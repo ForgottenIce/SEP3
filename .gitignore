@@ -2,6 +2,7 @@
 /SEP3CSharp/BlazorClient/obj
 /SEP3CSharp/BlazorClient/bin
 /SEP3CSharp/.vs/SEP3CSharp
+/SEP3CSharp/.idea
 
 # Java ignores:
 /SEP3Java/.idea/misc.xml
