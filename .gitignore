@@ -5,7 +5,4 @@
 /SEP3CSharp/.idea
 
 # Java ignores:
-/SEP3Java/.idea/misc.xml
-/SEP3Java/.idea/runConfigurations.xml
-/SEP3Java/.idea/vcs.xml
-/SEP3Java/.idea/workspace.xml
+/SEP3Java/.idea
