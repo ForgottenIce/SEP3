@@ -1,4 +1,8 @@
-﻿namespace BlazorClient {
-    public class GitTest {
+﻿using System.Net.Security;
+
+namespace BlazorClient {
+    public class GitTest
+    {
+        SslClientHelloInfo;
     }
 }
