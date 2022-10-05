@@ -5,4 +5,4 @@
 /SEP3CSharp/.idea
 
 # Java ignores:
-/SEP3Java/.idea
+/SEP3Java/out
