@@ -1,8 +1,7 @@
 ﻿using System.Net.Security;
 
 namespace BlazorClient {
-    public class GitTest
-    {
-        SslClientHelloInfo;
+    public class GitTest {
+        //TEST
     }
 }
