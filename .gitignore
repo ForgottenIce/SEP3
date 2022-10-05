@@ -1,11 +1,10 @@
-﻿# C# Ignores:
+﻿/.vs
+
+# C# Ignores:
 /SEP3CSharp/BlazorClient/obj
 /SEP3CSharp/BlazorClient/bin
-/SEP3CSharp/.vs/SEP3CSharp
+/SEP3CSharp/.vs
 /SEP3CSharp/.idea
 
 # Java ignores:
-/SEP3Java/.idea/misc.xml
-/SEP3Java/.idea/runConfigurations.xml
-/SEP3Java/.idea/vcs.xml
-/SEP3Java/.idea/workspace.xml
+/SEP3Java/out
