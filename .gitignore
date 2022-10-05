@@ -1,10 +1,10 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
+# C# Ignores:
 /SEP3CSharp/BlazorClient/obj
 /SEP3CSharp/BlazorClient/bin
 /SEP3CSharp/.vs/SEP3CSharp/v17
+
+# Java ignores:
 SEP3Java/.idea/misc.xml
 SEP3Java/.idea/runConfigurations.xml
 SEP3Java/.idea/vcs.xml
+SEP3Java/.idea/workspace.xml
