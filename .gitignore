@@ -5,6 +5,8 @@
 /SEP3CSharp/BlazorClient/bin
 /SEP3CSharp/.vs
 /SEP3CSharp/.idea
+/SEP3CSharp/RestAPI/obj
+/SEP3CSharp/RestAPI/bin
 
 # Java ignores:
 /SEP3Java/out

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorClient", "BlazorClient\BlazorClient.csproj", "{5DF6DCC3-90AE-4AD6-9CC6-E0EB8F7C2076}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestAPI", "RestAPI\RestAPI.csproj", "{5D2577A8-ED26-42CC-BA73-17EC26582EBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5DF6DCC3-90AE-4AD6-9CC6-E0EB8F7C2076}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DF6DCC3-90AE-4AD6-9CC6-E0EB8F7C2076}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DF6DCC3-90AE-4AD6-9CC6-E0EB8F7C2076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D2577A8-ED26-42CC-BA73-17EC26582EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D2577A8-ED26-42CC-BA73-17EC26582EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D2577A8-ED26-42CC-BA73-17EC26582EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D2577A8-ED26-42CC-BA73-17EC26582EBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
