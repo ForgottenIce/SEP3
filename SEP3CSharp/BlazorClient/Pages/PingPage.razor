@@ -1,0 +1,39 @@
+﻿@page "/PingPage"
+@using System.Text.Json
+@inject HttpClient Http
+
+<PageTitle>PingPage</PageTitle>
+
+<h1>PingPage</h1>
+
+<p role="status">from time: @fromTime</p>
+<p role="status">return time: @returnTime</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private long fromTime = 0;
+    private long returnTime = 0;
+
+    private async void IncrementCount()
+    {
+        HttpResponseMessage response = await Http.GetAsync("/Ping");
+        string result = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(result); //TODO implement more telling exception
+        }
+
+        long[]? dateTimes = JsonSerializer.Deserialize<long[]>(result, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        if (dateTimes != null && dateTimes.Length > 0)
+        {
+            fromTime = dateTimes[0];
+            returnTime = dateTimes[1];
+        }
+    }
+}

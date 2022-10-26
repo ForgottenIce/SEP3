@@ -2,11 +2,11 @@
 using gRPC;
 
 namespace gRPC;
-public class Class1
+public static class Class1
 {
-    public async Task<PingResponse> PingServerAsync()
+    public static async Task<PingResponse> PingServerAsync()
     {
-        using var channel = GrpcChannel.ForAddress("");
+        using var channel = GrpcChannel.ForAddress("http://localhost:9090");
         var client = new Ping.PingClient(channel);
         var reply = await client.pingAsync(new PingRequest { DateTime = 2 });
         return reply;
