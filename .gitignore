@@ -7,6 +7,10 @@
 /SEP3CSharp/.idea
 /SEP3CSharp/RestAPI/obj
 /SEP3CSharp/RestAPI/bin
+/SEP3CSharp/gRPC/obj
+/SEP3CSharp/gRPC/bin
+
 
 # Java ignores:
 /SEP3Java/out
+/SEP3Java/.idea/runConfigurations.xml
