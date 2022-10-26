@@ -10,3 +10,4 @@
 
 # Java ignores:
 /SEP3Java/out
+/SEP3Java/.idea/runConfigurations.xml
