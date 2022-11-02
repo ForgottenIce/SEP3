@@ -9,6 +9,8 @@
 /SEP3CSharp/RestAPI/bin
 /SEP3CSharp/gRPC/obj
 /SEP3CSharp/gRPC/bin
+/SEP3CSharp/Shared/bin
+/SEP3CSharp/Shared/obj
 
 
 # Java ignores:
