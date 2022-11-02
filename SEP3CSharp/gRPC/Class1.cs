@@ -1,5 +1,4 @@
 ﻿using Grpc.Net.Client;
-using gRPC;
 
 namespace gRPC;
 public static class Class1

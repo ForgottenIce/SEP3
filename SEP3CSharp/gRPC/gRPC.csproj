@@ -21,4 +21,9 @@
         <Protobuf Include="Protos\Ping.proto" GrpcServices="Client" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
 </Project>
