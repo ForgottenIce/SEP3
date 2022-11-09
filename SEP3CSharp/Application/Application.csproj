@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Logic\" />
-    <Folder Include="LogicInterfaces\" />
+    <ProjectReference Include="..\gRPC\gRPC.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

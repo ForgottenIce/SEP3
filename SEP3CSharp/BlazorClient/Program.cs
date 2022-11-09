@@ -15,6 +15,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthProvider>();
 builder.Services.AddScoped<IAuthService, JwtAuthService>();
 
+builder.Services.AddScoped<IPingService, PingService>();
+
 //Radzen Service
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();

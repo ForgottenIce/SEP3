@@ -15,6 +15,7 @@ public class PingController : ControllerBase
             PingResponse created = await Class1.PingServerAsync();
             return Ok(new long[] { created.OriginDate, created.ReturnDate });
         }
+
         catch (Exception e)
         {
             Console.WriteLine(e);

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using RestAPI.Services;
+using Application.LogicInterfaces;
 using Shared.Dtos;
 using Shared.Models;
 
@@ -14,12 +14,12 @@ namespace WebAPI.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration config;
-    private readonly IAuthService authService;
+    private readonly IAuthLogic authLogic;
 
-    public AuthController(IConfiguration config, IAuthService authService)
+    public AuthController(IConfiguration config, IAuthLogic authService)
     {
         this.config = config;
-        this.authService = authService;
+        this.authLogic = authService;
     }
     
     [HttpPost, Route("login")]
@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            User user = await authService.ValidateUser(userLoginDto.UserId, userLoginDto.Password);
+            User user = await authLogic.ValidateUser(userLoginDto.UserId, userLoginDto.Password);
             string token = GenerateJwt(user);
     
             return Ok(token);
