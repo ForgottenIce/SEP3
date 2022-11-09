@@ -1,27 +1,17 @@
 ﻿@using System.Text.Json
-@inject HttpClient Http
+@using HttpClients.ClientInterfaces
+@inject IPingService pingService
 
-<p style="margin: 0">@ping ms <button type="button" class="btn btn-success" style="width: 15px; height: 15px; padding: 3px 0px; border-radius: 8px;" @onclick="IncrementCount"></button></p>
+<p style="margin: 0">@ping ms <button type="button" class="btn btn-success" style="width: 15px; height: 15px; padding: 3px 0px; border-radius: 8px;" @onclick="checkPing"></button></p>
 
 @code {
     private long fromTime = 0;
     private long serverTime = 0;
     private long ping = 0;
 
-    private async void IncrementCount()
+    private async void checkPing()
     {
-        HttpResponseMessage response = await Http.GetAsync("/Ping");
-        string result = await response.Content.ReadAsStringAsync();
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception(result); //TODO implement more telling exception
-        }
-
-        long[]? dateTimes = JsonSerializer.Deserialize<long[]>(result, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        long[]? dateTimes = await pingService.PingAsync();
 
         if (dateTimes != null && dateTimes.Length > 0)
         {
