@@ -1,10 +1,11 @@
 using BlazorClient;
 using BlazorClient.Auth;
-using BlazorClient.Services;
-using BlazorClient.Services.Http;
+using HttpClients.ClientImplementations;
+using HttpClients.ClientInterfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Radzen;
 using Shared.Auth;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -13,6 +14,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthProvider>();
 builder.Services.AddScoped<IAuthService, JwtAuthService>();
+
+//Radzen Service
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 
 AuthorizationPolicies.AddPolicies(builder.Services);
 
