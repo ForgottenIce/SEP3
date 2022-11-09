@@ -12,9 +12,9 @@ public class AuthService : IAuthService {
         _loginService = loginService;
     }
 
-    public async Task<bool> ValidateUser(string username, string password) { //TODO implement proper exceptions
-        bool boolean = await _loginService.ValidateUserAsync(new UserLoginDto { Password = password, UserId = username });
-        return boolean;
+    public async Task<User> ValidateUser(string username, string password) { //TODO implement proper exceptions
+        User user = await _loginService.ValidateUserAsync(new UserLoginDto { Password = password, UserId = username });
+        return user;
     }
 
     public Task RegisterUser(User user) { //TODO implement proper exceptions

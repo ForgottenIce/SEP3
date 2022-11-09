@@ -1,10 +1,11 @@
 ﻿using gRPC.ServiceInterfaces;
 using Shared.Dtos;
+using Shared.Models;
 
 namespace gRPC.ServiceImplementations; 
 
 public class LoginService : ILoginService {
-	public Task<bool> ValidateUserAsync(UserLoginDto dto) {
+	public Task<User> ValidateUserAsync(UserLoginDto dto) {
 		throw new NotImplementedException();
 	}
 
