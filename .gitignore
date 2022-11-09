@@ -11,6 +11,10 @@
 /SEP3CSharp/gRPC/bin
 /SEP3CSharp/Shared/bin
 /SEP3CSharp/Shared/obj
+/SEP3CSharp/Application/bin
+/SEP3CSharp/Application/obj
+/SEP3CSharp/HttpClient/bin
+/SEP3CSharp/HttpClient/obj
 
 
 # Java ignores:
