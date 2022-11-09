@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Application.LogicInterfaces;
 using gRPC.ServiceInterfaces;
 using Shared.Dtos;
 using Shared.Models;
 
-namespace RestAPI.Services;
+namespace Application.Logic;
 
-public class AuthService : IAuthService {
+public class AuthLogic : IAuthLogic {
     private readonly ILoginService _loginService;
 
-    public AuthService(ILoginService loginService) {
+    public AuthLogic(ILoginService loginService) {
         _loginService = loginService;
     }
 

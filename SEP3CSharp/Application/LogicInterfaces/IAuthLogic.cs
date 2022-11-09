@@ -1,8 +1,8 @@
 ﻿using Shared.Models;
 
-namespace RestAPI.Services;
+namespace Application.LogicInterfaces;
 
-public interface IAuthService
+public interface IAuthLogic
 {
     Task<User> ValidateUser(string username, string password);
     Task RegisterUser(User user);
