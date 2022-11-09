@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using HttpClients.ClientInterfaces;
 using Shared.Dtos;
 using Shared.Models;
 
-namespace BlazorClient.Services.Http; 
+namespace HttpClients.ClientImplementations; 
 
 public class JwtAuthService : IAuthService{
 	private readonly HttpClient client;

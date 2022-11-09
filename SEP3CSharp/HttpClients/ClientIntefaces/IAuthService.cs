@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Shared.Models;
 
-namespace BlazorClient.Services; 
+namespace HttpClients.ClientInterfaces; 
 
 public interface IAuthService {
 	public Task LoginAsync(string username, string password);
