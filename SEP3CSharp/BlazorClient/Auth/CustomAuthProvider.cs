@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using BlazorClient.Services;
+using HttpClients.ClientInterfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorClient.Auth;
