@@ -1,3 +1,4 @@
+package groupid.sep3java.gRPCServices;
 
 import grpc.PingGrpc;
 import grpc.PingOuterClass;
