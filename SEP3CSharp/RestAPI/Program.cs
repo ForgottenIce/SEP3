@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILoginService,LoginService>();
 builder.Services.AddScoped<IAuthLogic,AuthLogic>();
-
+builder.Services.AddScoped<IPackageLogic, PackageLogic>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
