@@ -1,0 +1,35 @@
+﻿@page "/SeBestilling"
+
+@using Radzen
+@using global::Shared.Models
+
+
+
+@inject DialogService DialogService
+
+
+<RadzenDataGrid PageSize="5"  TItem="Package">
+<Columns>
+        <RadzenDataGridColumn Width="50px" TItem="int" Title="Order ID" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="data">
+                5
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="int"  Title="Vare nr enheder">
+            <Template Context="order">
+                5
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DateOnly" Title="Order Date" FormatString="{0:d}" />
+        <RadzenDataGridColumn TItem="bool" Title="På Lager">
+            <Template Context="order">
+                true
+            </Template>
+        </RadzenDataGridColumn>
+</Columns>
+</RadzenDataGrid>
+
+
+@code {
+    
+}

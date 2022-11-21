@@ -1,0 +1,28 @@
+﻿@page "/WorkerGui"
+<div class="d-flex flex-column mt-5 ">
+    <div class="d-flex justify-content-around">
+        <h3>
+            ID: @ID
+        </h3>
+        <h2>Worker GUI</h2>
+    </div>
+    <div class="d-flex justify-content-around">
+        <button type="button" class="btn btn-primary btn-lg" @onclick=SePakBestilling>Se/Pak bestilling</button>
+        <button type="button" class="btn btn-primary btn-lg" @onclick=VareRetur>Vare retur</button>
+        
+        </div>
+</div>
+
+@code {
+    private int ID=2;
+
+    private void SePakBestilling()
+    {
+        Console.WriteLine("go to bestilling");
+    }
+
+    private void VareRetur()
+    {
+        Console.WriteLine("go to Retur");
+    }
+}
