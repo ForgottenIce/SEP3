@@ -1,26 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Application.DaoInterfaces;
 using Application.LogicInterfaces;
-using gRPC.ServiceInterfaces;
-using Shared.Dtos;
 using Shared.Models;
 
 namespace Application.Logic;
 
 public class AuthLogic : IAuthLogic {
-    private readonly ILoginService _loginService;
+    private readonly IEmployeeDao _employeeDao;
 
-    public AuthLogic(ILoginService loginService) {
-        _loginService = loginService;
+    public AuthLogic(IEmployeeDao employeeDao) {
+        _employeeDao = employeeDao;
     }
 
     public async Task<Employee> ValidateEmployee(string username, string password) { //TODO implement proper exceptions
-        Employee employee = await _loginService.ValidateEmployeeAsync(new EmployeeLoginDto { Password = password, UserId = username });
+        Employee? employee = await _employeeDao.GetByUsernameAsync(username);
+        if (employee == null) {
+            throw new Exception("User not found");
+        }
+
+        if (!employee.Password.Equals(password)) {
+            throw new Exception("Password mismatch");
+        }
+        
         return employee;
     }
-
-    public Task RegisterEmployee(Employee employee) { //TODO implement proper exceptions
-        _loginService.RegisterEmployee(new EmployeeCreationDto { Password = employee.Password, Username = employee.Username });
-
-        return Task.CompletedTask;
-    }    
 }

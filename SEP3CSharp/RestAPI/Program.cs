@@ -1,8 +1,8 @@
 using System.Text;
+using Application.DaoInterfaces;
 using Application.Logic;
 using Application.LogicInterfaces;
-using gRPC.ServiceImplementations;
-using gRPC.ServiceInterfaces;
+using EfcEmployeeDataAccess.DAOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth;
@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ILoginService,LoginService>();
+builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
 builder.Services.AddScoped<IAuthLogic,AuthLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
