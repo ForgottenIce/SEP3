@@ -3,7 +3,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<RadzenText TextStyle="TextStyle.H3" TagName="TagName.H1" Class="my-4">
+<RadzenText TextStyle="TextStyle.H5" TagName="TagName.H1" Class="my-4">
     Se bestillinger
 </RadzenText>
 
@@ -25,11 +25,11 @@
         <RadzenDataGrid TItem="Order" Data="@data">
             <Columns>
                 <RadzenDataGridColumn TItem="Order" Property="OrderID" Title="OrderID" Width="50px" TextAlign="TextAlign.Center"/>
-                <RadzenDataGridColumn TItem="Order" Property="Varenrenheder" Title="Vare nr enheder" Sortable="false">
+                <RadzenDataGridColumn TItem="Order" Property="Varenrenheder" Title="Vare nr enheder" Width="100px" Sortable="false">
                     <Template Context="data"> </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Order" Property="Bestillingstidspunkt" Title="Bestillingstidspunkt" Width="500px" TextAlign="TextAlign.Center"/>
-                <RadzenDataGridColumn TItem="Order" Property="Pålager" Title="Pålager"/>
+                <RadzenDataGridColumn TItem="Order" Property="Bestillingstidspunkt" Title="Bestillingstidspunkt" Width="550px" TextAlign="TextAlign.Center"/>
+                <RadzenDataGridColumn TItem="Order" Property="Pålager" Title="Pålager" Width="200px" TextAlign="TextAlign.Center"/>
             </Columns>
         </RadzenDataGrid> 
     </div>
