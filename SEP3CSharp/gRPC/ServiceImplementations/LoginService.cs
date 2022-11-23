@@ -5,11 +5,11 @@ using Shared.Models;
 namespace gRPC.ServiceImplementations; 
 
 public class LoginService : ILoginService {
-	public Task<User> ValidateUserAsync(UserLoginDto dto) {
+	public Task<Employee> ValidateEmployeeAsync(EmployeeLoginDto dto) {
 		throw new NotImplementedException();
 	}
 
-	public Task RegisterUser(UserCreationDto dto) {
+	public Task RegisterEmployee(EmployeeCreationDto dto) {
 		throw new NotImplementedException();
 	}
 }

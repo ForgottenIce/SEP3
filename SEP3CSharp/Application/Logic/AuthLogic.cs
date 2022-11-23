@@ -13,26 +13,13 @@ public class AuthLogic : IAuthLogic {
         _loginService = loginService;
     }
 
-    public async Task<User> ValidateUser(string username, string password) { //TODO implement proper exceptions
-        User user = await _loginService.ValidateUserAsync(new UserLoginDto { Password = password, UserId = username });
-        return user;
+    public async Task<Employee> ValidateEmployee(string username, string password) { //TODO implement proper exceptions
+        Employee employee = await _loginService.ValidateEmployeeAsync(new EmployeeLoginDto { Password = password, UserId = username });
+        return employee;
     }
 
-    public Task RegisterUser(User user) { //TODO implement proper exceptions
-        if (string.IsNullOrEmpty(user.UserId))
-        {
-            throw new ValidationException("Username cannot be null");
-        }
-
-        if (string.IsNullOrEmpty(user.Password))
-        {
-            throw new ValidationException("Password cannot be null");
-        }
-        // Do more user info validation here
-        
-        // save to persistence instead of list
-
-        _loginService.RegisterUser(new UserCreationDto { Password = user.Password, UserId = user.UserId });
+    public Task RegisterEmployee(Employee employee) { //TODO implement proper exceptions
+        _loginService.RegisterEmployee(new EmployeeCreationDto { Password = employee.Password, Username = employee.Username });
 
         return Task.CompletedTask;
     }    

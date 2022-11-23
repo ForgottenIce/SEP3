@@ -23,12 +23,12 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost, Route("login")]
-    public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
+    public async Task<ActionResult> Login([FromBody] EmployeeLoginDto employeeLoginDto)
     {
         try
         {
-            User user = await authLogic.ValidateUser(userLoginDto.UserId, userLoginDto.Password);
-            string token = GenerateJwt(user);
+            Employee employee = await authLogic.ValidateEmployee(employeeLoginDto.UserId, employeeLoginDto.Password);
+            string token = GenerateJwt(employee);
     
             return Ok(token);
         }
@@ -38,24 +38,24 @@ public class AuthController : ControllerBase
         }
     }
     
-    private List<Claim> GenerateClaims(User user)
+    private List<Claim> GenerateClaims(Employee employee)
     {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-            new Claim(ClaimTypes.Name, user.UserId),
-            new Claim(ClaimTypes.Role, user.Role),
-            new Claim("DisplayName", user.Name),
-            new Claim("Email", user.Email)
+            new Claim(ClaimTypes.Name, employee.Username),
+            new Claim(ClaimTypes.Role, employee.Role),
+            new Claim("DisplayName", employee.FullName),
+            new Claim("Email", employee.Mail)
         };
         return claims.ToList();
     }
     
-    private string GenerateJwt(User user)
+    private string GenerateJwt(Employee employee)
     {
-        List<Claim> claims = GenerateClaims(user);
+        List<Claim> claims = GenerateClaims(employee);
     
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
         SigningCredentials signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
