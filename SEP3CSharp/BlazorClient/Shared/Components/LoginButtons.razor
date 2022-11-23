@@ -1,14 +1,15 @@
 ﻿@using HttpClients.ClientInterfaces
+@using Radzen
 @namespace Login
 @inject NavigationManager navMgr
 @inject IAuthService authService
 
 <AuthorizeView>
     <Authorized>
-        <img class="icon" src="img/Logout.png" @onclick="Logout"/>
+        <RadzenButton Icon="logout" Variant="Variant.Text" ButtonStyle="ButtonStyle.Light" Click="Logout"></RadzenButton>
     </Authorized>
     <NotAuthorized>
-        <img class="icon" src="img/Login.png" @onclick="Login"/>
+        <RadzenButton Icon="login" Variant="Variant.Text" ButtonStyle="ButtonStyle.Light" Click="Login"></RadzenButton>
     </NotAuthorized>
 </AuthorizeView>
 
