@@ -7,25 +7,26 @@
 @inject IPackageService packageService
 
 
-<RadzenDataGrid PageSize="5"  TItem="Package">
-<Columns>
+<RadzenDataGrid PageSize="5" TItem="Package">
+    
+    <Columns>
         <RadzenDataGridColumn Width="100px" TItem="Package" Title="Order ID" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
             <Template Context="data">
-                
+
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Package"  Title="Vare nr enheder">
+        <RadzenDataGridColumn TItem="Package" Title="Vare nr enheder">
             <Template Context="order">
                 5
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="Package" Title="Order Date" FormatString="{0:d}" />
+        <RadzenDataGridColumn TItem="Package" Title="Order Date" FormatString="{0:d}"/>
         <RadzenDataGridColumn TItem="Package" Title="På Lager">
             <Template Context="order">
                 true
             </Template>
         </RadzenDataGridColumn>
-</Columns>
+    </Columns>
 </RadzenDataGrid>
 
 
