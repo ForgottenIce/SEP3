@@ -6,7 +6,7 @@ namespace EfcEmployeeDataAccess;
 public class DataContext : DbContext {
 	public DbSet<Employee> Employees { get; set; }
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-		optionsBuilder.UseSqlite("Data Source = ../EfcDataAccess/data.db");
+		optionsBuilder.UseNpgsql("Host=mouse.db.elephantsql.com;Username=ylsiahyj;Password=MmTEt0YyYObkMIiBvjtV-yEUTHhr96lO");
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
