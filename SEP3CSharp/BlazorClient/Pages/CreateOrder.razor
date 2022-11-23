@@ -1,0 +1,76 @@
+﻿@page "/CreateOrder"
+@using Radzen
+<h3>CreateOrder</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default Numeric</RadzenText>
+                <RadzenNumeric TValue="int" Change=@(args => OnChange(args, "Numeric")) Class="w-100"/>
+            </RadzenCard>
+        </div>
+        <div class="col-3">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Placeholder</RadzenText>
+                <RadzenTextBox Placeholder="Search..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100"/>
+            </RadzenCard>
+        </div>
+        <div class="col-3" style="justify-content: center">
+            <RadzenButton Shade="Shade.Darker" Text="Godkend" ButtonStyle="ButtonStyle.Success"/>
+
+        </div>
+    </div>
+</div>
+
+
+    
+<div class="container-fluid">
+    <h3 class="mt-4">Render Fragment as Empty Text</h3>
+    <RadzenDataGrid TItem="Item" >
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+        </EmptyTemplate>
+        <Columns>
+           
+            <RadzenDataGridColumn TItem="Item" Property="Amount" Title="mængde"/>
+            <RadzenDataGridColumn TItem="Item" Property="ItemID" Title="varenummer"/>
+            
+            <RadzenDataGridColumn TItem="Item" ="Remove" Title="fjern"/>
+            
+        </Columns>
+    </RadzenDataGrid>
+
+</div>
+
+
+@code {
+
+
+    private void OnChange(string args, string textboxWithPlaceholder)
+    {
+        throw new NotImplementedException();
+    }
+
+    private int value;
+
+    private void OnChange(int args, string textboxWithPlaceholder)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public class Item
+    {
+        string itemNumber;
+
+        public Item(string itemNumber)
+        {
+            this.itemNumber = itemNumber;
+        }
+        
+        
+    }
+    
+    
+
+}
