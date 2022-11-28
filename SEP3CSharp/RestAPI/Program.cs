@@ -1,6 +1,7 @@
 using System.Text;
 using Application.Logic;
 using Application.LogicInterfaces;
+using gRPC;
 using gRPC.ServiceImplementations;
 using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,8 +17,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// gRPC dependencies
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+Uri grpcUri = new Uri("http://localhost:9090");
+builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
+
 builder.Services.AddScoped<ILoginService,LoginService>();
+
+// Logic dependencies
 builder.Services.AddScoped<IAuthLogic,AuthLogic>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
