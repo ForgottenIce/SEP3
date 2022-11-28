@@ -1,0 +1,226 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Radzen
+@page "/AddProduct"
+
+<div class="container p-4">
+    <div class="row">
+        <div class="col-3">
+            <h6 class="text-uppercase">ID</h6>
+        </div>
+        <div class="col-3">
+            <h6 class="text-uppercase">Tilføj produkt</h6>
+        </div>
+    </div>
+</div>
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+@if (order == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <RadzenFieldset Text="Opret nyt produkt">
+        <div class="row">
+            <div class="align-items-center d-flex col-md-3">
+                <RadzenLabel Text="Varenummer"/>
+            </div>
+            <div class="col-4">
+                <RadzenTextBox Placeholder="Varenummer" style="width: 50%;" Name="ItemID"/>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="align-items-center d-flex col-md-3">
+                <RadzenLabel Text="Register"/>
+            </div>
+            <div class="col-4">
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">DropDown with placeholder</RadzenText>
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select..." Data=@orders TextProperty="CompanyName"
+                                ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder"))>
+                </RadzenDropDown>
+            </div>
+        </div>
+        <div class="row">
+            <div class="align-items-center d-flex col-md-3">
+                <RadzenLabel Text="Description"/>
+            </div>
+            <div class="col-4">
+                <RadzenTextArea Placeholder="Description" style="width: 100%;" Name="Clerk"/>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col">
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
+
+                <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy2 Click=@OnBusyClickNewItem Text="Save"/>
+            </div>
+        </div>
+
+        <style>
+                        .button-demo .rz-button {
+                            margin: 0 0.5rem 1rem 0;
+                        }
+                        .button-demo h3 {
+                            margin-bottom: 1rem;
+                        }
+                    </style>
+
+
+    </RadzenFieldset>
+
+    <h3>Overskriv position</h3>
+
+    <RadzenFieldset Text="Opret nyt produkt">
+        <div class="row">
+            <div class="align-items-center d-flex col-md-3">
+                <RadzenLabel Text="lager positioner"/>
+            </div>
+            <div class="col-4">
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Postioner</RadzenText>
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select..." Data=@orders TextProperty="CompanyName"
+                                ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder"))>
+                </RadzenDropDown>
+            </div>
+
+            <div class="col-4">
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Varenummer</RadzenText>
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select..." Data=@orders TextProperty="CompanyName"
+                                ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder"))>
+                </RadzenDropDown>
+            </div>
+            <div class="row mb-4">
+                <div class="col">
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
+
+                    <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
+                </div>
+            </div>
+        </div>
+        <style>
+                .button-demo .rz-button {
+                    margin: 0 0.5rem 1rem 0;
+                }
+                .button-demo h3 {
+                    margin-bottom: 1rem;
+                }
+            </style>
+
+    </RadzenFieldset>
+}
+
+@code{
+
+    public void OnChange(object value, string name)
+    {
+        var str = value is IEnumerable<object> ? string.Join(", ", (IEnumerable<object>)value) : value;
+    }
+
+    IEnumerable<Order> orders;
+
+    public class Order
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public string CardHolder { get; set; }
+        public string Name { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public int Country { get; set; }
+        public int StoreId { get; set; }
+        public string Warehouse { get; set; }
+        public string Region { get; set; }
+        public string System { get; set; }
+        public int TransId { get; set; }
+        public string Register { get; set; }
+        public string Clerk { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Tax { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime ShipDate { get; set; }
+    }
+
+    public class CreditCard
+    {
+        public int CardId { get; set; }
+        public string CardNr { get; set; }
+    }
+
+    public class Country
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    Order order = new Order()
+    {
+        ExpiryDate = DateTime.Parse("10/10/2022"),
+        OrderDate = DateTime.Now,
+        ShipDate = DateTime.Now
+    };
+
+    List<CreditCard> cards = new List<CreditCard>()
+    {
+        new CreditCard() { CardId = 1, CardNr = "5555555555554444" },
+        new CreditCard() { CardId = 2, CardNr = "4012888888881881" }
+    };
+
+    List<Country> countries = new List<Country>()
+    {
+        new Country() { Id = 1, Name = "USA" },
+        new Country() { Id = 2, Name = "Germany" }
+    };
+
+    void Submit(Order arg)
+    {
+    //
+    }
+
+    void Cancel()
+    {
+    //
+    }
+
+
+    // btn logic 
+
+    bool busy;
+    bool busy2;
+
+    void OnClick(string buttonName)
+    {
+    }
+    
+
+    async Task OnBusyClick()
+    {
+        busy = true;
+        await Task.Delay(2000);
+        busy = false;
+    }
+    
+    async Task OnBusyClickNewItem()
+    {
+        busy2 = true;
+        await Task.Delay(2000);
+        busy2 = false;
+    }
+}

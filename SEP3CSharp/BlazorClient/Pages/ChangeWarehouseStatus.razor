@@ -1,13 +1,13 @@
-﻿@page "/CreateOrder"
-@using Radzen
-<h3>CreateOrder</h3>
+﻿@using Radzen
+@page "/ChangeWarehouseStatus"
+<h3>ChangeWarehouseStatus</h3>
 <div class="container p-4">
     <div class="row">
         <div class="col-3">
             <h6 class="text-uppercase">ID</h6>
         </div>
         <div class="col-3">
-            <h6 class="text-uppercase">CreateOrder</h6>
+            <h6 class="text-uppercase">Lager status</h6>
         </div>
     </div>
 </div>
@@ -35,42 +35,11 @@
 </div>
 
 
-<div class="container-fluid">
-    <h3 class="mt-4">Render Fragment as Empty Text</h3>
-    <RadzenDataGrid TItem="Item">
-        <EmptyTemplate>
-            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
-        </EmptyTemplate>
-        <Columns>
-
-            <RadzenDataGridColumn TItem="Item" Property="Amount" Title="mængde"/>
-            <RadzenDataGridColumn TItem="Item" Property="ItemID" Title="varenummer"/>
-
-
-        </Columns>
-    </RadzenDataGrid>
-    <div class="row mb-4">
-        <div class="col">
-            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
-
-            <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
-        </div>
-    </div>
-</div>
-<style>
-                    .button-demo .rz-button {
-                        margin: 0 0.5rem 1rem 0;
-                    }
-                    .button-demo h3 {
-                        margin-bottom: 1rem;
-                    }
-                </style>
 
 
 
 
 @code {
-
     // btn logic 
 
     bool busy;
@@ -109,7 +78,4 @@
             this.itemNumber = itemNumber;
         }
     }
-
-
-
 }

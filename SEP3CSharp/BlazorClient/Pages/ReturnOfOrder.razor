@@ -65,22 +65,48 @@
         </div>
 
         <div class="col-3">
-            <h6 class="text-uppercase">save</h6>
-
-            <p>
-                goood job
-            </p>
+            <div class="row mb-4">
+                           <div class="col">
+                               <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
+           
+                               <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
+                           </div>
+                       </div>
+                   </div>
+                   <style>
+                           .button-demo .rz-button {
+                               margin: 0 0.5rem 1rem 0;
+                           }
+                           .button-demo h3 {
+                               margin-bottom: 1rem;
+                           }
+                       </style>
         </div>
 
 
         <!--Grid column-->
     </div>
     <!--Grid row-->
-</div>
-<!-- Grid container -->
 
 
 @code {
+    
+    // btn logic 
+
+    bool busy;
+    
+
+    void OnClick(string buttonName)
+    {
+    }
+    
+
+    async Task OnBusyClick()
+    {
+        busy = true;
+        await Task.Delay(2000);
+        busy = false;
+    }
     string emptyText = "No Items to display!";
 
 
