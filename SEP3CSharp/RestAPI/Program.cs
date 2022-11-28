@@ -25,15 +25,22 @@ builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
 
 // gRPC dependencies
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
 Uri grpcUri = new Uri("http://localhost:9090");
+builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
 
+builder.Services.AddScoped<ILoginService,LoginService>();
 builder.Services.AddScoped<IPingService, PingService>();
 
+// Logic dependencies
+builder.Services.AddScoped<IAuthLogic,AuthLogic>();
 builder.Services.AddScoped<IPingLogic, PingLogic>();
-builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
