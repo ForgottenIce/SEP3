@@ -38,20 +38,18 @@ else
         </div>
 
 
-        <div class="row">
+        <div class="row" style="margin-top: 20px">
             <div class="align-items-center d-flex col-md-3">
                 <RadzenLabel Text="Register"/>
             </div>
             <div class="col-4">
-
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">DropDown with placeholder</RadzenText>
                 <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
                                 Placeholder="Select..." Data=@orders TextProperty="CompanyName"
                                 ValueProperty="CustomerID" Change=@(args => OnChange(args, "DropDown with placeholder"))>
                 </RadzenDropDown>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 20px">
             <div class="align-items-center d-flex col-md-3">
                 <RadzenLabel Text="Description"/>
             </div>
@@ -59,10 +57,16 @@ else
                 <RadzenTextArea Placeholder="Description" style="width: 100%;" Name="Clerk"/>
             </div>
         </div>
+        <div class="row" style="margin-top: 20px">
+                    <div class="align-items-center d-flex col-md-3">
+                        <RadzenLabel Text="Price"/>
+                    </div>
+                    <div class="col-4">
+                         <RadzenTextBox Placeholder="Price" style="width: 50%;" Name="ItemID"/>
+                    </div>
+                </div>
         <div class="row mb-4">
             <div class="col">
-                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
-
                 <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy2 Click=@OnBusyClickNewItem Text="Save"/>
             </div>
         </div>
@@ -105,8 +109,6 @@ else
             </div>
             <div class="row mb-4">
                 <div class="col">
-                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
-
                     <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
                 </div>
             </div>
@@ -208,7 +210,7 @@ else
     void OnClick(string buttonName)
     {
     }
-    
+
 
     async Task OnBusyClick()
     {
@@ -216,11 +218,12 @@ else
         await Task.Delay(2000);
         busy = false;
     }
-    
+
     async Task OnBusyClickNewItem()
     {
         busy2 = true;
         await Task.Delay(2000);
         busy2 = false;
     }
+
 }
