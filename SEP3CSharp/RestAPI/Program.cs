@@ -4,6 +4,9 @@ using Application.Logic;
 using Application.LogicInterfaces;
 using EfcEmployeeDataAccess;
 using EfcEmployeeDataAccess.DAOs;
+using gRPC;
+using gRPC.ServiceImplementations;
+using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth;
@@ -19,7 +22,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
-builder.Services.AddScoped<IAuthLogic,AuthLogic>();
+
+// gRPC dependencies
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+Uri grpcUri = new Uri("http://localhost:9090");
+builder.Services.AddGrpcClient<Ping.PingClient>(o => {
+    o.Address = grpcUri;
+});
+
+builder.Services.AddScoped<IPingService, PingService>();
+
+builder.Services.AddScoped<IPingLogic, PingLogic>();
+builder.Services.AddScoped<IAuthLogic, AuthLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
