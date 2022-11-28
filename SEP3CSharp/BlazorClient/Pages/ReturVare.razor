@@ -8,54 +8,56 @@
 
 
 <div>
-    
     <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <h3 align="center">Id navn</h3>
+        <div class="container md">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3 align="center">ID navn</h3>
+                </div>
+                <div class="col md-3">
+                    <h3 align="center">retur vare</h3>
+                </div>
             </div>
-            <div class="col md-3">
-                <h3 align="center">retur vare</h3>
-            </div>
-        </div>
-        <div>
-            
-            <div class="col-lg-6 offset-lg-3 d-flex p-3">
-                <RadzenCard class="d-flex m-5 p-0 rz-border-radius-4 rz-shadow-10" Style="width: 100%; flex-direction: column; overflow: hidden; align-items: stretch;">
-                    <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-background-color-ice p-5" style="text-align: center;">
+            <div>
 
-                        <div>
+                <div class="col-lg-6 offset-lg-3 d-flex p-3">
+                    <RadzenCard class="d-flex m-5 p-0 rz-border-radius-4 rz-shadow-10" Style="width: 100%; flex-direction: column; overflow: hidden; align-items: stretch;">
+                        <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-background-color-ice p-5" style="text-align: center;">
+
+                            <div>
+                                <div class="field">
+                                    <label for="OrdreID">OrdreID:</label><br>
+                                    <input type="text" id="OrdreID" name="OrdreID"><br>
+                                </div>
+                                <br>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary">Søg</button>
+                            </div>
+
+                        </RadzenCard>
+                    </RadzenCard>
+                </div>
+
+                <div>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Ordre ID</h5>
                             <div class="field">
                                 <label for="OrdreID">OrdreID:</label><br>
                                 <input type="text" id="OrdreID" name="OrdreID"><br>
                             </div>
                             <br>
-                        </div>
-                        <div>
                             <button type="button" class="btn btn-primary">Søg</button>
                         </div>
-
-                    </RadzenCard>
-                </RadzenCard>
-            </div>
-            
-            <div>
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">Ordre ID</h5>
-                        <div class="field">
-                            <label for="OrdreID">OrdreID:</label><br>
-                            <input type="text" id="OrdreID" name="OrdreID"><br>
-                        </div>
-                        <br>
-                        <button type="button" class="btn btn-primary">Søg</button>
-                  </div>
+                    </div>
                 </div>
-            </div>
-            
-        </div>
 
+            </div>
+
+        </div>
     </div>
+    
 
 </div>
 

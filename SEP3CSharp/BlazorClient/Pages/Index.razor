@@ -8,31 +8,35 @@
 </RadzenText>
 
 <div>
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-3" >
-                <h6 class="text-uppercase" align="center">ID navn</h6>
-            </div>
-            <div class="col-3">
-                <h6 class="text-uppercase" align="center">Se Bestilling</h6>
-            </div>
+    <div class="container">
+        
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-3">
+                    <h6 class="text-uppercase" align="center">ID navn</h6>
+                </div>
+                <div class="col-3">
+                    <h6 class="text-uppercase" align="center">Se Bestilling</h6>
+                </div>
 
+            </div>
+        </div>
+
+
+        <div>
+            <RadzenDataGrid TItem="Order" Data="@data">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Order" Property="OrderID" Title="OrderID" Width="50px" TextAlign="TextAlign.Center"/>
+                    <RadzenDataGridColumn TItem="Order" Property="Varenrenheder" Title="Vare nr enheder" Width="100px" Sortable="false">
+                        <Template Context="data"> </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Order" Property="Bestillingstidspunkt" Title="Bestillingstidspunkt" Width="550px" TextAlign="TextAlign.Center"/>
+                    <RadzenDataGridColumn TItem="Order" Property="Pålager" Title="Pålager" Width="200px" TextAlign="TextAlign.Center"/>
+                </Columns>
+            </RadzenDataGrid>
         </div>
     </div>
     
-
-    <div>
-        <RadzenDataGrid TItem="Order" Data="@data">
-            <Columns>
-                <RadzenDataGridColumn TItem="Order" Property="OrderID" Title="OrderID" Width="50px" TextAlign="TextAlign.Center"/>
-                <RadzenDataGridColumn TItem="Order" Property="Varenrenheder" Title="Vare nr enheder" Width="100px" Sortable="false">
-                    <Template Context="data"> </Template>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Order" Property="Bestillingstidspunkt" Title="Bestillingstidspunkt" Width="550px" TextAlign="TextAlign.Center"/>
-                <RadzenDataGridColumn TItem="Order" Property="Pålager" Title="Pålager" Width="200px" TextAlign="TextAlign.Center"/>
-            </Columns>
-        </RadzenDataGrid> 
-    </div>
 </div>
 
 
