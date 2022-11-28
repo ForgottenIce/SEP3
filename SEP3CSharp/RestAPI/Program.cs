@@ -34,7 +34,6 @@ builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
 
-builder.Services.AddScoped<ILoginService,LoginService>();
 builder.Services.AddScoped<IPingService, PingService>();
 
 // Logic dependencies
