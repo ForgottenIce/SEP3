@@ -4,14 +4,16 @@ option csharp_namespace = "gRPC";
 package grpc;
 
 message CreateProductRequest {
-	string description = 1;
-	double price = 2;
+	string name = 1
+	string description = 2;
+	double price = 3;
 }
 
 message ProductResponse {
 	int64 id = 1;
-	string description = 2;
-	double price = 3;
+	string name = 2
+	string description = 3;
+	double price = 4;
 }
 
 message GetProductRequest {
