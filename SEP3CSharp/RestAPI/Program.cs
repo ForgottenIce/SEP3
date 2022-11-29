@@ -30,15 +30,22 @@ Uri grpcUri = new Uri("http://localhost:9090");
 builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
+builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
 
 builder.Services.AddScoped<IPingService, PingService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // Logic dependencies
-builder.Services.AddScoped<IAuthLogic,AuthLogic>();
+builder.Services.AddScoped<IAuthLogic, AuthLogic>();
 builder.Services.AddScoped<IPingLogic, PingLogic>();
+builder.Services.AddScoped<IOrderLogic, OrderLogic>();
+builder.Services.AddScoped<IProductLogic, ProductLogic>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
