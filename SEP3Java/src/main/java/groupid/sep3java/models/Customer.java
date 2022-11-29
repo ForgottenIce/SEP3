@@ -9,11 +9,11 @@ import java.util.Objects;
 @Entity
 public class Customer {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long id;
-	public String fullName;
-	public String phoneNo;
-	public String address;
-	public String mail;
+	private long id;
+	private String fullName;
+	private String phoneNo;
+	private String address;
+	private String mail;
 
 	public Customer() {
 	}

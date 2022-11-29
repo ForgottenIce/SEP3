@@ -8,16 +8,27 @@ import java.util.Objects;
 @Entity
 public class Product {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long Id;
-	public String Description;
-	public double Price;
+	private long Id;
+
+	private String name;
+	private String description;
+	private double price;
 
 	public Product() {
 	}
 
-	public Product( String description, double price) {
-		Description = description;
-		Price = price;
+	public Product(String name, String description, double price) {
+		this.name = name;
+		this.description = description;
+		this.price = price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public long getId() {
@@ -29,19 +40,19 @@ public class Product {
 	}
 
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 
 	public double getPrice() {
-		return Price;
+		return price;
 	}
 
 	public void setPrice(double price) {
-		Price = price;
+		this.price = price;
 	}
 
 	@Override public boolean equals(Object o) {
@@ -50,16 +61,17 @@ public class Product {
 		if (!(o instanceof Product))
 			return false;
 		Product product = (Product) o;
-		return Id == product.Id && Double.compare(product.Price, Price) == 0
-				&& Objects.equals(Description, product.Description);
+		return Id == product.Id && Double.compare(product.price, price) == 0
+				&& Objects.equals(name, product.name) && Objects.equals(description,
+				product.description);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(Id, Description, Price);
+		return Objects.hash(Id, name, description, price);
 	}
 
 	@Override public String toString() {
-		return "Product{" + "Id=" + Id + ", Description='" + Description + '\''
-				+ ", Price=" + Price + '}';
+		return "Product{" + "Id=" + Id + ", name='" + name + '\''
+				+ ", Description='" + description + '\'' + ", Price=" + price + '}';
 	}
 }
