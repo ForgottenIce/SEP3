@@ -38,6 +38,10 @@ public class ProductServiceImpl extends
 
 	@Override public void getProducts(GetProductsRequest request,
 			StreamObserver<GetProductsResponse> responseObserver) {
-		super.getProducts(request, responseObserver);
+		List<Product> products = repository.findAll();
+
+		GetProductsResponse getProductsResponse = GRPCProductFactory.createGetProductsResponse(products);
+		responseObserver.onNext(getProductsResponse);
+		responseObserver.onCompleted();
 	}
 }
