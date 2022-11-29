@@ -2,13 +2,13 @@
 
 public class DirectoryNotFoundException:ArgumentException {
     
-    public UserNotFoundException() : base("directory cannot be found") {
+    public DirectoryNotFoundException() : base("directory cannot be found") {
     }
 
-    public UserNotFoundException(string? message) : base(message) {
+    public DirectoryNotFoundException(string? message) : base(message) {
     }
 
-    public UserNotFoundException(string? message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException) {
+    public DirectoryNotFoundException(string? message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException) {
     }
     
 }
