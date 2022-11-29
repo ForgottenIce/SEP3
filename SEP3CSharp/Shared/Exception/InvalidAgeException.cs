@@ -1,6 +1,8 @@
-﻿namespace Shared.Exception;
+﻿using System.Data;
 
-public class InvalidAgeException : System.Exception
+namespace Shared.Exception;
+
+public class InvalidAgeException : ArgumentException
 {
     public InvalidAgeException() : base("Age is invalid")
     {
@@ -10,7 +12,6 @@ public class InvalidAgeException : System.Exception
     {
     }
 
-    public InvalidAgeException(string message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException)
-    {
+    public InvalidAgeException(string? message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException) {
     }
 }
