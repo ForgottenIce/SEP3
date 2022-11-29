@@ -17,7 +17,6 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthProvider>();
 builder.Services.AddScoped<IAuthService, JwtAuthService>();
 
 builder.Services.AddScoped<IPingService, PingService>();
-builder.Services.AddScoped<IPackageService, PackageService>();
 
 //Radzen Service
 builder.Services.AddScoped<DialogService>();

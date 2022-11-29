@@ -4,10 +4,9 @@
 @using global::Shared.Models
 @using HttpClients.ClientImplementations
 @using HttpClients.ClientInterfaces
-@inject IPackageService packageService
 
 
-<RadzenDataGrid PageSize="5" TItem="Package">
+<RadzenDataGrid PageSize="5" TItem="Package" Data="packages">
     
     <Columns>
         <RadzenDataGridColumn Width="100px" TItem="Package" Title="Order ID" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
@@ -31,20 +30,18 @@
 
 
 @code {
-    private List<Package> Packages;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            Packages = await packageService.GetAllAsync();
-            Console.WriteLine(Packages[0].Destination);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+    public class Package {
+        public int Id { get; set; }
+        public string Test { get; set; }
     }
+
+    private List<Package> packages = new List<Package>() {
+        new Package {Id = 1, Test = "Test1"},
+        new Package {Id = 2, Test = "Test2"},
+        new Package {Id = 3, Test = "Test3"},
+        new Package {Id = 4, Test = "Test4"},
+    };
+    
 
 }
