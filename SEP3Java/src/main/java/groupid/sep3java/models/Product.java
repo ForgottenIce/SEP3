@@ -9,6 +9,8 @@ import java.util.Objects;
 public class Product {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
 	public long Id;
+
+	public String name;
 	public String Description;
 	public double Price;
 
@@ -18,6 +20,14 @@ public class Product {
 	public Product( String description, double price) {
 		Description = description;
 		Price = price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public long getId() {
@@ -51,15 +61,16 @@ public class Product {
 			return false;
 		Product product = (Product) o;
 		return Id == product.Id && Double.compare(product.Price, Price) == 0
-				&& Objects.equals(Description, product.Description);
+				&& Objects.equals(name, product.name) && Objects.equals(Description,
+				product.Description);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(Id, Description, Price);
+		return Objects.hash(Id, name, Description, Price);
 	}
 
 	@Override public String toString() {
-		return "Product{" + "Id=" + Id + ", Description='" + Description + '\''
-				+ ", Price=" + Price + '}';
+		return "Product{" + "Id=" + Id + ", name='" + name + '\''
+				+ ", Description='" + Description + '\'' + ", Price=" + Price + '}';
 	}
 }
