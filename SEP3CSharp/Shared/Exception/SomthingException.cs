@@ -1,4 +1,4 @@
-﻿namespace BlazorClient.Shared.Exception;
+﻿namespace Shared.Exception;
 
 public class  SomthingException : ArgumentException {
     
