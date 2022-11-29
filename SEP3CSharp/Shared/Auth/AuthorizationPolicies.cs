@@ -6,13 +6,13 @@ public static class AuthorizationPolicies {
 	public static void AddPolicies(IServiceCollection services) {
 		services.AddAuthorizationCore(options => {
 			options.AddPolicy("MustBeManager",a => 
-				a.RequireAuthenticatedUser().RequireClaim("Role","Manager"));
+				a.RequireAuthenticatedUser().RequireRole("Manager"));
 			
 			options.AddPolicy("MustBeOfWarehouseTeam",a => 
-				a.RequireAuthenticatedUser().RequireClaim("Role", "Warehouse"));
+				a.RequireAuthenticatedUser().RequireRole("Warehouse"));
 			
 			options.AddPolicy("MustBeCashier",a => 
-				a.RequireAuthenticatedUser().RequireClaim("Role", "Cashier"));
+				a.RequireAuthenticatedUser().RequireRole("Cashier"));
 		});
 	}
 }

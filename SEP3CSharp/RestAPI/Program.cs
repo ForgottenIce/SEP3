@@ -1,6 +1,10 @@
 using System.Text;
+using Application.DaoInterfaces;
 using Application.Logic;
 using Application.LogicInterfaces;
+using EfcEmployeeDataAccess;
+using EfcEmployeeDataAccess.DAOs;
+using gRPC;
 using gRPC.ServiceImplementations;
 using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,9 +20,33 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ILoginService,LoginService>();
-builder.Services.AddScoped<IAuthLogic,AuthLogic>();
-builder.Services.AddScoped<IPackageLogic, PackageLogic>();
+builder.Services.AddDbContext<DataContext>();
+builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
+
+// gRPC dependencies
+AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+Uri grpcUri = new Uri("http://localhost:9090");
+builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
+builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
+builder.Services.AddGrpcClient<Ping.PingClient>(o => {
+    o.Address = grpcUri;
+});
+
+builder.Services.AddScoped<IPingService, PingService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+// Logic dependencies
+builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+builder.Services.AddScoped<IPingLogic, PingLogic>();
+builder.Services.AddScoped<IOrderLogic, OrderLogic>();
+builder.Services.AddScoped<IProductLogic, ProductLogic>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;

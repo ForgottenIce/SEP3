@@ -1,39 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Application.DaoInterfaces;
 using Application.LogicInterfaces;
-using gRPC.ServiceInterfaces;
-using Shared.Dtos;
 using Shared.Models;
 
 namespace Application.Logic;
 
 public class AuthLogic : IAuthLogic {
-    private readonly ILoginService _loginService;
+    private readonly IEmployeeDao _employeeDao;
 
-    public AuthLogic(ILoginService loginService) {
-        _loginService = loginService;
+    public AuthLogic(IEmployeeDao employeeDao) {
+        _employeeDao = employeeDao;
     }
 
-    public async Task<User> ValidateUser(string username, string password) { //TODO implement proper exceptions
-        User user = await _loginService.ValidateUserAsync(new UserLoginDto { Password = password, UserId = username });
-        return user;
-    }
-
-    public Task RegisterUser(User user) { //TODO implement proper exceptions
-        if (string.IsNullOrEmpty(user.UserId))
-        {
-            throw new ValidationException("Username cannot be null");
+    public async Task<Employee> ValidateEmployee(string username, string password) { //TODO implement proper exceptions
+        Employee? employee = await _employeeDao.GetByUsernameAsync(username);
+        if (employee == null) {
+            throw new Exception("User not found");
         }
 
-        if (string.IsNullOrEmpty(user.Password))
-        {
-            throw new ValidationException("Password cannot be null");
+        if (!employee.Password.Equals(password)) {
+            throw new Exception("Password mismatch");
         }
-        // Do more user info validation here
         
-        // save to persistence instead of list
-
-        _loginService.RegisterUser(new UserCreationDto { Password = user.Password, UserId = user.UserId });
-
-        return Task.CompletedTask;
-    }    
+        return employee;
+    }
 }

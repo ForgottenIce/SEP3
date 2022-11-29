@@ -1,18 +1,24 @@
-﻿using gRPC;
+﻿using Application.LogicInterfaces;
+using gRPC;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RestAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PingController : ControllerBase
-{
+public class PingController : ControllerBase {
+    private readonly IPingLogic _pingLogic;
+
+    public PingController(IPingLogic pingLogic) {
+        _pingLogic = pingLogic;
+    }
+
     [HttpGet]
     public async Task<ActionResult<long[]>> GetPingAsync()
     {
         try
         {
-            PingResponse created = await Class1.PingServerAsync();
+            PingResponse created = await _pingLogic.PingAsync();
             return Ok(new long[] { created.OriginDate, created.ReturnDate });
         }
 

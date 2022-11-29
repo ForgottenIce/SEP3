@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+option csharp_namespace = "gRPC";
+package grpc;
+
+message CreateCustomerRequest {
+  int64 id = 1;
+  string fullname = 2;
+  string phoneNo = 3;
+  string address = 5;
+  string mail = 6;
+}
+
+message CustomerResponse {
+  int64 id = 1;
+  string fullname = 2;
+  string phoneNo = 3;
+  string address = 5;
+  string mail = 6;
+}
+
+message GetCustomerRequest{
+  int64 id = 1;
+}
+
+message GetCustomersRequest{}
+
+message GetCustomersResponse{
+  repeated CustomerResponse customers = 1;
+}
+
+service CustomersGrpcService {
+  rpc CreateCustomer(CreateCustomerRequest) returns (CustomerResponse);
+  rpc GetCustomer(GetCustomerRequest) returns (CustomerResponse);
+  rpc GetCustomers(GetCustomersRequest) returns (GetCustomersResponse);
+}
