@@ -6,9 +6,11 @@ import groupid.sep3java.repositories.ProductRepository;
 import grpc.Product.*;
 import grpc.ProductGrpcServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
 
+@GrpcService
 public class ProductServiceImpl extends
 		ProductGrpcServiceGrpc.ProductGrpcServiceImplBase {
 	private final ProductRepository repository;
