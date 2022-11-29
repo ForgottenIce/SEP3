@@ -1,0 +1,24 @@
+﻿@page "/Cashier"
+
+@inject NavigationManager navigationManager
+<AuthorizeView>
+
+    <NotAuthorized>
+        <div class="d-flex flex-column mt-5 ">
+            <div class="d-flex justify-content-around">
+                <h3>
+                    ID:@* @context.User.Identity!.Name *@
+                </h3>
+                <h2>Cashier</h2>
+            </div>
+            <div class="d-flex justify-content-center mt-5">
+                <button type="button" class="btn btn-primary button mx-3" @*@onclick=SePakBestilling*@>Se bestilling</button>
+                <button type="button" class="btn btn-primary button mx-3" @*@onclick=OpretBestilling*@>Opret bestilling</button>
+
+            </div>
+        </div>
+    </NotAuthorized>
+    @code {
+    
+    }</AuthorizeView>
+ 
