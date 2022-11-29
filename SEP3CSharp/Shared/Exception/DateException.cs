@@ -15,8 +15,4 @@ public class DateException : NotSupportedException
     public DateException(string? message) : base(message)
     {
     }
-
-    public DateException(string? message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException)
-    {
-    }
 }

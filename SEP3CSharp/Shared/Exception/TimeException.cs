@@ -15,8 +15,4 @@ public class TimeException : NotSupportedException
     public TimeException(string? message) : base(message)
     {
     }
-
-    public TimeException(string? message, string? paramName, System.Exception? innerException) : base(message, paramName, innerException)  
-    {
-    }
 }
