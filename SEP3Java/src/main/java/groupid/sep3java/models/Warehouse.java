@@ -9,30 +9,30 @@ import java.util.Objects;
 @Entity
 public class Warehouse {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	private long Id;
-	private String Address;
+	private long id;
+	private String address;
 
 	public Warehouse() {
 	}
 
 	public Warehouse(String address) {
-		Address = address;
+		this.address = address;
 	}
 
 	public long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(long id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getAddress() {
-		return Address;
+		return address;
 	}
 
 	public void setAddress(String address) {
-		Address = address;
+		this.address = address;
 	}
 
 	@Override public boolean equals(Object o) {
@@ -41,14 +41,14 @@ public class Warehouse {
 		if (!(o instanceof Warehouse))
 			return false;
 		Warehouse warehouse = (Warehouse) o;
-		return Id == warehouse.Id && Objects.equals(Address, warehouse.Address);
+		return id == warehouse.id && Objects.equals(address, warehouse.address);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(Id, Address);
+		return Objects.hash(id, address);
 	}
 
 	@Override public String toString() {
-		return "Warehouse{" + "Id=" + Id + ", Address='" + Address + '\'' + '}';
+		return "Warehouse{" + "Id=" + id + ", Address='" + address + '\'' + '}';
 	}
 }
