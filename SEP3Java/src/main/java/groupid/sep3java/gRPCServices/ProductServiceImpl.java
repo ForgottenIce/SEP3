@@ -7,6 +7,8 @@ import grpc.Product.*;
 import grpc.ProductGrpcServiceGrpc;
 import io.grpc.stub.StreamObserver;
 
+import java.util.List;
+
 public class ProductServiceImpl extends
 		ProductGrpcServiceGrpc.ProductGrpcServiceImplBase {
 	private final ProductRepository repository;
@@ -27,7 +29,11 @@ public class ProductServiceImpl extends
 
 	@Override public void getProduct(GetProductRequest request,
 			StreamObserver<ProductResponse> responseObserver) {
-		super.getProduct(request, responseObserver);
+		Product product = repository.findById(request.getId())
+				.orElseThrow();
+		ProductResponse productResponse = GRPCProductFactory.createProductResponse(product);
+		responseObserver.onNext(productResponse);
+		responseObserver.onCompleted();
 	}
 
 	@Override public void getProducts(GetProductsRequest request,
