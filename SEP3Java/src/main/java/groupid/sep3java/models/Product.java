@@ -8,11 +8,11 @@ import java.util.Objects;
 @Entity
 public class Product {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long Id;
+	private long Id;
 
-	public String name;
-	public String Description;
-	public double Price;
+	private String name;
+	private String Description;
+	private double Price;
 
 	public Product() {
 	}

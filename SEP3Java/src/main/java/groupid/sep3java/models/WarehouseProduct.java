@@ -7,11 +7,11 @@ public class WarehouseProduct {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
 	public long productId;
 	@ManyToOne
-	public Warehouse warehouseID;
-	public int quantity;
-	public int minimumQuantity;
-	public String shelf;
-	public int shelfSection;
+	private Warehouse warehouseID;
+	private int quantity;
+	private int minimumQuantity;
+	private String shelf;
+	private int shelfSection;
 
 	public WarehouseProduct() {
 	}

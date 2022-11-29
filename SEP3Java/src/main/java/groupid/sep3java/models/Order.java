@@ -7,14 +7,14 @@ import java.util.Objects;
 @Entity(name = "orderPlaced")
 public class Order {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long id;
+	private long id;
 	@ManyToOne
-	public Customer customer;
+	private Customer customer;
 	@Temporal(TemporalType.DATE)
-	public Date dateTimeOrdered;
-	public boolean isPacked;
+	private Date dateTimeOrdered;
+	private boolean isPacked;
 	@Temporal(TemporalType.DATE)
-	public Date dateTimeSent;
+	private Date dateTimeSent;
 
 	public Order() {
 	}

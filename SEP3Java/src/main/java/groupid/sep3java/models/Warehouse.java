@@ -9,8 +9,8 @@ import java.util.Objects;
 @Entity
 public class Warehouse {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long Id;
-	public String Address;
+	private long Id;
+	private String Address;
 
 	public Warehouse() {
 	}
