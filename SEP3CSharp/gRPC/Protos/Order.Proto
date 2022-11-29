@@ -25,7 +25,7 @@ message GetOrderRequest {
 message GetOrdersRequest {}
 
 message GetOrdersResponse {
-  repeated OrderResponse products = 1;
+  repeated OrderResponse orders = 1;
 }
 
 service OrderGrpcService {
