@@ -16,6 +16,10 @@ public class ProductLogic : IProductLogic {
         return product;
     }
 
+    public Task<Product> GetProductByIdAsync(long id) {
+        throw new NotImplementedException();
+    }
+
     public async Task<IEnumerable<Product>> GetProductsAsync() {
         IEnumerable<Product> products = await productService.GetProductsAsync();
         return products;
