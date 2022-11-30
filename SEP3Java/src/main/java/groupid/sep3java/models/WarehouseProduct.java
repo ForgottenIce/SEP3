@@ -3,42 +3,33 @@ package groupid.sep3java.models;
 import javax.persistence.*;
 import java.util.Objects;
 @Entity
+@IdClass(WarehouseProductID.class)
 public class WarehouseProduct {
-	@Id @GeneratedValue(strategy = GenerationType.TABLE)
-	public long productId;
-	@ManyToOne
-	private Warehouse warehouseID;
+	@Id @ManyToOne
+	public Product productId;
+	@Id @ManyToOne
+	private Warehouse warehouseId;
 	private int quantity;
 	private int minimumQuantity;
-	private String shelf;
-	private int shelfSection;
+	private String warehousePosition;
 
 	public WarehouseProduct() {
 	}
 
-	public WarehouseProduct(Warehouse warehouseID, int quantity,
-			int minimumQuantity, String shelf, int shelfSection) {
-		this.warehouseID = warehouseID;
+	public WarehouseProduct(Warehouse warehouseId, int quantity,
+			int minimumQuantity, String warehousePosition) {
+		this.warehouseId = warehouseId;
 		this.quantity = quantity;
 		this.minimumQuantity = minimumQuantity;
-		this.shelf = shelf;
-		this.shelfSection = shelfSection;
+		this.warehousePosition = warehousePosition;
 	}
 
-	public long getProductId() {
-		return productId;
+	public Warehouse getWarehouseId() {
+		return warehouseId;
 	}
 
-	public void setProductId(long productId) {
-		this.productId = productId;
-	}
-
-	public Warehouse getWarehouseID() {
-		return warehouseID;
-	}
-
-	public void setWarehouseID(Warehouse warehouseID) {
-		this.warehouseID = warehouseID;
+	public void setWarehouseId(Warehouse warehouseID) {
+		this.warehouseId = warehouseID;
 	}
 
 	public int getQuantity() {
@@ -57,20 +48,12 @@ public class WarehouseProduct {
 		this.minimumQuantity = minimumQuantity;
 	}
 
-	public String getShelf() {
-		return shelf;
+	public String getWarehousePosition() {
+		return warehousePosition;
 	}
 
-	public void setShelf(String shelf) {
-		this.shelf = shelf;
-	}
-
-	public int getShelfSection() {
-		return shelfSection;
-	}
-
-	public void setShelfSection(int shelfSection) {
-		this.shelfSection = shelfSection;
+	public void setWarehousePosition(String shelf) {
+		this.warehousePosition = shelf;
 	}
 
 	@Override public boolean equals(Object o) {
@@ -79,21 +62,20 @@ public class WarehouseProduct {
 		if (!(o instanceof WarehouseProduct))
 			return false;
 		WarehouseProduct that = (WarehouseProduct) o;
-		return productId == that.productId && quantity == that.quantity
+		return quantity == that.quantity
 				&& minimumQuantity == that.minimumQuantity
-				&& shelfSection == that.shelfSection && Objects.equals(warehouseID,
-				that.warehouseID) && Objects.equals(shelf, that.shelf);
+				&& Objects.equals(warehouseId, that.warehouseId)
+				&& Objects.equals(warehousePosition, that.warehousePosition);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(productId, warehouseID, quantity, minimumQuantity,
-				shelf, shelfSection);
+		return Objects.hash(warehouseId, quantity, minimumQuantity,
+				warehousePosition);
 	}
 
 	@Override public String toString() {
-		return "WarehouseProduct{" + "productId=" + productId + ", warehouseID="
-				+ warehouseID + ", quantity=" + quantity + ", minimumQuantity="
-				+ minimumQuantity + ", shelf='" + shelf + '\'' + ", shelfSection="
-				+ shelfSection + '}';
+		return "WarehouseProduct{" + "warehouseID="
+				+ warehouseId + ", quantity=" + quantity + ", minimumQuantity="
+				+ minimumQuantity + ", shelf='" + warehousePosition + '}';
 	}
 }
