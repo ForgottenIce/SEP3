@@ -23,6 +23,10 @@
         <RadzenDataGridColumn TItem="Order" Property="Condition" Title="Stand"/>
         <RadzenDataGridColumn TItem="Order" Property="ItmePosition" Title="Vare position"/>
 
+
+        <FooterTemplate>
+            Total amount: <b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}")</b>
+        </FooterTemplate>
     </Columns>
 </RadzenDataGrid>
 
@@ -46,34 +50,25 @@
 
         </div>
         <!--Grid column-->
-        
+
         <!--Grid column-->
         <div class="col-3">
-            <h6 class="text-uppercase">Returvare</h6>
 
-            <p>
-                55555
-            </p>
-        </div>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Returnable products</RadzenText>
+            <RadzenTextBox Disabled="true" Class="w-100"/>
 
-        <div class="col-3">
-            <h6 class="text-uppercase">cansel</h6>
-
-            <p>
-                NOPE
-            </p>
         </div>
 
         <div class="col-3">
             <div class="row mb-4">
-                           <div class="col">
-                               <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
-           
-                               <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
-                           </div>
-                       </div>
-                   </div>
-                   <style>
+                <div class="col">
+                    <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Busy Indicator</RadzenText>
+
+                    <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Save"/>
+                </div>
+            </div>
+        </div>
+        <style>
                            .button-demo .rz-button {
                                margin: 0 0.5rem 1rem 0;
                            }
@@ -81,25 +76,24 @@
                                margin-bottom: 1rem;
                            }
                        </style>
-        </div>
-
-
-        <!--Grid column-->
     </div>
-    <!--Grid row-->
+
+
+    <!--Grid column-->
+</div>
+<!--Grid row-->
 
 
 @code {
-    
+
     // btn logic 
 
     bool busy;
-    
+
 
     void OnClick(string buttonName)
     {
     }
-    
 
     async Task OnBusyClick()
     {
@@ -107,6 +101,10 @@
         await Task.Delay(2000);
         busy = false;
     }
+    // total counter
+
+
+
     string emptyText = "No Items to display!";
 
 
@@ -118,6 +116,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        orders.Count();
     }
 
     public class Order
@@ -138,8 +137,6 @@
         }
 
         List<Order> orders;
-
-        Order order = new Order("25565", "5", "5", "good", "B52-D7");
 
         public List<Order> Orders
         {
