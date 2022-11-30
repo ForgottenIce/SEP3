@@ -5,12 +5,16 @@ package grpc;
 
 message WarehouseProductResponse
 {
-
-  int64 ProductId = 1;
-  int64 WarehouseId = 2;
-  int32 Quantity = 3;
-  int32 minimumQuantity = 4;
-  string WarehousePosition = 5;
+  int64 productId = 1;
+  string productName = 2;
+  string description = 3;
+  double price = 4;
+  int64 warehouseId = 5;
+  string warehouseName = 6;
+  string address = 7;
+  int32 quantity = 8;
+  int32 minimumQuantity = 9;
+  string WarehousePosition = 10;
 }
 
 message CreateWarehouseProductRequest {
