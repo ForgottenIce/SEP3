@@ -36,7 +36,7 @@ message GetWarehouseProductsResponse
 service WarehouseProductGrpcService{
   rpc CreateWarehouseProduct(CreateWarehouseProductRequest) returns (WarehouseProductResponse);
   rpc GetWarehouseProduct(GetWarehouseProductRequest) returns (WarehouseProductResponse);
-  rpc GetProducts(GetWarehouseProductsRequest) returns (GetWarehouseProductsResponse);
+  rpc GetWarehouseProducts(GetWarehouseProductsRequest) returns (GetWarehouseProductsResponse);
   
 
 }

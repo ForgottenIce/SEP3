@@ -29,10 +29,10 @@ message GetWarehousesResponse
 
 
 
-service WarehouseProductGrpcService{
-  rpc CreateWarehouseProduct(CreateWarehouseRequest) returns (WarehouseResponse);
-  rpc GetWarehouseProduct(GetWarehouseRequest) returns (WarehouseResponse);
-  rpc GetProducts(GetWarehousesRequest) returns (GetWarehousesResponse);
+service WarehouseGrpcService{
+  rpc CreateWarehouse(CreateWarehouseRequest) returns (WarehouseResponse);
+  rpc GetWarehouse(GetWarehouseRequest) returns (WarehouseResponse);
+  rpc GetWarehouses(GetWarehousesRequest) returns (GetWarehousesResponse);
 
 
 }
