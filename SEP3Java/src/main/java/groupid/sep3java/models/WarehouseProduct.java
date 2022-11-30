@@ -16,20 +16,29 @@ public class WarehouseProduct {
 	public WarehouseProduct() {
 	}
 
-	public WarehouseProduct(Warehouse warehouseId, int quantity,
+	public WarehouseProduct(Product productId, Warehouse warehouseId, int quantity,
 			int minimumQuantity, String warehousePosition) {
+		this.productId = productId;
 		this.warehouseId = warehouseId;
 		this.quantity = quantity;
 		this.minimumQuantity = minimumQuantity;
 		this.warehousePosition = warehousePosition;
 	}
 
+	public Product getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Product productId) {
+		this.productId = productId;
+	}
+
 	public Warehouse getWarehouseId() {
 		return warehouseId;
 	}
 
-	public void setWarehouseId(Warehouse warehouseID) {
-		this.warehouseId = warehouseID;
+	public void setWarehouseId(Warehouse warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 
 	public int getQuantity() {
