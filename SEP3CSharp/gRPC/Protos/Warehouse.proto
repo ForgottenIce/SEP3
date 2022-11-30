@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+option csharp_namespace = "gRPC";
+
+package grpc;
+
+message WarehouseResponse
+{
+  int64 WarehouseId = 1;
+  string name = 2;
+  string address = 3;
+}
+
+message CreateWarehouseRequest {
+  string name = 1;
+  string address =2;
+}
+
+message GetWarehouseRequest
+{
+  int64 WarehouseId = 1;
+}
+message GetWarehousesRequest {}
+
+message GetWarehousesResponse
+{
+  repeated WarehouseResponse warehouses = 1;
+}
+
+
+
+
+service WarehouseProductGrpcService{
+  rpc CreateWarehouseProduct(CreateWarehouseRequest) returns (WarehouseResponse);
+  rpc GetWarehouseProduct(GetWarehouseRequest) returns (WarehouseResponse);
+  rpc GetProducts(GetWarehousesRequest) returns (GetWarehousesResponse);
+
+
+}
