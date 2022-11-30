@@ -6,16 +6,16 @@ message CreateCustomerRequest {
   int64 id = 1;
   string fullname = 2;
   string phoneNo = 3;
-  string address = 5;
-  string mail = 6;
+  string address = 4;
+  string mail = 5;
 }
 
 message CustomerResponse {
   int64 id = 1;
   string fullname = 2;
   string phoneNo = 3;
-  string address = 5;
-  string mail = 6;
+  string address = 4;
+  string mail = 5;
 }
 
 message GetCustomerRequest{
