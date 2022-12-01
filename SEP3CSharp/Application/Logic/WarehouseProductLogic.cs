@@ -8,9 +8,9 @@ public class WarehouseProductLogic : IWarehouseProductLogic
 {
     private readonly IWarehouseProductService _warehouseProductService;
 
-    public WarehouseProductLogic(IWarehouseProductServise warehouseProductServise)
+    public WarehouseProductLogic(IWarehouseProductService warehouseProductService)
     {
-        this._warehouseProductService = warehouseProductServise;
+        this._warehouseProductService = warehouseProductService;
     }
 
     public Task<WarehouseProduct> GetWarehouseProductByIdAsync(long id)
@@ -18,11 +18,8 @@ public class WarehouseProductLogic : IWarehouseProductLogic
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductAsync()
+    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsAsync()
     {
         throw new NotImplementedException();
     }
-}
-{
-    
 }
