@@ -1,5 +1,6 @@
 ﻿using Application.LogicInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace RestAPI.Controllers;
@@ -19,7 +20,11 @@ public class WarehouseController : ControllerBase {
             IEnumerable<Warehouse> warehouses = await _warehouseLogic.GetWarehousesAsync();
             return Ok(warehouses);
         }
-        catch(Exception e) {
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
@@ -30,6 +35,14 @@ public class WarehouseController : ControllerBase {
         try {
             Warehouse warehouse = await _warehouseLogic.GetWarehouseByIdAsync(id);
             return Ok(warehouse);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
         }
         catch (Exception e) {
             Console.WriteLine(e);
