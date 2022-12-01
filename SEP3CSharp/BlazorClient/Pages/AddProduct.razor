@@ -9,7 +9,9 @@
 <div class="container p-4">
     <div class="row">
         <div class="col-3">
-            <h6 class="text-uppercase">ID</h6>
+            <label style="color: Black">
+                ID @currentUser
+            </label>
         </div>
         <div class="col-3">
             <h6 class="text-uppercase">Tilføj produkt</h6>
@@ -24,40 +26,39 @@
 </style>
 
 
-
 <RadzenFieldset Text="Opret nyt produkt">
-<div class="row">
-    <div class="align-items-center d-flex col-md-3">
-        <RadzenLabel Text="Name"/>
-    </div>
-    <div class="col-4">
-        <RadzenTextBox Placeholder="Name" style="width: 50%;" @bind-Value="ProductName"/>
-    </div>
-</div>
-
-<div class="row" style="margin-top: 20px">
-    <div class="align-items-center d-flex col-md-3">
-        <RadzenLabel Text="Description"/>
-    </div>
-    <div class="col-4">
-            <RadzenTextArea Placeholder="Description" style="width: 100%;" @bind-Value="ProductDescription" />
-    </div>
-</div>
-<div class="row" style="margin-top: 20px">
-            <div class="align-items-center d-flex col-md-3">
-                <RadzenLabel Text="Price"/>
-            </div>
-            <div class="col-4">
-            <RadzenNumeric ShowUpDown="false" TValue="double" Class="w-50" @bind-Value="ProductPrice" />
-            </div>
+    <div class="row">
+        <div class="align-items-center d-flex col-md-3">
+            <RadzenLabel Text="Name"/>
         </div>
-<div class="row mb-4">
-    <div class="col">
-        <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addProductIsbusy Click=@CreateProduct Text="Save"/>
+        <div class="col-4">
+            <RadzenTextBox Placeholder="Name" style="width: 50%;" @bind-Value="ProductName"/>
+        </div>
     </div>
-</div>
 
-<style>
+    <div class="row" style="margin-top: 20px">
+        <div class="align-items-center d-flex col-md-3">
+            <RadzenLabel Text="Description"/>
+        </div>
+        <div class="col-4">
+            <RadzenTextArea Placeholder="Description" style="width: 100%;" @bind-Value="ProductDescription"/>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px">
+        <div class="align-items-center d-flex col-md-3">
+            <RadzenLabel Text="Price"/>
+        </div>
+        <div class="col-4">
+            <RadzenNumeric ShowUpDown="false" TValue="double" Class="w-50" @bind-Value="ProductPrice"/>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col">
+            <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addProductIsbusy Click=@CreateProduct Text="Save"/>
+        </div>
+    </div>
+
+    <style>
                 .button-demo .rz-button {
                     margin: 0 0.5rem 1rem 0;
                 }
@@ -112,6 +113,9 @@
 
 
 @code{
+    
+    //Label
+    String currentUser ="420" ;
 
     bool addProductIsbusy = false;
 
@@ -119,10 +123,11 @@
     string ProductDescription { get; set; }
     double ProductPrice { get; set; }
 
-    async Task CreateProduct() {
+    async Task CreateProduct()
+    {
         addProductIsbusy = true;
         await productService.CreateProductAsync(new ProductCreationDto(ProductName, ProductDescription, ProductPrice));
         navMgr.NavigateTo("/");
-
     }
+
 }
