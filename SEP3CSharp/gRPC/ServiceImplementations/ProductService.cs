@@ -45,7 +45,8 @@ public class ProductService : IProductService {
         GetProductsResponse reply = await _serviceClient.GetProductsAsync(new GetProductsRequest());
 
         List<Product> products = new();
-        foreach (ProductResponse pr in reply.Products) {
+        foreach (ProductResponse pr in reply.Products) 
+        {
             products.Add(new Product() {
                 Id = pr.Id,
                 Name = pr.Name,
