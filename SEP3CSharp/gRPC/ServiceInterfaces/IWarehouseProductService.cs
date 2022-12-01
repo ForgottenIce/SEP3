@@ -5,6 +5,6 @@ namespace gRPC.ServiceInterfaces;
 
 public interface IWarehouseProductService
 {
-    Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductDto dto);
+    Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductCreationDto dto);
     Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsAsync();
 }   
