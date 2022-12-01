@@ -1,6 +1,6 @@
 ﻿namespace Shared.Dtos;
 
-public class WarehouseProductDto
+public class WarehouseProductCreationDto
 {
     public long ProductId { get;}
     public long WarehouseId { get;}
@@ -8,7 +8,7 @@ public class WarehouseProductDto
     public int MinimumQuantity { get;}
     public string WarehousePosition { get;}
 
-    public WarehouseProductDto(long productId, long warehouseId, int quantity, int minimumQuantity, string warehousePosition)
+    public WarehouseProductCreationDto(long productId, long warehouseId, int quantity, int minimumQuantity, string warehousePosition)
     {
         ProductId = productId;
         WarehouseId = warehouseId;
