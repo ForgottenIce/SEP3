@@ -8,7 +8,7 @@ public class WarehouseProductLogic : IWarehouseProductLogic
 {
     private readonly IWarehouseProductService _warehouseProductService;
 
-    public WarehouseProductLogic(IWarehouseProductServise warehouseProductServise)
+    public WarehouseProductLogic(IWarehouseProductService warehouseProductServise)
     {
         this._warehouseProductService = warehouseProductServise;
     }
@@ -22,7 +22,4 @@ public class WarehouseProductLogic : IWarehouseProductLogic
     {
         throw new NotImplementedException();
     }
-}
-{
-    
 }
