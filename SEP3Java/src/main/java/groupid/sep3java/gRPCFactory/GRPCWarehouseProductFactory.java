@@ -23,7 +23,10 @@ public class GRPCWarehouseProductFactory {
 		Product product = warehouseProduct.getProductId();
 		Warehouse warehouse = warehouseProduct.getWarehouseId();
 		WarehouseProductResponse warehouseProductResponse = WarehouseProductResponse.newBuilder()
-				.setProductId(product.getId()).setWarehouseId(warehouse.getId())
+				.setProductId(product.getId()).setProductName(product.getName())
+				.setDescription(product.getDescription()).setPrice(product.getPrice())
+				.setWarehouseId(warehouse.getId()).setWarehouseName(warehouse.getName())
+				.setAddress(warehouse.getAddress()).setQuantity(warehouseProduct.getQuantity())
 				.setMinimumQuantity(warehouseProduct.getMinimumQuantity())
 				.setWarehousePosition(warehouseProduct.getWarehousePosition()).build();
 
