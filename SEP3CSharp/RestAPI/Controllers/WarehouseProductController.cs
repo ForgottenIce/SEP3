@@ -1,12 +1,8 @@
-﻿using Application.Logic;
-using Application.LogicInterfaces;
+﻿using Application.LogicInterfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Dtos;
 using Shared.Models;
 
-
 namespace RestAPI.Controllers;
-
 
 [ApiController]
 [Route("[controller]")]
@@ -24,7 +20,7 @@ public class WarehouseProductController : ControllerBase
     public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetAllAsync() {
         try
         {
-            IEnumerable<WarehouseProduct> warehouseProducts = await ;
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductAsync();
             return Ok(warehouseProducts);
         }
         catch (Exception e)
@@ -40,14 +36,14 @@ public class WarehouseProductController : ControllerBase
     public async Task<ActionResult<WarehouseProduct>> GetWarehouseProductByIdAsync([FromRoute] long id) {
         try
         {
-            WarehouseProduct warehouseProduct = await _warehouseProductLogic.GetWarehouseProductAsync(id);
+            WarehouseProduct warehouseProduct = await _warehouseProductLogic.GetWarehouseProductByIdAsync(id);
             return Ok(warehouseProduct);
 
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return StatusCodes(500, e.Message);
+            return StatusCode(500, e.Message);
         }
         
     }

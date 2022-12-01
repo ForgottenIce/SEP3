@@ -5,5 +5,5 @@ namespace Application.LogicInterfaces;
 public interface IWarehouseProductLogic
 {
  Task<IEnumerable<WarehouseProduct>> GetWarehouseProductAsync();
- Task<WarehouseProduct> GetWarehouseByIdAsync(long id);
+ Task<WarehouseProduct> GetWarehouseProductByIdAsync(long id);
 }

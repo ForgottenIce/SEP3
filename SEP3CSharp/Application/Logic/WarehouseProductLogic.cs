@@ -22,4 +22,9 @@ public class WarehouseProductLogic : IWarehouseProductLogic
     {
         throw new NotImplementedException();
     }
+
+    public Task<WarehouseProduct> GetWarehouseByIdAsync(long id)
+    {
+        throw new NotImplementedException();
+    }
 }
