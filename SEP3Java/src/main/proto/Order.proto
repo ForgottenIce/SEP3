@@ -3,7 +3,6 @@ option csharp_namespace = "gRPC";
 package grpc;
 
 message CreateOrderRequest {
-  int64 id = 1;
   int64 customerId = 2;
   int64 dateTimeOrdered = 3;
   bool isPacked = 4;
