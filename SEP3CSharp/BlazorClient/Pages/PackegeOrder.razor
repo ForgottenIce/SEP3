@@ -2,7 +2,9 @@
 @using Radzen
 
 <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H1" Class="my-4">
-    <text>Ordre ID</text>
+    <label>
+        Order ID @CurrentOrderID
+    </label>
 </RadzenText>
 
 
@@ -41,6 +43,8 @@
 
 @code 
 {
+    String CurrentOrderID = "420";
+    
     List<Order> data = new List<Order>();
 
     class Order
