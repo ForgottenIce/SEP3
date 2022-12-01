@@ -1,11 +1,13 @@
 package groupid.sep3java.gRPCServices;
 
+import groupid.sep3java.exceptions.NotFoundException;
 import groupid.sep3java.gRPCFactory.GRPCWarehouseFactory;
 import groupid.sep3java.repositories.WarehouseRepository;
 import grpc.Warehouse.*;
 import groupid.sep3java.models.Warehouse;
 import grpc.WarehouseGrpcServiceGrpc;
 import io.grpc.Metadata;
+import io.grpc.Status;
 import io.grpc.protobuf.ProtoUtils;
 import io.grpc.reflection.v1alpha.ErrorResponse;
 import io.grpc.stub.StreamObserver;
@@ -34,24 +36,21 @@ public class WarehouseServiceImpl extends WarehouseGrpcServiceGrpc.WarehouseGrpc
         responseObserver.onCompleted();
     }
 
-
-
-
     @Override
     public void getWarehouse(GetWarehouseRequest request, StreamObserver<WarehouseResponse> responseObserver) {
     try {
         Warehouse warehouse = repository.findById(request.getWarehouseId())
-                .orElseThrow(() -> new RuntimeException("Warehouse with WarehouseId:" + request.getWarehouseId() + "was not found"));
+                .orElseThrow(() -> new NotFoundException("Warehouse with WarehouseId:" + request.getWarehouseId() + "was not found"));
         WarehouseResponse warehouseResponse = GRPCWarehouseFactory.createWarehouseResponse(warehouse);
         responseObserver.onNext(warehouseResponse);
         responseObserver.onCompleted();
     }
-    catch (RuntimeException e) {
+    catch (NotFoundException e) {
         Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
         ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
         Metadata metadata = new Metadata();
         metadata.put(errorResponseKey, errorResponse);
-        responseObserver.onError(io.grpc.Status.INVALID_ARGUMENT.withDescription("Warehouse was not found")
+        responseObserver.onError(Status.NOT_FOUND.withDescription("Warehouse was not found")
                 .asRuntimeException(metadata));
     }
 }

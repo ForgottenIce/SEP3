@@ -3,7 +3,6 @@ option csharp_namespace = "gRPC";
 package grpc;
 
 message CreateCustomerRequest {
-  int64 id = 1;
   string fullname = 2;
   string phoneNo = 3;
   string address = 4;
