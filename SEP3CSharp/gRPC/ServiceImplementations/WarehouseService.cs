@@ -26,7 +26,7 @@ public class WarehouseService : IWarehouseService {
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            if (e.StatusCode == StatusCode.InvalidArgument) { // TODO: Change to NotFound later
+            if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
             throw e;
@@ -52,7 +52,7 @@ public class WarehouseService : IWarehouseService {
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            if (e.StatusCode == StatusCode.InvalidArgument) { // TODO: Change to NotFound later
+            if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
             throw e;
