@@ -17,9 +17,9 @@ import java.util.List;
 
 @GrpcService
 public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImplBase {
-	private WarehouseProductRepository warehouseProductRepository;
-	private ProductRepository productRepository;
-	private WarehouseRepository warehouseRepository;
+	private final WarehouseProductRepository warehouseProductRepository;
+	private final ProductRepository productRepository;
+	private final WarehouseRepository warehouseRepository;
 
 	public WarehouseProductServiceImpl(
 			WarehouseProductRepository warehouseProductRepository,
