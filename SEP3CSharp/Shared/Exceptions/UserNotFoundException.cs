@@ -1,4 +1,4 @@
-﻿namespace Shared.Exception;
+﻿namespace Shared.Exceptions;
 
 public class UserNotFoundException: ArgumentException {
     

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Shared.Exception;
+namespace Shared.Exceptions;
 
 public class InvalidAgeException : ArgumentException
 {

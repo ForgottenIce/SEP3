@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Shared.Exception;
+namespace Shared.Exceptions;
 
 public class DateException : NotSupportedException
 {
