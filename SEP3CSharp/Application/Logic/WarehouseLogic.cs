@@ -12,17 +12,12 @@ public class WarehouseLogic : IWarehouseLogic {
     }
 
     public async Task<Warehouse> GetWarehouseByIdAsync(long id) {
-        try {
-            Warehouse warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
-            return warehouse;
-        }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            throw new NotFoundException(new Warehouse());
-        }
+        Warehouse warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
+        return warehouse;
     }
 
-    public Task<IEnumerable<Warehouse>> GetWarehousesAsync() {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<Warehouse>> GetWarehousesAsync() {
+        IEnumerable<Warehouse> warehouses = await _warehouseService.GetWarehousesAsync();
+        return warehouses;
     }
 }
