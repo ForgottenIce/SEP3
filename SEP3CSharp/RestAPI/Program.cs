@@ -51,6 +51,7 @@ builder.Services.AddScoped<IAuthLogic, AuthLogic>();
 builder.Services.AddScoped<IPingLogic, PingLogic>();
 builder.Services.AddScoped<IOrderLogic, OrderLogic>();
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
+builder.Services.AddScoped<IWarehouseLogic, WarehouseLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

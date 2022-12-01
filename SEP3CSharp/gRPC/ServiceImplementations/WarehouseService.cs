@@ -9,8 +9,15 @@ public class WarehouseService : IWarehouseService {
         _serviceClient = serviceClient;
     }
 
-    public Task<Warehouse> GetWarehouseByIdAsync(long id) {
-        throw new NotImplementedException();
+    public async Task<Warehouse> GetWarehouseByIdAsync(long id) {
+        WarehouseResponse reply = await _serviceClient.GetWarehouseAsync(new GetWarehouseRequest { WarehouseId = id });
+
+        Warehouse warehouse = new Warehouse {
+            Id = reply.WarehouseId,
+            Address = reply.Address,
+            Name = reply.Name
+        };
+        return warehouse;
     }
 
     public Task<IEnumerable<Warehouse>> GetWarehousesAsync() {
