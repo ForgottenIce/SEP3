@@ -1,6 +1,5 @@
 package groupid.sep3java.gRPCServices;
 
-import groupid.sep3java.gRPCFactory.GRPCProductFactory;
 import groupid.sep3java.gRPCFactory.GRPCWarehouseProductFactory;
 import groupid.sep3java.models.*;
 import groupid.sep3java.repositories.ProductRepository;
@@ -17,12 +16,12 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import java.util.List;
 
 @GrpcService
-public class WarehouseProductImpl extends WarehouseProductGrpcServiceImplBase {
+public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImplBase {
 	private WarehouseProductRepository warehouseProductRepository;
 	private ProductRepository productRepository;
 	private WarehouseRepository warehouseRepository;
 
-	public WarehouseProductImpl(
+	public WarehouseProductServiceImpl(
 			WarehouseProductRepository warehouseProductRepository,
 			ProductRepository productRepository,
 			WarehouseRepository warehouseRepository) {
