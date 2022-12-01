@@ -34,8 +34,8 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 			CreateWarehouseProductRequest request,
 			StreamObserver<WarehouseProductResponse> responseObserver) {
 		try {
-			Product product = productRepository.findById(request.getProductId()).orElseThrow();
-			Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow();
+			Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new RuntimeException("product with id:" + request.getProductId() + "was not found"));
+			Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new RuntimeException("Warehouse with WarehouseId:" + request.getWarehouseId() + "was not found"));
 
 			WarehouseProduct warehouseProductToSave = GRPCWarehouseProductFactory.create(request,product,warehouse);
 			WarehouseProduct newProduct = warehouseProductRepository.save(warehouseProductToSave);
@@ -71,7 +71,7 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
-			responseObserver.onError(io.grpc.Status.INVALID_ARGUMENT.withDescription("Product was not found")
+			responseObserver.onError(io.grpc.Status.INVALID_ARGUMENT.withDescription("Warehouse or Product could not be found")
 					.asRuntimeException(metadata));
 		}
 	}
