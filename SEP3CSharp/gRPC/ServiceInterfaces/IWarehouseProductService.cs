@@ -1,7 +1,7 @@
 ﻿using Shared.Dtos;
 using Shared.Models;
 
-namespace HttpClients.ClientIntefaces;
+namespace gRPC.ServiceInterfaces;
 
 public interface IWarehouseProductService
 {
