@@ -1,11 +1,14 @@
 package groupid.sep3java.gRPCServices;
 
+import groupid.sep3java.exceptions.AlreadyExistsException;
+import groupid.sep3java.exceptions.NotFoundException;
 import groupid.sep3java.gRPCFactory.GRPCProductFactory;
 import groupid.sep3java.models.Product;
 import groupid.sep3java.repositories.ProductRepository;
 import grpc.Product.*;
 import grpc.ProductGrpcServiceGrpc;
 import io.grpc.Metadata;
+import io.grpc.Status;
 import io.grpc.protobuf.ProtoUtils;
 import io.grpc.reflection.v1alpha.ErrorResponse;
 import io.grpc.stub.StreamObserver;
@@ -36,17 +39,17 @@ public class ProductServiceImpl extends
 			StreamObserver<ProductResponse> responseObserver) {
 		try {
 			Product product = repository.findById(request.getId())
-					.orElseThrow(() -> new RuntimeException("product with id:" + request.getId() + "was not found"));
+					.orElseThrow(() -> new NotFoundException("product with id:" + request.getId() + "was not found"));
 			ProductResponse productResponse = GRPCProductFactory.createProductResponse(product);
 			responseObserver.onNext(productResponse);
 			responseObserver.onCompleted();
 		}
-		catch (RuntimeException e) {
+		catch (NotFoundException e) {
 			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
 			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
-			responseObserver.onError(io.grpc.Status.INVALID_ARGUMENT.withDescription("Product was not found")
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Product was not found")
 					.asRuntimeException(metadata));
 		}
 	}

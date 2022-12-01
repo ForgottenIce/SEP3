@@ -1,11 +1,14 @@
 package groupid.sep3java.gRPCServices;
 
+import groupid.sep3java.exceptions.AlreadyExistsException;
+import groupid.sep3java.exceptions.NotFoundException;
 import groupid.sep3java.gRPCFactory.GRPCCustomerFactory;
 import groupid.sep3java.models.Customer;
 import groupid.sep3java.repositories.CustomerRepository;
 import grpc.Customer.*;
 import grpc.CustomersGrpcServiceGrpc.*;
 import io.grpc.Metadata;
+import io.grpc.Status;
 import io.grpc.protobuf.ProtoUtils;
 import io.grpc.reflection.v1alpha.ErrorResponse;
 import io.grpc.stub.StreamObserver;
@@ -34,17 +37,17 @@ public class CustomerServiceImpl extends CustomersGrpcServiceImplBase {
 	@Override public void getCustomer(GetCustomerRequest request,
 			StreamObserver<CustomerResponse> responseObserver) {
 		try {
-			Customer customer = repository.findById(request.getId()).orElseThrow(() -> new RuntimeException("Customer with id:" + request.getId() + "was not found"));
+			Customer customer = repository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Customer with id:" + request.getId() + "was not found"));
 			CustomerResponse response = GRPCCustomerFactory.createCustomerResponse(customer);
 			responseObserver.onNext(response);
 			responseObserver.onCompleted();
 		}
-		catch (RuntimeException e) {
+		catch (NotFoundException e) {
 			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
 			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
-			responseObserver.onError(io.grpc.Status.INVALID_ARGUMENT.withDescription("Customer was not found")
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Customer was not found")
 					.asRuntimeException(metadata));
 		}
 	}
