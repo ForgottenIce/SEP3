@@ -20,8 +20,10 @@
         <div class="col-3">
 
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to add</RadzenText>
-            <RadzenNumeric ShowUpDown="false" TValue="int" Change=@(args => OnChange(args, "Numeric")) Class="w-100"/>
-        </div>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Nullable numeric</RadzenText>
+            <RadzenNumeric TValue="int?" @bind-Value=@value Placeholder="Enter or clear value" Change=@(args => OnChange(args.Value, "Amount")) Class="w-100"@bind="amount">
+            </RadzenNumeric>
+            </div>
        
 
     </div>
@@ -35,8 +37,7 @@
 
 
 @code {
-    
-    
+    int amount { get; set; }
     // btn logic 
 
     bool busy;
@@ -44,38 +45,48 @@
     void OnClick(string buttonName)
     {
     }
-
-
     async Task OnBusyClick()
     {
         busy = true;
         await Task.Delay(2000);
         busy = false;
     }
-
-
     private void OnChange(string args, string textboxWithPlaceholder)
     {
         throw new NotImplementedException();
     }
-
     private int value;
-
     private void OnChange(int args, string textboxWithPlaceholder)
     {
         throw new NotImplementedException();
     }
-
     public class Item
     {
         string itemNumber;
-
         public Item(string itemNumber)
         {
             this.itemNumber = itemNumber;
         }
     }
+    
+    
+    public bool validateNumber()
+    {
+        if (amount<=0)
+        {
+            return true;
+        }
+        return false;
+    }
 
-
-
+    public void CreateWhenVaili()
+    {
+        if (validateNumber().Equals(true))
+        {
+            //add to order list 
+        }
+    }
+    
+    
+    
 }
