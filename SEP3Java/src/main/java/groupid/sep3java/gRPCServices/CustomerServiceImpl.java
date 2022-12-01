@@ -1,6 +1,5 @@
 package groupid.sep3java.gRPCServices;
 
-import groupid.sep3java.exceptions.AlreadyExistsException;
 import groupid.sep3java.exceptions.NotFoundException;
 import groupid.sep3java.gRPCFactory.GRPCCustomerFactory;
 import groupid.sep3java.models.Customer;
