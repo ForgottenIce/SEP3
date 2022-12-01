@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
 
-// gRPC dependencies
+// gRPC Service Clients
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 Uri grpcUri = new Uri("http://localhost:9090");
@@ -33,13 +33,18 @@ builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o =>
 builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
+builder.Services.AddGrpcClient<WarehouseGrpcService.WarehouseGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
 
+// gRPC Services
 builder.Services.AddScoped<IPingService, PingService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
