@@ -2,6 +2,6 @@
 
 namespace gRPC.ServiceInterfaces;
 public interface IWarehouseService {
-    Task<IEnumerable<Warehouse>> GetWarehousesAsync();
-    Task<Warehouse> GetWarehouseByIdAsync(long id);
+    Task <IEnumerable<Warehouse>> GetWarehousesAsync();
+    Task <Warehouse> GetWarehouseByIdAsync(long id);
 }
