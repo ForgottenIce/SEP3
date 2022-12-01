@@ -1,7 +1,6 @@
 package groupid.sep3java.gRPCFactory;
 
 import groupid.sep3java.models.Warehouse;
-import grpc.Product;
 import grpc.Warehouse.*;
 
 import java.util.List;
