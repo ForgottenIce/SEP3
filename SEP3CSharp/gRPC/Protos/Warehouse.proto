@@ -26,13 +26,8 @@ message GetWarehousesResponse
   repeated WarehouseResponse warehouses = 1;
 }
 
-
-
-
 service WarehouseGrpcService{
   rpc CreateWarehouse(CreateWarehouseRequest) returns (WarehouseResponse);
   rpc GetWarehouse(GetWarehouseRequest) returns (WarehouseResponse);
   rpc GetWarehouses(GetWarehousesRequest) returns (GetWarehousesResponse);
-
-
 }
