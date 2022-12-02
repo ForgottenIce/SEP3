@@ -35,7 +35,7 @@ public class CreateCustomerService : ICreateCustomerService
 
     public async Task<IEnumerable<Customer>> GetCreateCustomerAsync()
     {
-        HttpResponseMessage responseMessage = await _httpClient.GetAsync("/CreateCustomer");
+        HttpResponseMessage responseMessage = await _httpClient.GetAsync("/CreateCustomer"); // Url er ikke right sat
         string content = await responseMessage.Content.ReadAsStringAsync();
         if (!responseMessage.IsSuccessStatusCode)
         {
