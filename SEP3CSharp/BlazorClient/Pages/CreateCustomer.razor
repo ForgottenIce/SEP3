@@ -48,7 +48,7 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col">
-                        <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addCustomerIsbusy Click=@CreateCustomer Text="Create"/>
+                        <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addCustomerIsbusy Click=@CreateNewCustomer Text="Create"/>
                     </div>
                 </div>
                 
@@ -86,7 +86,7 @@
     {
     }
 
-
+/*
     async Task CreateCustomer()
     {
         if (validatePhone().Equals(true) && validateFullName().Equals(true))
@@ -100,13 +100,13 @@
             navMgr.NavigateTo("/");
         }
     }
-    
-    async Task CreateProduct()
+    */
+    async Task CreateNewCustomer()
     {
         if (validatePhone().Equals(true) && validateFullName().Equals(true))
         {
             addCustomerIsbusy = true;
-            await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
+            await customerService.CreateCustomerAsync(new CustomerCreationDto(
                 fullName, address,mail, phoneNo));
             navMgr.NavigateTo("/");
         }
