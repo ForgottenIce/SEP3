@@ -20,6 +20,7 @@ builder.Services.AddScoped<IAuthService, JwtAuthService>();
 // Http Services
 builder.Services.AddScoped<IPingService, PingService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 //Radzen Services
 builder.Services.AddScoped<DialogService>();

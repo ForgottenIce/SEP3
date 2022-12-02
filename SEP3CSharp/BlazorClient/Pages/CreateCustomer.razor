@@ -1,6 +1,12 @@
 ﻿@page "/CreateCustomer"
 @using System.Text.Json
+@using global::Shared.Dtos
+@using HttpClients.ClientImplementations
+@using HttpClients.ClientIntefaces
+@using Microsoft.AspNetCore.Components
 @using Radzen
+@inject NavigationManager navMgr;
+@inject ICustomerService customerService;
 <h3>CreateCustomer</h3>
 
 <div class="container-fluid">
@@ -40,11 +46,12 @@
                         </div>
                     </div>
                 </div>
-               <div class="row mb-4"style="margin-left: 2%">
-                   <div class="">
-                       <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Create"/>
-                   </div>
-               </div>
+                <div class="row mb-4">
+                    <div class="col">
+                        <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addCustomerIsbusy Click=@CreateCustomer Text="Create"/>
+                    </div>
+                </div>
+                
                 
                 <style>
                     .button-demo .rz-button {
@@ -63,10 +70,12 @@
 
 @code
 {
+    bool addCustomerIsbusy = false;
     string fullName { get; set; }
     string phoneNo { get; set; }
     string address { get; set; }
     string mail { get; set; }
+    private string errorLabel;
 
     //
     // btn logic 
@@ -78,13 +87,35 @@
     }
 
 
-    async Task OnBusyClick()
+    async Task CreateCustomer()
     {
-        busy = true;
-        await Task.Delay(2000);
-        busy = false;
-    }
+        if (validatePhone().Equals(true) && validateFullName().Equals(true))
+        {
+            addCustomerIsbusy = true;
+            await customerService.CreateCustomerAsync(new CustomerCreationDto(
+            {
+                FullName = dto.FullName, Address = dto.Address, Mail = dto.Mail, PhoneNo = dto.PhoneNo);
+                    }
 
+            navMgr.NavigateTo("/");
+        }
+    }
+    
+    async Task CreateProduct()
+    {
+        if (validatePhone().Equals(true) && validateFullName().Equals(true))
+        {
+            addCustomerIsbusy = true;
+            await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
+                fullName, address,mail, phoneNo));
+            navMgr.NavigateTo("/");
+        }
+
+         
+    }
+    
+    
+    
 
     private void OnChange(string args, string textboxWithPlaceholder)
     {
