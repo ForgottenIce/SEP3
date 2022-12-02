@@ -1,6 +1,7 @@
 ﻿using Application.LogicInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace RestAPI.Controllers;
@@ -20,6 +21,10 @@ public class ProductController : ControllerBase {
             Product product = await _productLogic.CreateProductAsync(dto);
             return Created($"/product/{product.Id}", product);
         }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
         catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
@@ -32,7 +37,15 @@ public class ProductController : ControllerBase {
             Product product = await _productLogic.GetProductByIdAsync(id);
             return Ok(product);
         }
-        catch(Exception e) {
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
@@ -43,6 +56,10 @@ public class ProductController : ControllerBase {
         try {
             IEnumerable<Product> product = await _productLogic.GetProductsAsync();
             return Ok(product);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
         }
         catch (Exception e) {
             Console.WriteLine(e);
