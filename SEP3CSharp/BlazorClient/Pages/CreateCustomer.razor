@@ -8,20 +8,20 @@
         <div class="col-lg-6 col-xl-4 offset-lg-3 offset-xl-4">
     
 
-            <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
+            <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0; padding: 2rem;">
                                     
                 <div class="d-flex flex-row p-3">
                     <div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-1 mb-0">FullName: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="FullName" />
+                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="fullName" />
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Phone: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">5 characters maximum</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="Phone" />
+                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="phoneNo" />
                             
                             
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
@@ -29,13 +29,13 @@
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Address: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="Address" />
+                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="address" />
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Mail: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-Value="Mail" />
+                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-Value="mail" />
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
                         </div>
                     </div>
@@ -63,10 +63,10 @@
 
 @code
 {
-    string FullName { get; set; }
-    string Phone { get; set; }
-    string Address { get; set; }
-    string Mail { get; set; }
+    string fullName { get; set; }
+    string phoneNo { get; set; }
+    string address { get; set; }
+    string mail { get; set; }
 
     //
     // btn logic 
@@ -110,11 +110,11 @@
     //Label
     public bool validateFullName()
     {
-        if (string.IsNullOrEmpty(FullName)|| string.IsNullOrEmpty(Address) || String.IsNullOrEmpty(Mail))
+        if (string.IsNullOrEmpty(fullName)|| string.IsNullOrEmpty(address) || String.IsNullOrEmpty(mail))
         {
             return false;
         }
-        char[] chars = FullName.ToCharArray();
+        char[] chars = fullName.ToCharArray();
         foreach (char c in chars)
         {
             if (!Char.IsLetter(c))
@@ -128,11 +128,11 @@
     
     public bool validatePhone()
     {
-        if (String.IsNullOrEmpty(Phone))
+        if (String.IsNullOrEmpty(phoneNo))
         {
             return false;
         }
-        char[] chars = Phone.ToCharArray();
+        char[] chars = phoneNo.ToCharArray();
         foreach (char c in chars)
         {
             if (Char.IsLetter(c)&& chars.Length != 8)
