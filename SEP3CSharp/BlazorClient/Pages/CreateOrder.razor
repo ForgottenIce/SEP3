@@ -68,6 +68,7 @@
 
 @code {
 
+    String Amount { get; set; }
     // btn logic 
 
     bool busy;
@@ -107,7 +108,18 @@
         }
     }
 
+    //Label
+    public bool validateAmount()
+    {
+        if (Amount.Equals(<0))
+        {
+            //exceptional.set("You must enter a positive number.");
+            return false;
+        }
+    }
 
+}
+return true;
 
 
 
