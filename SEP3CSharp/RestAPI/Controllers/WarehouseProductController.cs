@@ -20,7 +20,7 @@ public class WarehouseProductController : ControllerBase
     public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetAllAsync() {
         try
         {
-            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductAsync();
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
             return Ok(warehouseProducts);
         }
         catch (Exception e)
