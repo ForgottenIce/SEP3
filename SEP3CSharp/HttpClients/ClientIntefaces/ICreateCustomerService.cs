@@ -3,9 +3,9 @@ using Shared.Models;
 
 namespace HttpClients.ClientIntefaces;
 
-public class ICreateCustomerService
+public interface ICreateCustomerService
 {
     Task<Customer> CreateCustomerAsync(CreateCustomerDto dto);
     Task<IEnumerable<Customer>> GetCreateCustomerAsync();
-    Task<Customer> GetCreateCustomerById(int id);
+    
 }
