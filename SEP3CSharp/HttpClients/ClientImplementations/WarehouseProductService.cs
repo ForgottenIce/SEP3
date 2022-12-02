@@ -28,7 +28,7 @@ public class WarehouseProductService : IWarehouseProductService {
 			})!;
 		return warehouseProduct;
 	}
-
+	[Obsolete("not working right",true)]
 	public async Task<WarehouseProduct> GetWarehouseProductById(long id) {
 		HttpResponseMessage response = await _httpClient.GetAsync($"/warehouseProduct/{id}");
 		string content = await response.Content.ReadAsStringAsync();
