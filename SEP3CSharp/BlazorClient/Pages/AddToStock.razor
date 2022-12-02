@@ -20,10 +20,10 @@
         <div class="col-3">
 
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to add</RadzenText>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Nullable numeric</RadzenText>
-            <RadzenNumeric TValue="int?" @bind-Value=@value Placeholder="Enter or clear value" Change=@(args => OnChange(args.Value, "Amount")) Class="w-100"@bind="amount">
-            </RadzenNumeric>
-            </div>
+            
+            <RadzenNumeric ShowUpDown="false" TValue="int" Class="w-100" @bind-Value="Amount"/>
+           
+        </div>
        
 
     </div>
@@ -37,7 +37,8 @@
 
 
 @code {
-    int amount { get; set; }
+    int Amount { get; set; }
+    
     // btn logic 
 
     bool busy;
@@ -72,7 +73,7 @@
     
     public bool validateNumber()
     {
-        if (amount<=0)
+        if (Amount<=0)
         {
             return true;
         }
