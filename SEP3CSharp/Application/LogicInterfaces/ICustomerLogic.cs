@@ -1,9 +1,11 @@
-﻿using Shared.Models;
+﻿using Shared.Dtos;
+using Shared.Models;
 
 namespace Application.LogicInterfaces;
 
 public interface ICustomerLogic
 {
-    Task<IEnumerable<Customer>> GetCustomerAsync();
+    Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
     Task<Customer> GetCustomerByIdAsync(long id);
+    Task<IEnumerable<Customer>> GetCustomersAsync();
 }

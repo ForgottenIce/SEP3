@@ -1,27 +1,34 @@
-﻿using Application.LogicInterfaces;
-using gRPC.ServiceInterfaces;
-using Shared.Models;
+﻿
+
+using Application.LogicInterfaces;
 
 namespace Application.Logic;
-
+using gRPC.ServiceInterfaces;
+using Shared.Dtos;
+using Shared.Models;
 
 public class CustomerLogic : ICustomerLogic
 {
-    private readonly ICustomerLogic _customerService;
-
-    public CustomerLogic(ICreateCustomerService cutomerService)
-    {
-        _customerService = cutomerService;
+    private readonly ICustomerLogic customerService;
+    public CustomerLogic(ICustomerService customerService) {
+        this.customerService = customerService;
     }
 
-    public async Task<IEnumerable<Customer>> GetCustomerAsync()
+
+    public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
-        IEnumerable<Customer> customers = await _customerService.GetCustomerAsync();
-        return customers;
+        Customer customer = await customerService.CreateCustomerAsync(dto);
+        return customer;
     }
 
     public Task<Customer> GetCustomerByIdAsync(long id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<Customer>> GetCustomersAsync()
+    {
+        IEnumerable<Customer> customers = await customerService.GetCustomersAsync();
+        return customers;
     }
 }
