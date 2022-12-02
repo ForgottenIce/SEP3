@@ -31,8 +31,13 @@ public class CustomerService : ICustomerService
         };
         return customer;
     }
+//TODO
+    public Task<IEnumerable<Customer>> GetCustomerAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-    public async Task<IEnumerable<Customer>> GetCreateCustomerAsync()
+    public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
         GetCustomersResponse replay = await _serviceClient.GetCustomersAsync(new GetCustomersRequest());
 
@@ -52,7 +57,7 @@ public class CustomerService : ICustomerService
         return customers.AsEnumerable();
     }
 
-    public async Task<Customer> GetCreateCustomerById(int id)
+    public async Task<Customer> GetCustomerById(int id)
     {
         CustomerResponse replay = await _serviceClient.GetCustomerAsync(new GetCustomerRequest()
         {
@@ -71,4 +76,5 @@ public class CustomerService : ICustomerService
 
         return customer;
     }
+    
 }

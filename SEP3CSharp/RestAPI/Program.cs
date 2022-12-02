@@ -10,6 +10,7 @@ using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth;
+using Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,12 +40,16 @@ builder.Services.AddGrpcClient<WarehouseGrpcService.WarehouseGrpcServiceClient>(
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
+builder.Services.AddGrpcClient<CustomersGrpcService.CustomersGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 
 // gRPC Services
 builder.Services.AddScoped<IPingService, PingService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
@@ -52,6 +57,7 @@ builder.Services.AddScoped<IPingLogic, PingLogic>();
 builder.Services.AddScoped<IOrderLogic, OrderLogic>();
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
 builder.Services.AddScoped<IWarehouseLogic, WarehouseLogic>();
+builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

@@ -9,7 +9,7 @@ using Shared.Models;
 
 public class CustomerLogic : ICustomerLogic
 {
-    private readonly ICustomerLogic customerService;
+    private readonly ICustomerService customerService;
     public CustomerLogic(ICustomerService customerService) {
         this.customerService = customerService;
     }
@@ -25,7 +25,7 @@ public class CustomerLogic : ICustomerLogic
     {
         throw new NotImplementedException();
     }
-
+//TODO
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
         IEnumerable<Customer> customers = await customerService.GetCustomersAsync();
