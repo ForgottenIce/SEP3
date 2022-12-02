@@ -1,7 +1,7 @@
 ﻿@page "/AdminGui"
 
 
-@inject NavigationManager navigationManager
+@inject NavigationManager navMgr
 <AuthorizeView>
 
     <NotAuthorized>
@@ -13,8 +13,8 @@
            </div>
        </div>
             <div class="d-flex justify-content-center mt-5">
-                <button type="button" class="btn btn-primary button mx-3" @*@onclick=LagerStatus*@>Se/Ændre lager status</button>
-                <button type="button" class="btn btn-primary button mx-3" @*@onclick=OverskrivPosition*@>Overskriv posotion</button>
+                <button type="button" class="btn btn-primary button mx-3" onclick="@GoToAddProduct">Se/Ændre lager status</button>
+                <button type="button" class="btn btn-primary button mx-3" onclick="@GoToOverridePosition" > Tilføj vare eller overskriv posotion</button>
 
             </div>
     </NotAuthorized>
@@ -23,4 +23,14 @@
     }</AuthorizeView>
  
 @code {
+
+    async Task GoToOverridePosition()
+    {
+        navMgr.NavigateTo("/AddProduct");
+    }
+
+    async Task GoToAddProduct()
+    {
+        navMgr.NavigateTo("/AddProductToWarehouse");
+    }
 }

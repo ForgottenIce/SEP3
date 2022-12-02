@@ -18,11 +18,8 @@
             <RadzenTextBox Placeholder="Search..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100"/>
         </div>
         <div class="col-3">
-
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Amount to add</RadzenText>
-            
-            <RadzenNumeric ShowUpDown="false" TValue="int" Class="w-100" @bind-Value="Amount"/>
-           
+            <RadzenNumeric ShowUpDown="false" TValue="int" Class="w-100" @bind-Value="amount"/>
         </div>
        
 
@@ -37,7 +34,8 @@
 
 
 @code {
-    int Amount { get; set; }
+    int amount { get; set; }
+    public int itemNumber { get; set; } 
     
     // btn logic 
 
@@ -73,7 +71,7 @@
     
     public bool validateNumber()
     {
-        if (Amount<=0)
+        if (amount<=0)
         {
             return true;
         }

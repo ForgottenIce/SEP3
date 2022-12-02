@@ -1,0 +1,98 @@
+﻿@page "/"
+@using HttpClients.ClientInterfaces
+@inject IAuthService authService
+@inject NavigationManager navMgr
+<h3>Alting/Aps</h3>
+
+<div>
+    <div class="container-center">
+        <div class="col-xl-6 d-flex p-3">
+            <RadzenCard class="p-5 w-40">
+                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
+                    Please login
+                </RadzenText>
+                <AuthorizeView>
+                    <NotAuthorized>
+
+
+                        <div class="container-fluid" style="justify-content: center">
+                            <label>User name:</label>
+                            <input type="text" @bind="userName"/>
+                        </div>
+                        <div class="container-fluid"style="justify-content: center; margin-top: 20px; margin-left: 8px">
+                            <label style="text-align: center">Password:</label>
+                            <input type="password" @bind="password"/>
+                        </div>
+                        @if (!string.IsNullOrEmpty(errorLabel))
+                        {
+                            <div class="container-fluid"style="align-content: center; margin-top: 20px">
+                                <label style="color: red">
+                                    @errorLabel
+                                </label>
+                            </div>
+                        }
+                        <div class="container-fluid" style="justify-content: center; margin-top: 20px">
+                            <button class="loginbtn" @onclick="LoginAsync">Log in</button>
+                        </div>
+
+                    </NotAuthorized>
+                    <Authorized>
+                        <div class="card">
+                            <h3>Hello, @context.User.Identity?.Name</h3>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+
+            </RadzenCard>
+            <RadzenCard class="p-5 w-40" Style="margin-left: 20px">
+                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
+                    Total ordres ordered since launch
+                </RadzenText>
+                
+                <RadzenTextBox Disabled="true" Placeholder=AmountOrdered Class="w-100"></RadzenTextBox>
+                
+            </RadzenCard>
+
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private string userName = string.Empty;
+    private string password = string.Empty;
+    private string errorLabel = "";
+
+    private async Task LoginAsync()
+    {
+        errorLabel = "";
+        try
+        {
+            await authService.LoginAsync(userName, password);
+            navMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = $"Error: {e.Message}";
+        }
+    }
+    
+public class Order
+{
+
+    String totalOrder;
+
+
+    public Order(string totalOrder)
+    {
+        this.totalOrder = totalOrder;
+    }
+
+    public string total
+    {
+        get => totalOrder;
+        set => totalOrder = value ?? throw new ArgumentNullException(nameof(value));
+    }
+}
+}

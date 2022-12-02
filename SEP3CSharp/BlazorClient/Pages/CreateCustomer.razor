@@ -2,6 +2,7 @@
 @using global::Shared.Dtos
 @using HttpClients.ClientIntefaces
 @using Microsoft.AspNetCore.Components
+@using System.Text.RegularExpressions
 @inject NavigationManager navMgr;
 @inject ICustomerService customerService;
 <h3>CreateCustomer</h3>
@@ -65,11 +66,12 @@
     string address { get; set; }
     string mail { get; set; }
     private string errorLabel;
-
+    
+    Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
 
     async Task CreateNewCustomer()
     {
-        if (validatePhone().Equals(true) && validateFullName().Equals(true))
+        if (validatePhone().Equals(true) && validateFullName().Equals(true)&& validateMail().Equals(true))
         {
             addCustomerIsbusy = true;
             await customerService.CreateCustomerAsync(new CustomerCreationDto(
@@ -78,6 +80,18 @@
         }
         
     }
+
+    public bool validateMail()
+    {
+        if (regex.IsMatch(mail))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
+    
     
     public bool validateFullName()
     {
