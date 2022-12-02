@@ -1,10 +1,7 @@
 ﻿@page "/CreateCustomer"
-@using System.Text.Json
 @using global::Shared.Dtos
-@using HttpClients.ClientImplementations
 @using HttpClients.ClientIntefaces
 @using Microsoft.AspNetCore.Components
-@using Radzen
 @inject NavigationManager navMgr;
 @inject ICustomerService customerService;
 <h3>CreateCustomer</h3>
@@ -21,34 +18,26 @@
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-1 mb-0">FullName: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="fullName" />
+                             <RadzenTextBox Placeholder="Fullname" style="width: 50%;" Class="w-100" @bind-value="fullName" />
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Phone: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">5 characters maximum</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="phoneNo" />
-                            
-                            
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenTextBox Placeholder="Phone" style="width: 50%;" Class="w-100" @bind-value="phoneNo" />
                         </div>
                         <div class="row px-3">
-                            <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Address: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="address" />
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Addresse: </RadzenText>
+                            <RadzenTextBox Placeholder="Address" style="width: 50%;" Class="w-100" @bind-value="address" />
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Mail: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-Value="mail" />
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenTextBox Placeholder="Mail" style="width: 50%;" Class="w-100" @bind-Value="mail" />
                         </div>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col">
-                        <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@addCustomerIsbusy Click=@CreateNewCustomer Text="Create"/>
+                        <RadzenButton style="width: 160px" Icon="save" BusyText="Creating ..." IsBusy=@addCustomerIsbusy Click=@CreateNewCustomer Text="Create"/>
                     </div>
                 </div>
                 
@@ -77,15 +66,6 @@
     string mail { get; set; }
     private string errorLabel;
 
-    //
-    // btn logic 
-
-    bool busy;
-
-    void OnClick(string buttonName)
-    {
-    }
-
 
     async Task CreateNewCustomer()
     {
@@ -96,21 +76,9 @@
                 fullName, phoneNo, address,mail));
             navMgr.NavigateTo("/");
         }
-
-         
+        
     }
     
-    
-    
-
-    private void OnChange(string args, string textboxWithPlaceholder)
-    {
-        throw new NotImplementedException();
-    }
-
-
-
-    //Label
     public bool validateFullName()
     {
         if (string.IsNullOrEmpty(fullName)|| string.IsNullOrEmpty(address) || String.IsNullOrEmpty(mail))
@@ -140,7 +108,7 @@
         {
             if (Char.IsLetter(c)&& chars.Length != 8)
             {
-    // exceptionLabel.set("only letters allowed");
+            // exceptionLabel.set("only letters allowed");
                 return false; 
             }
         }
