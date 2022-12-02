@@ -3,7 +3,7 @@ using Shared.Models;
 
 namespace HttpClients.ClientIntefaces;
 
-public interface ICreateCustomerService
+public interface ICustomerService
 {
     Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
     Task<IEnumerable<Customer>> GetCreateCustomerAsync();

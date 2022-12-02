@@ -6,7 +6,7 @@ using Shared.Models;
 
 namespace HttpClients.ClientImplementations;
 
-public class CustomerService : ICreateCustomerService
+public class CustomerService : ICustomerService
 {
     private readonly HttpClient _httpClient;
 
