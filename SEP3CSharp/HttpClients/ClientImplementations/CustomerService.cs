@@ -35,6 +35,19 @@ public class CustomerService : ICreateCustomerService
 
     public async Task<IEnumerable<Customer>> GetCreateCustomerAsync()
     {
-        HttpResponseMessage responseMessage = await _httpClient.GetAsync()
+        HttpResponseMessage responseMessage = await _httpClient.GetAsync("/CreateCustomer"); // Url er ikke right sat
+        string content = await responseMessage.Content.ReadAsStringAsync();
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            throw new Exception(content);
+        }
+
+        IEnumerable<Customer> customers = JsonSerializer.Deserialize<IEnumerable<Customer>>(content,
+            new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+        return customers;
+
     }
 }
