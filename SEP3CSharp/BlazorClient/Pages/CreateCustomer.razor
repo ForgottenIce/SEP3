@@ -86,28 +86,14 @@
     {
     }
 
-/*
-    async Task CreateCustomer()
-    {
-        if (validatePhone().Equals(true) && validateFullName().Equals(true))
-        {
-            addCustomerIsbusy = true;
-            await customerService.CreateCustomerAsync(new CustomerCreationDto(
-            {
-                FullName = dto.FullName, Address = dto.Address, Mail = dto.Mail, PhoneNo = dto.PhoneNo);
-                    }
 
-            navMgr.NavigateTo("/");
-        }
-    }
-    */
     async Task CreateNewCustomer()
     {
         if (validatePhone().Equals(true) && validateFullName().Equals(true))
         {
             addCustomerIsbusy = true;
             await customerService.CreateCustomerAsync(new CustomerCreationDto(
-                fullName, address,mail, phoneNo));
+                fullName, phoneNo, address,mail));
             navMgr.NavigateTo("/");
         }
 
@@ -122,21 +108,7 @@
         throw new NotImplementedException();
     }
 
-    private int value;
 
-    private void OnChange(int args, string textboxWithPlaceholder)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public class Item
-    {
-        string itemNumber;
-        public Item(string itemNumber)
-        {
-            this.itemNumber = itemNumber;
-        }
-    }
 
     //Label
     public bool validateFullName()
