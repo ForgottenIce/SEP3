@@ -21,7 +21,7 @@
 </style>
 
 
-<RadzenFieldset Text="Opret nyt produkt">
+<RadzenFieldset Text="Create new product">
     <div class="row">
         <div class="align-items-center d-flex col-md-3">
             <RadzenLabel Text="Name"/>
@@ -115,11 +115,39 @@
     string ProductDescription { get; set; }
     double ProductPrice { get; set; }
 
-    async Task CreateProduct()
+
+    
+    
+
+    public bool validateProductNameAndDiscription()
     {
-        addProductIsbusy = true;
-        await productService.CreateProductAsync(new ProductCreationDto(ProductName, ProductDescription, ProductPrice));
-        navMgr.NavigateTo("/");
+        if (string.IsNullOrEmpty(ProductName) && string.IsNullOrEmpty(ProductDescription))
+        {
+            return false;
+        }
+        return true;
     }
 
+    public bool validatePrice()
+    {
+        if (ProductPrice < 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+     async Task CreateProduct()
+     {
+         if (validateProductNameAndDiscription().Equals(true) && validatePrice().Equals(true))
+         {
+             addProductIsbusy = true;
+             await productService.CreateProductAsync(new ProductCreationDto(
+                 ProductName, ProductDescription, ProductPrice));
+             navMgr.NavigateTo("/");
+         }
+
+         
+     }
 }

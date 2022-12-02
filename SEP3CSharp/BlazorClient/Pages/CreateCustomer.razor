@@ -1,6 +1,9 @@
 ﻿@page "/CreateCustomer"
-@using System.Text.Json
-@using Radzen
+@using global::Shared.Dtos
+@using HttpClients.ClientIntefaces
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager navMgr;
+@inject ICustomerService customerService;
 <h3>CreateCustomer</h3>
 
 <div class="container-fluid">
@@ -8,43 +11,36 @@
         <div class="col-lg-6 col-xl-4 offset-lg-3 offset-xl-4">
     
 
-            <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0 calc(-1 * var(--rz-card-padding)); padding: 2rem;">
+            <RadzenCard Class="my-3 rz-background-color-primary-lighter rz-shadow-0 rz-border-radius-0" style="margin: 0; padding: 2rem;">
                                     
                 <div class="d-flex flex-row p-3">
                     <div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-1 mb-0">FullName: </RadzenText>
                             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="FullName" />
+                             <RadzenTextBox Placeholder="Fullname" style="width: 50%;" Class="w-100" @bind-value="fullName" />
                             <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Phone: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">5 characters maximum</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="Phone" />
-                            
-                            
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenTextBox Placeholder="Phone" style="width: 50%;" Class="w-100" @bind-value="phoneNo" />
                         </div>
                         <div class="row px-3">
-                            <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Address: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-value="Address" />
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Addresse: </RadzenText>
+                            <RadzenTextBox Placeholder="Address" style="width: 50%;" Class="w-100" @bind-value="address" />
                         </div>
                         <div class="row px-3">
                             <RadzenText TextStyle="TextStyle.H6" Class="d-flex mt-3 mb-0">Mail: </RadzenText>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default TextBox</RadzenText>
-                            <RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) Class="w-100" @bind-Value="Mail" />
-                            <RadzenText TextStyle="TextStyle.Body1"></RadzenText>
+                            <RadzenTextBox Placeholder="Mail" style="width: 50%;" Class="w-100" @bind-Value="mail" />
                         </div>
                     </div>
                 </div>
-               <div class="row mb-4"style="margin-left: 2%">
-                   <div class="">
-                       <RadzenButton style="width: 160px" Icon="save" BusyText="Saving ..." IsBusy=@busy Click=@OnBusyClick Text="Create"/>
-                   </div>
-               </div>
+                <div class="row mb-4">
+                    <div class="col">
+                        <RadzenButton style="width: 160px" Icon="save" BusyText="Creating ..." IsBusy=@addCustomerIsbusy Click=@CreateNewCustomer Text="Create"/>
+                    </div>
+                </div>
+                
                 
                 <style>
                     .button-demo .rz-button {
@@ -63,58 +59,33 @@
 
 @code
 {
-    string FullName { get; set; }
-    string Phone { get; set; }
-    string Address { get; set; }
-    string Mail { get; set; }
+    bool addCustomerIsbusy = false;
+    string fullName { get; set; }
+    string phoneNo { get; set; }
+    string address { get; set; }
+    string mail { get; set; }
+    private string errorLabel;
 
-    //
-    // btn logic 
 
-    bool busy;
-
-    void OnClick(string buttonName)
+    async Task CreateNewCustomer()
     {
-    }
-
-
-    async Task OnBusyClick()
-    {
-        busy = true;
-        await Task.Delay(2000);
-        busy = false;
-    }
-
-
-    private void OnChange(string args, string textboxWithPlaceholder)
-    {
-        throw new NotImplementedException();
-    }
-
-    private int value;
-
-    private void OnChange(int args, string textboxWithPlaceholder)
-    {
-        throw new NotImplementedException();
+        if (validatePhone().Equals(true) && validateFullName().Equals(true))
+        {
+            addCustomerIsbusy = true;
+            await customerService.CreateCustomerAsync(new CustomerCreationDto(
+                fullName, phoneNo, address,mail));
+            navMgr.NavigateTo("/");
+        }
+        
     }
     
-    public class Item
-    {
-        string itemNumber;
-        public Item(string itemNumber)
-        {
-            this.itemNumber = itemNumber;
-        }
-    }
-
-    //Label
     public bool validateFullName()
     {
-        if (string.IsNullOrEmpty(FullName)|| string.IsNullOrEmpty(Address) || String.IsNullOrEmpty(Mail))
+        if (string.IsNullOrEmpty(fullName)|| string.IsNullOrEmpty(address) || String.IsNullOrEmpty(mail))
         {
             return false;
         }
-        char[] chars = FullName.ToCharArray();
+        char[] chars = fullName.ToCharArray();
         foreach (char c in chars)
         {
             if (!Char.IsLetter(c))
@@ -128,16 +99,16 @@
     
     public bool validatePhone()
     {
-        if (String.IsNullOrEmpty(Phone))
+        if (String.IsNullOrEmpty(phoneNo))
         {
             return false;
         }
-        char[] chars = Phone.ToCharArray();
+        char[] chars = phoneNo.ToCharArray();
         foreach (char c in chars)
         {
             if (Char.IsLetter(c)&& chars.Length != 8)
             {
-    // exceptionLabel.set("only letters allowed");
+            // exceptionLabel.set("only letters allowed");
                 return false; 
             }
         }

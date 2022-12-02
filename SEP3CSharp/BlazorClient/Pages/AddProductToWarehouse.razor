@@ -9,19 +9,21 @@
 
 
 
- <div class="container-fluid">
-     <div class="row">
-         <div class="col-xl-6 mb-4">
-             <RadzenCard>
-                 <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">1. Customers</RadzenText>
-                 <RadzenDropDown Style="width:300px" TValue="string" @bind-Value="WareHouses.wAdress" Placeholder="Select Adres" AllowFiltering="true" Data="@(WareHouses.wAdress)" TextProperty="CompanyName" ValueProperty="CustomerID"/>
-             </RadzenCard>
-         </div>
-     </div>
+ 
      
       <div class="container" Data =@(WareHouses.wAdress)>
           
-             <div>
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-xl-6 mb-4">
+                      <RadzenCard>
+                          <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">1. Customers</RadzenText>
+                          <RadzenDropDown Style="width:300px" TValue="string" @bind-Value="WareHouses.wAdress" Placeholder="Select Adres" AllowFiltering="true" Data="@(WareHouses.wAdress)" TextProperty="CompanyName" ValueProperty="CustomerID"/>
+                      </RadzenCard>
+                  </div>
+              </div>
+              
+          <div>
                  <RadzenDataGrid TItem="WareHouses">
                      <Columns>
                          <RadzenDataGridColumn TItem="WareHouses" Property="ProductId" Title="ProductId" Width="150px" TextAlign="TextAlign.Center"/>
