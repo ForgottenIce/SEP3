@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using System.Text;
+using Grpc.Core;
 using gRPC.ServiceInterfaces;
 using Shared.Dtos;
 using Shared.Exceptions;
@@ -46,7 +47,8 @@ public class WarehouseProductService : IWarehouseProductService
                 throw new ServiceUnavailableException();
             }
             if (e.StatusCode == StatusCode.NotFound) {
-                throw new NotFoundException(e.Status.Detail);
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
 
             if (e.StatusCode == StatusCode.AlreadyExists) {
