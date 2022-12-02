@@ -5,57 +5,88 @@
 @using global::Shared.Dtos
 @using global::Shared.Models
 @inject NavigationManager navMgr
+@inject DialogService DialogService
+@inject IWarehouseProductService warehouseProductService
 @inject IProductService productService
+@inject IWarehouseService warehouseService
 
 
 
- <div class="container-fluid">
-     <div class="row">
-         <div class="col-xl-6 mb-4">
-             <RadzenCard>
-                 <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">1. Customers</RadzenText>
-                 <RadzenDropDown Style="width:300px" TValue="string" @bind-Value="WareHouses.wAdress" Placeholder="Select Adres" AllowFiltering="true" Data="@(WareHouses.wAdress)" TextProperty="CompanyName" ValueProperty="CustomerID"/>
-             </RadzenCard>
-         </div>
-     </div>
-     
-      <div class="container" Data =@(WareHouses.wAdress)>
-          
-             <div>
-                 <RadzenDataGrid TItem="WareHouses">
-                     <Columns>
-                         <RadzenDataGridColumn TItem="WareHouses" Property="ProductId" Title="ProductId" Width="150px" TextAlign="TextAlign.Center"/>
-                         <RadzenDataGridColumn TItem="WareHouses" Property="Name" Title="Name" Width="150px" Sortable="false">
-                             <Template Context="data"> </Template>
-                         </RadzenDataGridColumn>
-                         <RadzenDataGridColumn TItem="WareHouses" Property="Description" Title="Description" Width="500px" TextAlign="TextAlign.Center"/>
-                         <RadzenDataGridColumn TItem="WareHouses" Property="Price" Title="Price" Width="100px" TextAlign="TextAlign.Center"/>
-                         <RadzenDataGridColumn TItem="WareHouses" Property="Add" Title="Add" Width="200px" TextAlign="TextAlign.Center"/>
-                         <Template Context="data">
-                             <RadzenCheckBox TValue="bool" />
-                         </Template>
-                         
-                     </Columns>
-                 </RadzenDataGrid>
-             </div>
-         </div>
- </div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">1. Customers</RadzenText>
+                <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
+                <RadzenDataGrid TItem="Product" Data="@_products" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Product" Property="Id" Title="Product Id" Width="150px" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" Width="150px" Sortable="false" />
+                        <RadzenDataGridColumn TItem="Product" Property="Description" Title="Description" Width="500px" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
+                    </Columns>
+                </RadzenDataGrid>
+                <RadzenButton Text="Add to Warehouse" Disabled="@(_selectedProduct == null || _selectedWarehouse == null  ? true : false)" Click="OpenCreationDialog"/>
+            </RadzenCard>
+        </div>
+    </div> 
+    @if (!string.IsNullOrEmpty(errorMsg)) {
+            <br />
+                <label style="color: red">Error: @errorMsg</label>
+    }
+</div>
 @code 
 {
-    
-    public class WareHouses
-    {
-        public String wID;
-        public static String wAdress;
-        RadzenDataGrid<WareHouses> ordersGrid;
-        IList<WareHouses> orders;
+    private string errorMsg = "";
 
+    private IEnumerable<Product> _products = null;
+    private IEnumerable<Warehouse> _warehouses = null;
 
-        public WareHouses()
-        {
+    private IList<Product> _selectedProduct;
+    private Warehouse _selectedWarehouse;
+    private int _quantity = 0;
+    private int _minQuantity = 0;
+    private string _position = "";
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _warehouses = await warehouseService.GetWarehousesAsync();
+            _products = await productService.GetProductsAsync();
+        }
+        catch (Exception e) {
+            errorMsg = e.Message;
         }
     }
-    
-    
-   
+
+    private async Task OpenCreationDialog(){
+        var result = await DialogService.OpenAsync("Confirm signup", ds =>
+            @<div>
+                <p class="mb-4">Add <b>@_selectedProduct.First().Name</b> to <b>@_selectedWarehouse.Name</b></p>
+                <div class="row">
+                    <div class="col">
+                        <RadzenNumeric Min="0" TValue="int" @bind-Value=_quantity></RadzenNumeric>
+                        <RadzenNumeric Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
+                        <RadzenTextBox @bind-Value=_position Placeholder="Warehouse Position"></RadzenTextBox>
+                        <RadzenButton Text="Confirm" Click="async () => {await CreateWarehouseProduct(_selectedProduct.First().Id,_selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1" />
+                    </div>
+                </div>
+        </div>
+    );
+    }
+    private async Task CreateWarehouseProduct(long productId, long warehouseId) {
+        try {
+            WarehouseProduct warehouseProduct = await warehouseProductService.CreateWarehouseProductAsync(new WarehouseProductCreationDto {
+                    ProductId = productId,
+                    WarehouseId = warehouseId,
+                    Quantity = _quantity,
+                    MinimumQuantity = _minQuantity,
+                    WarehousePosition = _position
+                });
+            _position = "";
+        }
+        catch (Exception e) {
+            errorMsg = e.Message;
+        }
+    }
+
 }

@@ -2,18 +2,9 @@
 
 public class WarehouseProductCreationDto
 {
-    public long ProductId { get;}
-    public long WarehouseId { get;}
-    public int Quantity { get;}
-    public int MinimumQuantity { get;}
-    public string WarehousePosition { get;}
-
-    public WarehouseProductCreationDto(long productId, long warehouseId, int quantity, int minimumQuantity, string warehousePosition)
-    {
-        ProductId = productId;
-        WarehouseId = warehouseId;
-        Quantity = quantity;
-        MinimumQuantity = minimumQuantity;
-        WarehousePosition = warehousePosition;
-    }
+    public long ProductId { get; set; }
+    public long WarehouseId { get; set; }
+    public int Quantity { get; set; }
+    public int MinimumQuantity { get; set; }
+    public string WarehousePosition { get; set; }
 }

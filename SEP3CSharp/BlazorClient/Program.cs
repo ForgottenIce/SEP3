@@ -19,7 +19,9 @@ builder.Services.AddScoped<IAuthService, JwtAuthService>();
 
 // Http Services
 builder.Services.AddScoped<IPingService, PingService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
 
 //Radzen Services
 builder.Services.AddScoped<DialogService>();
