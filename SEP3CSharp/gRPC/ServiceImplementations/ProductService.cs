@@ -37,7 +37,7 @@ public class ProductService : IProductService {
         }
     }
 
-    public async Task<Product> GetProductByIdAsync(int id) {
+    public async Task<Product> GetProductByIdAsync(long id) {
         try {
             ProductResponse reply = await _serviceClient.GetProductAsync(new GetProductRequest { Id = id});
 
