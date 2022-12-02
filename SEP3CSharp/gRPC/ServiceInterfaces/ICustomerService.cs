@@ -3,9 +3,9 @@ using Shared.Models;
 
 namespace gRPC.ServiceInterfaces;
 
-public interface ICreateCustomerService
+public interface ICustomerService
 {
-    Task<Customer> CreateCustomerAsync(CreateCustomerDto dto);
+    Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
     Task<IEnumerable<Customer>> GetCreateCustomerAsync();
     Task<Customer> GetCreateCustomerById(int id);
 }

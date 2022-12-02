@@ -1,6 +1,6 @@
 ﻿namespace Shared.Dtos;
 
-public class CreateCustomerDto
+public class CustomerCreationDto
 {
     public long Id { get; set; }
     public string FullName { get; set; }

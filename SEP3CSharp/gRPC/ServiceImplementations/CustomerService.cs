@@ -4,16 +4,16 @@ using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
 
-public class CreateCustomerService : ICreateCustomerService
+public class CustomerService : ICustomerService
 {
     private readonly CustomersGrpcService.CustomersGrpcServiceClient _serviceClient;
 
-    public CreateCustomerService(CustomersGrpcService.CustomersGrpcServiceClient serviceClient)
+    public CustomerService(CustomersGrpcService.CustomersGrpcServiceClient serviceClient)
     {
         _serviceClient = serviceClient;
     }
 
-    public async Task<Customer> CreateCustomerAsync(CreateCustomerDto dto)
+    public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
         CustomerResponse replay = await _serviceClient.CreateCustomerAsync(new CreateCustomerRequest()
         { 

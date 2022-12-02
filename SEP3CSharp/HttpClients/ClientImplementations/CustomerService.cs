@@ -6,16 +6,16 @@ using Shared.Models;
 
 namespace HttpClients.ClientImplementations;
 
-public class CreateCustomerService : ICreateCustomerService
+public class CustomerService : ICreateCustomerService
 {
     private readonly HttpClient _httpClient;
 
-    public CreateCustomerService(HttpClient httpClient)
+    public CustomerService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    public async Task<Customer> CreateCustomerAsync(CreateCustomerDto dto)
+    public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/CreateCustomer", dto);
         string content = await response.Content.ReadAsStringAsync();
