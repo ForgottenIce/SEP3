@@ -1,4 +1,5 @@
-﻿using Application.LogicInterfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using Application.LogicInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
 using Shared.Exceptions;
@@ -61,14 +62,12 @@ public class WarehouseProductController : ControllerBase
     
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("byid")]
 
-    public async Task<ActionResult<WarehouseProduct>> GetWarehouseProductByIdAsync([FromRoute] long id) {
-        try
-        {
-            WarehouseProduct warehouseProduct = await _warehouseProductLogic.GetWarehouseProductByIdAsync(id);
+    public async Task<ActionResult<WarehouseProduct>> GetWarehouseProductByIdAsync([FromQuery, Required, Range(1,long.MaxValue)] long productId, [FromQuery, Required, Range(1,long.MaxValue)] long warehouseId) {
+        try {
+            WarehouseProduct warehouseProduct = await _warehouseProductLogic.GetWarehouseProductByIdAsync(productId, warehouseId);
             return Ok(warehouseProduct);
-
         }
         catch (NotFoundException e) {
             Console.WriteLine(e.Message);
