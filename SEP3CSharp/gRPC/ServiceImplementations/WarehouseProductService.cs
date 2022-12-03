@@ -59,12 +59,12 @@ public class WarehouseProductService : IWarehouseProductService
     }
     
     
-    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long id)
+    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId)
     {
         try {
             WarehouseProductResponse replyTo =
                 await _warehouseProductGrpcServiceClient.GetWarehouseProductAsync(new GetWarehouseProductRequest
-                    { WarehouseId = id });
+                    { ProductId = productId, WarehouseId = warehouseId });
 
             WarehouseProduct warehouseProduct = new WarehouseProduct
             {
