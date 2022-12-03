@@ -19,8 +19,8 @@ public class WarehouseProductLogic : IWarehouseProductLogic
         return warehouseProduct;
     }
 
-    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long id) {
-        WarehouseProduct warehouseProduct = await _warehouseProductService.GetWarehouseProductByIdAsync(id);
+    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId) {
+        WarehouseProduct warehouseProduct = await _warehouseProductService.GetWarehouseProductByIdAsync(productId, warehouseId);
         return warehouseProduct;
     }
 
