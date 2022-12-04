@@ -52,7 +52,7 @@ builder.Services.AddScoped<IPingService, PingService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
 
 // Logic dependencies

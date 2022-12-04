@@ -10,14 +10,18 @@ namespace RestAPI.Controllers;
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
-    private readonly ICustomerLogic customerLogic;
+    private readonly ICustomerLogic _customerLogic;
+
+    public CustomerController(ICustomerLogic customerLogic) {
+        _customerLogic = customerLogic;
+    }
 
     [HttpPost]
     public async Task<ActionResult<Customer>> CreateCustomerAsync(CustomerCreationDto dto)
     {
         try
         {
-            Customer customer = await customerLogic.CreateCustomerAsync(dto);
+            Customer customer = await _customerLogic.CreateCustomerAsync(dto);
             return Created($"/Customer/{customer.Id}", customer);
         }
         catch (Exception e) {
@@ -28,7 +32,7 @@ public class CustomerController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Customer>> GetCustomerByIdAsync([FromRoute] long id) {
         try {
-            Customer customer = await customerLogic.GetCustomerByIdAsync(id);
+            Customer customer = await _customerLogic.GetCustomerByIdAsync(id);
             return Ok(customer);
         }
         catch(Exception e) {
@@ -39,7 +43,7 @@ public class CustomerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersAsync() {
         try {
-            IEnumerable<Customer> customer = await customerLogic.GetCustomersAsync();
+            IEnumerable<Customer> customer = await _customerLogic.GetCustomersAsync();
             return Ok(customer);
         }
         catch (Exception e) {
