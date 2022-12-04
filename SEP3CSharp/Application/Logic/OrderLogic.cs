@@ -11,15 +11,18 @@ public class OrderLogic : IOrderLogic {
         _orderService = orderService;
     }
 
-    public Task<Order> CreateOrderAsync(OrderCreationDto dto) {
-        throw new NotImplementedException();
+    public async Task<Order> CreateOrderAsync(OrderCreationDto dto) {
+        Order order = await _orderService.CreateOrderAsync(dto);
+        return order;
     }
 
-    public Task<Order> GetOrderByIdAsync(long id) {
-        throw new NotImplementedException();
+    public async Task<Order> GetOrderByIdAsync(long id) {
+        Order order = await _orderService.GetOrderByIdAsync(id);
+        return order;
     }
 
-    public Task<IEnumerable<Order>> GetOrdersAsync() {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<Order>> GetOrdersAsync() {
+        IEnumerable<Order> orders = await _orderService.GetOrdersAsync();
+        return orders;
     }
 }
