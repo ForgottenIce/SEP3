@@ -27,6 +27,7 @@ public class CustomerGrpcService : ICustomerGrpcService
             });
             Customer customer = new Customer()
             {
+                Id = reply.Id,
                 FullName = reply.Fullname,
                 PhoneNo = reply.PhoneNo,
                 Address = reply.Address,
@@ -78,9 +79,7 @@ public class CustomerGrpcService : ICustomerGrpcService
                 Id = id
             });
 
-            Customer customer = new Customer()
-
-                {
+            Customer customer = new Customer() {
                     Id = reply.Id,
                     FullName = reply.Fullname,
                     PhoneNo = reply.PhoneNo,
