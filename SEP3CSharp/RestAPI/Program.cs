@@ -37,6 +37,9 @@ builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
 builder.Services.AddGrpcClient<WarehouseGrpcService.WarehouseGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
+builder.Services.AddGrpcClient<WarehouseProductGrpcService.WarehouseProductGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
@@ -50,6 +53,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
+builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
@@ -58,6 +62,7 @@ builder.Services.AddScoped<IOrderLogic, OrderLogic>();
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
 builder.Services.AddScoped<IWarehouseLogic, WarehouseLogic>();
 builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
+builder.Services.AddScoped<IWarehouseProductLogic, WarehouseProductLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

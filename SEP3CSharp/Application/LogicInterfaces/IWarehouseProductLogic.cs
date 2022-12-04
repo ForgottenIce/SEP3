@@ -1,7 +1,9 @@
-﻿using Shared.Models;
+﻿using Shared.Dtos;
+using Shared.Models;
 
 namespace Application.LogicInterfaces;
 public interface IWarehouseProductLogic {
-    Task<WarehouseProduct> GetWarehouseProductByIdAsync(long id);
+    Task<WarehouseProduct> CreateWarehouseProduct(WarehouseProductCreationDto dto);
+    Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId);
     Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsAsync();
 }

@@ -1,5 +1,8 @@
-﻿using gRPC.ServiceInterfaces;
+﻿using System.Text;
+using Grpc.Core;
+using gRPC.ServiceInterfaces;
 using Shared.Dtos;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
@@ -17,66 +20,102 @@ public class WarehouseProductService : IWarehouseProductService
 
     public async Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductCreationDto dto)
     {
-        WarehouseProductResponse replay = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
-            new CreateWarehouseProductRequest()
+        try {
+            WarehouseProductResponse replay = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
+                new CreateWarehouseProductRequest()
+                {
+                    WarehouseId = dto.WarehouseId,
+                    WarehousePosition = dto.WarehousePosition,
+                    MinimumQuantity = dto.MinimumQuantity,
+                    Quantity = dto.Quantity,
+                    ProductId = dto.ProductId
+                });
+
+            WarehouseProduct warehouseProduct = new WarehouseProduct()
             {
-                WarehouseId = dto.WarehouseId,
-                WarehousePosition = dto.WarehousePosition,
-                MinimumQuantity = dto.MinimumQuantity,
-                Quantity = dto.Quantity,
-                ProductId = dto.ProductId
-            });
+                WarehouseId = replay.WarehouseId,
+                WarehousePosition = replay.WarehousePosition,
+                MinimumQuantity = replay.MinimumQuantity,
+                Quantity = replay.Quantity,
+                ProductId = replay.ProductId
 
-        WarehouseProduct warehouseProduct = new WarehouseProduct()
-        {
-            WarehouseId = replay.WarehouseId,
-            WarehousePosition = replay.WarehousePosition,
-            MinimumQuantity = replay.MinimumQuantity,
-            Quantity = replay.Quantity,
-            ProductId = replay.ProductId
+            };
+            return warehouseProduct;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
 
-        };
-        return warehouseProduct;
+            if (e.StatusCode == StatusCode.AlreadyExists) {
+                throw new AlreadyExistsException(e.Status.Detail);
+            }
+            throw e;
+        }
     }
     
     
-    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(int id)
+    public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId)
     {
-        WarehouseProductResponse replyTo =
-            await _warehouseProductGrpcServiceClient.GetWarehouseProductAsync(new GetWarehouseProductRequest
-                { WarehouseId = id });
+        try {
+            WarehouseProductResponse replyTo =
+                await _warehouseProductGrpcServiceClient.GetWarehouseProductAsync(new GetWarehouseProductRequest
+                    { ProductId = productId, WarehouseId = warehouseId });
 
-        WarehouseProduct warehouseProduct = new WarehouseProduct
-        {
-            WarehouseId = replyTo.WarehouseId,
-            WarehousePosition = replyTo.WarehousePosition,
-            MinimumQuantity = replyTo.MinimumQuantity,
-            Quantity = replyTo.Quantity,
-            ProductId = replyTo.ProductId
+            WarehouseProduct warehouseProduct = new WarehouseProduct
+            {
+                WarehouseId = replyTo.WarehouseId,
+                WarehousePosition = replyTo.WarehousePosition,
+                MinimumQuantity = replyTo.MinimumQuantity,
+                Quantity = replyTo.Quantity,
+                ProductId = replyTo.ProductId
             
-        };
-        throw new NotImplementedException(); //???
+            };
+            return warehouseProduct;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                throw new NotFoundException(e.Status.Detail);
+            }
+            throw e;
+        }
     }
     
 
     public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsAsync()
     {
-        GetWarehouseProductsResponse reply = await _warehouseProductGrpcServiceClient.GetWarehouseProductsAsync(new GetWarehouseProductsRequest());
+        try {
+            GetWarehouseProductsResponse reply = await _warehouseProductGrpcServiceClient.GetWarehouseProductsAsync(new GetWarehouseProductsRequest());
        
         
-        List<WarehouseProduct> warehouseProducts = new();
-        foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
-        {
-            warehouseProducts.Add(new WarehouseProduct()
+            List<WarehouseProduct> warehouseProducts = new();
+            foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
             {
-                WarehouseId = pr.WarehouseId,
-                WarehousePosition = pr.WarehousePosition,
-                MinimumQuantity = pr.MinimumQuantity,
-                Quantity = pr.Quantity,
-                ProductId = pr.ProductId
-            });
-        }
+                warehouseProducts.Add(new WarehouseProduct()
+                {
+                    WarehouseId = pr.WarehouseId,
+                    WarehousePosition = pr.WarehousePosition,
+                    MinimumQuantity = pr.MinimumQuantity,
+                    Quantity = pr.Quantity,
+                    ProductId = pr.ProductId
+                });
+            }
 
-        return warehouseProducts.AsEnumerable();
+            return warehouseProducts.AsEnumerable();
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            
+            throw e;
+        }
     }
 }
