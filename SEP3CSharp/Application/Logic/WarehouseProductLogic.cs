@@ -7,9 +7,9 @@ namespace Application.Logic;
 
 public class WarehouseProductLogic : IWarehouseProductLogic
 {
-    private readonly IWarehouseProductService _warehouseProductService;
+    private readonly IWarehouseProductGrpcService _warehouseProductService;
 
-    public WarehouseProductLogic(IWarehouseProductService warehouseProductService)
+    public WarehouseProductLogic(IWarehouseProductGrpcService warehouseProductService)
     {
         _warehouseProductService = warehouseProductService;
     }

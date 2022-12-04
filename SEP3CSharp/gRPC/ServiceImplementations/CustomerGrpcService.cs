@@ -6,11 +6,11 @@ using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
 
-public class CustomerService : ICustomerService
+public class CustomerGrpcService : ICustomerGrpcService
 {
     private readonly CustomersGrpcService.CustomersGrpcServiceClient _serviceClient;
 
-    public CustomerService(CustomersGrpcService.CustomersGrpcServiceClient serviceClient)
+    public CustomerGrpcService(CustomersGrpcService.CustomersGrpcServiceClient serviceClient)
     {
         _serviceClient = serviceClient;
     }

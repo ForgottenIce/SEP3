@@ -2,7 +2,7 @@
 using Shared.Models;
 
 namespace gRPC.ServiceInterfaces;
-public interface IProductService {
+public interface IProductGrpcService {
     Task<Product> CreateProductAsync(ProductCreationDto dto);
     Task<IEnumerable<Product>> GetProductsAsync();
     Task<Product> GetProductByIdAsync(long id);

@@ -5,9 +5,9 @@ using Shared.Models;
 
 namespace Application.Logic;
 public class WarehouseLogic : IWarehouseLogic {
-    private readonly IWarehouseService _warehouseService;
+    private readonly IWarehouseGrpcService _warehouseService;
 
-    public WarehouseLogic(IWarehouseService warehouseService) {
+    public WarehouseLogic(IWarehouseGrpcService warehouseService) {
         _warehouseService = warehouseService;
     }
 

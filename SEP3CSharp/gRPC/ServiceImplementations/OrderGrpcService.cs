@@ -3,11 +3,11 @@ using Shared.Dtos;
 using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
-public class OrderService : IOrderService {
+public class OrderGrpcService : IOrderGrpcService {
 
-    private readonly OrderGrpcService.OrderGrpcServiceClient _serviceClient;
+    private readonly gRPC.OrderGrpcService.OrderGrpcServiceClient _serviceClient;
 
-    public OrderService(OrderGrpcService.OrderGrpcServiceClient serviceClient) {
+    public OrderGrpcService(gRPC.OrderGrpcService.OrderGrpcServiceClient serviceClient) {
         _serviceClient = serviceClient;
     }
 

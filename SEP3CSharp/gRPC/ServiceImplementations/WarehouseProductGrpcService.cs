@@ -7,11 +7,11 @@ using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
 
-public class WarehouseProductService : IWarehouseProductService
+public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 {
-    private readonly WarehouseProductGrpcService.WarehouseProductGrpcServiceClient _warehouseProductGrpcServiceClient;
+    private readonly gRPC.WarehouseProductGrpcService.WarehouseProductGrpcServiceClient _warehouseProductGrpcServiceClient;
 
-    public WarehouseProductService(WarehouseProductGrpcService.WarehouseProductGrpcServiceClient warehouseProductGrpcServiceClient)
+    public WarehouseProductGrpcService(gRPC.WarehouseProductGrpcService.WarehouseProductGrpcServiceClient warehouseProductGrpcServiceClient)
     {
         _warehouseProductGrpcServiceClient = warehouseProductGrpcServiceClient;
     }

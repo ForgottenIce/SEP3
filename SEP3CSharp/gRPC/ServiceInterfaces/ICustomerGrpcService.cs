@@ -3,7 +3,7 @@ using Shared.Models;
 
 namespace gRPC.ServiceInterfaces;
 
-public interface ICustomerService
+public interface ICustomerGrpcService
 {
     Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
     Task<Customer> GetCustomerByIdAsync(long id);

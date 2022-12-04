@@ -1,5 +1,5 @@
 ﻿namespace gRPC.ServiceInterfaces; 
 
-public interface IPingService {
+public interface IPingGrpcService {
 	Task<PingResponse> pingAsync();
 }

@@ -28,16 +28,16 @@ builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 Uri grpcUri = new Uri("http://localhost:9090");
-builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.ProductGrpcService.ProductGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
-builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.OrderGrpcService.OrderGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
-builder.Services.AddGrpcClient<WarehouseGrpcService.WarehouseGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.WarehouseGrpcService.WarehouseGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
-builder.Services.AddGrpcClient<WarehouseProductGrpcService.WarehouseProductGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.WarehouseProductGrpcService.WarehouseProductGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
@@ -48,12 +48,12 @@ builder.Services.AddGrpcClient<CustomersGrpcService.CustomersGrpcServiceClient>(
 });
 
 // gRPC Services
-builder.Services.AddScoped<IPingService, PingService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
+builder.Services.AddScoped<IPingGrpcService, PingGrpcService>();
+builder.Services.AddScoped<IOrderGrpcService, gRPC.ServiceImplementations.OrderGrpcService>();
+builder.Services.AddScoped<IProductGrpcService, gRPC.ServiceImplementations.ProductGrpcService>();
+builder.Services.AddScoped<IWarehouseGrpcService, gRPC.ServiceImplementations.WarehouseGrpcService>();
+builder.Services.AddScoped<ICustomerGrpcService, CustomerGrpcService>();
+builder.Services.AddScoped<IWarehouseProductGrpcService, gRPC.ServiceImplementations.WarehouseProductGrpcService>();
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();

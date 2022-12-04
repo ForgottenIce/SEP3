@@ -5,9 +5,9 @@ using Shared.Models;
 
 namespace Application.Logic;
 public class OrderLogic : IOrderLogic {
-    private readonly IOrderService _orderService;
+    private readonly IOrderGrpcService _orderService;
 
-    public OrderLogic(IOrderService orderService) {
+    public OrderLogic(IOrderGrpcService orderService) {
         _orderService = orderService;
     }
 

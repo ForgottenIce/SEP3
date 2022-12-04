@@ -7,8 +7,8 @@ namespace Application.Logic;
 
 public class CustomerLogic : ICustomerLogic
 {
-    private readonly ICustomerService customerService;
-    public CustomerLogic(ICustomerService customerService) {
+    private readonly ICustomerGrpcService customerService;
+    public CustomerLogic(ICustomerGrpcService customerService) {
         this.customerService = customerService;
     }
 

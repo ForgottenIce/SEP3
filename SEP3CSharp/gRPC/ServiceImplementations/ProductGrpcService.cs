@@ -5,11 +5,11 @@ using Shared.Exceptions;
 using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
-public class ProductService : IProductService {
+public class ProductGrpcService : IProductGrpcService {
 
-    private readonly ProductGrpcService.ProductGrpcServiceClient _serviceClient;
+    private readonly gRPC.ProductGrpcService.ProductGrpcServiceClient _serviceClient;
 
-    public ProductService(ProductGrpcService.ProductGrpcServiceClient grpcServiceClient) {
+    public ProductGrpcService(gRPC.ProductGrpcService.ProductGrpcServiceClient grpcServiceClient) {
         _serviceClient = grpcServiceClient;
     }
 
