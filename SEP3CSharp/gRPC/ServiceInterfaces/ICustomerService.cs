@@ -6,8 +6,6 @@ namespace gRPC.ServiceInterfaces;
 public interface ICustomerService
 {
     Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
-    Task<IEnumerable<Customer>> GetCustomerAsync();
-    Task<Customer> GetCustomerById(int id);
-
+    Task<Customer> GetCustomerByIdAsync(long id);
     Task<IEnumerable<Customer>> GetCustomersAsync();
 }

@@ -1,5 +1,7 @@
 ﻿using gRPC.ServiceInterfaces;
+using Grpc.Core;
 using Shared.Dtos;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
@@ -15,66 +17,87 @@ public class CustomerService : ICustomerService
 
     public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
-        CustomerResponse replay = await _serviceClient.CreateCustomerAsync(new CreateCustomerRequest()
-        { 
-            Fullname = dto.FullName,
-            PhoneNo = dto.PhoneNo,
-            Address = dto.Address,
-            Mail = dto.Mail
-        });
-        Customer customer = new Customer()
-        {
-            FullName = replay.Fullname,
-            PhoneNo = replay.PhoneNo,
-            Address = replay.Address,
-            Mail = replay.Mail
-        };
-        return customer;
-    }
-//TODO
-    public Task<IEnumerable<Customer>> GetCustomerAsync()
-    {
-        throw new NotImplementedException();
+        try {
+            CustomerResponse reply = await _serviceClient.CreateCustomerAsync(new CreateCustomerRequest()
+            { 
+                Fullname = dto.FullName,
+                PhoneNo = dto.PhoneNo,
+                Address = dto.Address,
+                Mail = dto.Mail
+            });
+            Customer customer = new Customer()
+            {
+                FullName = reply.Fullname,
+                PhoneNo = reply.PhoneNo,
+                Address = reply.Address,
+                Mail = reply.Mail
+            };
+            return customer;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            throw e;
+        }
     }
 
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
-        GetCustomersResponse replay = await _serviceClient.GetCustomersAsync(new GetCustomersRequest());
+        try {
+            GetCustomersResponse reply = await _serviceClient.GetCustomersAsync(new GetCustomersRequest());
 
-        List<Customer> customers = new();
-        foreach (CustomerResponse pr in replay.Customers)
-        {
-            customers.Add(new Customer()
-                {
-                    Id = pr.Id,
-                    Address = pr.Address,
-                    FullName = pr.Fullname,
-                    Mail = pr.Mail,
-                    PhoneNo = pr.PhoneNo
-                });
-        }
-
-        return customers.AsEnumerable();
-    }
-
-    public async Task<Customer> GetCustomerById(int id)
-    {
-        CustomerResponse replay = await _serviceClient.GetCustomerAsync(new GetCustomerRequest()
-        {
-            Id = id
-        });
-
-        Customer customer = new Customer()
-
+            List<Customer> customers = new();
+            foreach (CustomerResponse pr in reply.Customers)
             {
-                Id = replay.Id,
-                FullName = replay.Fullname,
-                PhoneNo = replay.PhoneNo,
-                Address = replay.Address,
-                Mail = replay.Mail
-            };
+                customers.Add(new Customer()
+                    {
+                        Id = pr.Id,
+                        Address = pr.Address,
+                        FullName = pr.Fullname,
+                        Mail = pr.Mail,
+                        PhoneNo = pr.PhoneNo
+                    });
+            }
 
-        return customer;
+            return customers.AsEnumerable();
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            throw e;
+        }
     }
-    
+
+    public async Task<Customer> GetCustomerByIdAsync(long id)
+    {
+        try {
+            CustomerResponse reply = await _serviceClient.GetCustomerAsync(new GetCustomerRequest()
+            {
+                Id = id
+            });
+
+            Customer customer = new Customer()
+
+                {
+                    Id = reply.Id,
+                    FullName = reply.Fullname,
+                    PhoneNo = reply.PhoneNo,
+                    Address = reply.Address,
+                    Mail = reply.Mail
+                };
+
+            return customer;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                throw new NotFoundException(e.Status.Detail);
+            }
+            throw e;
+        }
+    }
 }
