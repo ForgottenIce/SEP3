@@ -2,10 +2,10 @@
 
 namespace gRPC.ServiceImplementations; 
 
-public class PingService : IPingService{
+public class PingGrpcService : IPingGrpcService{
 	private Ping.PingClient _client;
 
-	public PingService(Ping.PingClient client) {
+	public PingGrpcService(Ping.PingClient client) {
 		_client = client;
 	}
 

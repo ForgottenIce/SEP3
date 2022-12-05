@@ -2,6 +2,7 @@
 using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace RestAPI.Controllers;
@@ -24,6 +25,10 @@ public class CustomerController : ControllerBase
             Customer customer = await _customerLogic.CreateCustomerAsync(dto);
             return Created($"/Customer/{customer.Id}", customer);
         }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
         catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
@@ -35,7 +40,15 @@ public class CustomerController : ControllerBase
             Customer customer = await _customerLogic.GetCustomerByIdAsync(id);
             return Ok(customer);
         }
-        catch(Exception e) {
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
         }
@@ -45,6 +58,10 @@ public class CustomerController : ControllerBase
         try {
             IEnumerable<Customer> customer = await _customerLogic.GetCustomersAsync();
             return Ok(customer);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
         }
         catch (Exception e) {
             Console.WriteLine(e);

@@ -3,7 +3,7 @@ using Shared.Models;
 
 namespace gRPC.ServiceInterfaces;
 
-public interface IWarehouseProductService
+public interface IWarehouseProductGrpcService
 {
     Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductCreationDto dto);
     Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId);

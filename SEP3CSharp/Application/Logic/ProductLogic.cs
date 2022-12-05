@@ -5,9 +5,9 @@ using Shared.Models;
 
 namespace Application.Logic;
 public class ProductLogic : IProductLogic {
-    private readonly IProductService productService;
+    private readonly IProductGrpcService productService;
 
-    public ProductLogic(IProductService productService) {
+    public ProductLogic(IProductGrpcService productService) {
         this.productService = productService;
     }
 

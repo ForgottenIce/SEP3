@@ -2,8 +2,8 @@
 using Shared.Models;
 
 namespace gRPC.ServiceInterfaces;
-public interface IOrderService {
+public interface IOrderGrpcService {
     Task<Order> CreateOrderAsync(OrderCreationDto dto);
     Task<Order> GetOrderByIdAsync(long id);
-    Task<Order> GetOrdersAsync();
+    Task<IEnumerable<Order>> GetOrdersAsync();
 }

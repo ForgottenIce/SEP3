@@ -4,10 +4,10 @@ using Shared.Exceptions;
 using Shared.Models;
 
 namespace gRPC.ServiceImplementations;
-public class WarehouseService : IWarehouseService {
-    private readonly WarehouseGrpcService.WarehouseGrpcServiceClient _serviceClient;
+public class WarehouseGrpcService : IWarehouseGrpcService {
+    private readonly gRPC.WarehouseGrpcService.WarehouseGrpcServiceClient _serviceClient;
 
-    public WarehouseService(WarehouseGrpcService.WarehouseGrpcServiceClient serviceClient) {
+    public WarehouseGrpcService(gRPC.WarehouseGrpcService.WarehouseGrpcServiceClient serviceClient) {
         _serviceClient = serviceClient;
     }
 
