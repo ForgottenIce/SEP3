@@ -21,7 +21,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
     public async Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductCreationDto dto)
     {
         try {
-            WarehouseProductResponse replay = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
+            WarehouseProductResponse reply = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
                 new CreateWarehouseProductRequest()
                 {
                     WarehouseId = dto.WarehouseId,
@@ -33,12 +33,20 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 
             WarehouseProduct warehouseProduct = new WarehouseProduct()
             {
-                WarehouseId = replay.WarehouseId,
-                WarehousePosition = replay.WarehousePosition,
-                MinimumQuantity = replay.MinimumQuantity,
-                Quantity = replay.Quantity,
-                ProductId = replay.ProductId
-
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                  Id = reply.Product.Id,
+                  Name = reply.Product.Name,
+                  Description = reply.Product.Description,
+                  Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
             };
             return warehouseProduct;
         }
@@ -62,17 +70,26 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
     public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId)
     {
         try {
-            WarehouseProductResponse replyTo =
+            WarehouseProductResponse reply =
                 await _warehouseProductGrpcServiceClient.GetWarehouseProductAsync(new GetWarehouseProductRequest
                     { ProductId = productId, WarehouseId = warehouseId });
 
             WarehouseProduct warehouseProduct = new WarehouseProduct
             {
-                WarehouseId = replyTo.WarehouseId,
-                WarehousePosition = replyTo.WarehousePosition,
-                MinimumQuantity = replyTo.MinimumQuantity,
-                Quantity = replyTo.Quantity,
-                ProductId = replyTo.ProductId
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                    Id = reply.Product.Id,
+                    Name = reply.Product.Name,
+                    Description = reply.Product.Description,
+                    Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
             
             };
             return warehouseProduct;
@@ -100,11 +117,20 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             {
                 warehouseProducts.Add(new WarehouseProduct()
                 {
-                    WarehouseId = pr.WarehouseId,
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
                     WarehousePosition = pr.WarehousePosition,
                     MinimumQuantity = pr.MinimumQuantity,
-                    Quantity = pr.Quantity,
-                    ProductId = pr.ProductId
+                    Quantity = pr.Quantity
                 });
             }
 
