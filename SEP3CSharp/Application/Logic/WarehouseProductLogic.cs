@@ -29,11 +29,15 @@ public class WarehouseProductLogic : IWarehouseProductLogic
         return warehouseProducts;
     }
 
-    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductIdAsync(long id) {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductIdAsync(long id) {
+        IEnumerable<WarehouseProduct> warehouseProducts =
+            await _warehouseProductService.GetWarehouseProductsByProductIdAsync(id);
+        return warehouseProducts;
     }
 
-    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseIdAsync(long id) {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseIdAsync(long id) {
+        IEnumerable<WarehouseProduct> warehouseProducts =
+            await _warehouseProductService.GetWarehouseProductsByWarehouseIdAsync(id);
+        return warehouseProducts;
     }
 }
