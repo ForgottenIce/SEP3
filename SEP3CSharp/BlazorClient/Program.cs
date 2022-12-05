@@ -22,6 +22,7 @@ builder.Services.AddScoped<IPingService, PingService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
 
 //Radzen Services
