@@ -28,4 +28,12 @@ public class WarehouseProductLogic : IWarehouseProductLogic
         IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductService.GetWarehouseProductsAsync();
         return warehouseProducts;
     }
+
+    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductIdAsync(long id) {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseIdAsync(long id) {
+        throw new NotImplementedException();
+    }
 }
