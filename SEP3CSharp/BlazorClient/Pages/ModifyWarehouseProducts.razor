@@ -78,17 +78,16 @@
                         <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
                         <RadzenText TextStyle="TextStyle.Overline"Text="Position"/>
                         <RadzenTextBox class="mb-2" @bind-Value=_position Placeholder="Warehouse Position"></RadzenTextBox>
-                        <RadzenButton Text="Confirm" Click="async () => {await CreateWarehouseProduct(_selectedProduct.First().ProductId.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
+                        <RadzenButton Text="Confirm" Click="async () => {await AlterWarehouseProduct(_selectedProduct.First().ProductId.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
                     </div>
                 </div>
             </div>
         );
     }
     
-    private async Task CreateWarehouseProduct(long productId, long warehouseId) {
+    private async Task AlterWarehouseProduct(long productId, long warehouseId) {
         try {
-            throw new NotImplementedException();
-            WarehouseProduct warehouseProduct = await warehouseProductService.CreateWarehouseProductAsync(new WarehouseProductCreationDto {
+            WarehouseProduct warehouseProduct = await warehouseProductService.AlterWarehouseProductAsync(new WarehouseProductCreationDto {
                     ProductId = productId,
                     WarehouseId = warehouseId,
                     Quantity = _quantity,
@@ -98,6 +97,7 @@
             _quantity = 0;
             _minQuantity = 0;
             _position = "";
+            await GetProducts(warehouseId);
         }
         catch (Exception e) {
             errorMsg = e.Message;
