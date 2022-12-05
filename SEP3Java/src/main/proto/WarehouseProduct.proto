@@ -41,6 +41,7 @@ message QueryByPartialIdRequest {
 
 service WarehouseProductGrpcService{
   rpc CreateWarehouseProduct(CreateWarehouseProductRequest) returns (WarehouseProductResponse);
+  rpc AlterWarehouseProduct(CreateWarehouseProductRequest) returns (WarehouseProductResponse);
   rpc GetWarehouseProduct(GetWarehouseProductRequest) returns (WarehouseProductResponse);
   rpc GetWarehouseProducts(GetWarehouseProductsRequest) returns (GetWarehouseProductsResponse);
   rpc GetWarehouseProductByProductId(QueryByPartialIdRequest) returns (GetWarehouseProductsResponse);
