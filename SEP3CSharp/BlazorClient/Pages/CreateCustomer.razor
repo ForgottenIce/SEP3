@@ -81,7 +81,7 @@
     
     public bool validateFullName()
     {
-        if (string.IsNullOrEmpty(fullName)|| string.IsNullOrEmpty(address) || String.IsNullOrEmpty(mail))
+        if (string.IsNullOrEmpty(fullName)&& string.IsNullOrEmpty(address) && String.IsNullOrEmpty(mail))
         {
             return false;
         }
