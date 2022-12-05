@@ -60,4 +60,36 @@ public class WarehouseProductService : IWarehouseProductService {
 			})!;
 		return warehouseProducts;
 	}
+
+	public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductAsync(long id) {
+		HttpResponseMessage response = await _httpClient.GetAsync($"/warehouseProduct/byproductid/{id}");
+		string content = await response.Content.ReadAsStringAsync();
+
+		if (!response.IsSuccessStatusCode) {
+			string result = await response.Content.ReadAsStringAsync();
+			throw new Exception(result);
+		}
+		
+		IEnumerable<WarehouseProduct> warehouseProducts = JsonSerializer.Deserialize<IEnumerable<WarehouseProduct>>(content,
+			new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true
+			})!;
+		return warehouseProducts;
+	}
+	
+	public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseAsync(long id) {
+		HttpResponseMessage response = await _httpClient.GetAsync($"/warehouseProduct/bywarehouseid/{id}");
+		string content = await response.Content.ReadAsStringAsync();
+
+		if (!response.IsSuccessStatusCode) {
+			string result = await response.Content.ReadAsStringAsync();
+			throw new Exception(result);
+		}
+		
+		IEnumerable<WarehouseProduct> warehouseProducts = JsonSerializer.Deserialize<IEnumerable<WarehouseProduct>>(content,
+			new JsonSerializerOptions {
+				PropertyNameCaseInsensitive = true
+			})!;
+		return warehouseProducts;
+	}
 }
