@@ -18,7 +18,7 @@ public class OrderGrpcService : IOrderGrpcService {
             DateTimeOffset dtOffsetOrdered = new DateTimeOffset(dto.DateTimeOrdered);
             DateTimeOffset dtOffsetSent = new DateTimeOffset(dto.DateTimeSent);
             OrderResponse reply = await _serviceClient.CreateOrderAsync(new CreateOrderRequest {
-                CustomerId = dto.Customer.Id,
+                CustomerId = dto.CustomerId,
                 DateTimeOrdered = dtOffsetOrdered.ToUnixTimeSeconds(),
                 IsPacked = dto.IsPacked,
                 DateTimeSent = dtOffsetSent.ToUnixTimeSeconds(),
@@ -33,9 +33,9 @@ public class OrderGrpcService : IOrderGrpcService {
                     Address = reply.Customer.Address,
                     Mail = reply.Customer.Mail,
                 },
-                DateTimeOrdered = DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime,
+                DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                 IsPacked = reply.IsPacked,
-                DateTimeSent = DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
+                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
             };
             return order;
         }
@@ -63,9 +63,9 @@ public class OrderGrpcService : IOrderGrpcService {
                     Address = reply.Customer.Address,
                     Mail = reply.Customer.Mail,
                 },
-                DateTimeOrdered = DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime,
+                DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                 IsPacked = reply.IsPacked,
-                DateTimeSent = DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
+                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
             };
             return order;
         }
@@ -95,9 +95,9 @@ public class OrderGrpcService : IOrderGrpcService {
                         Address = or.Customer.Address,
                         Mail = or.Customer.Mail,
                     },
-                    DateTimeOrdered = DateTimeOffset.FromUnixTimeSeconds(or.DateTimeOrdered).DateTime,
+                    DateTimeOrdered = or.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                     IsPacked = or.IsPacked,
-                    DateTimeSent = DateTimeOffset.FromUnixTimeSeconds(or.DateTimeSent).DateTime
+                    DateTimeSent = or.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeSent).DateTime
                 });
             }
             
