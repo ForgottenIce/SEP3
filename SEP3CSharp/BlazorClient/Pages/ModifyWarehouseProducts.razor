@@ -1,0 +1,106 @@
+﻿@page "/ModifyWarehouseProducts"
+<h3>ModifyWarehouseProducts</h3>
+@using Radzen
+@using HttpClients.ClientIntefaces
+@using global::Shared.Dtos
+@using global::Shared.Models
+@inject NavigationManager navMgr
+@inject DialogService DialogService
+@inject IWarehouseProductService warehouseProductService
+@inject IWarehouseService warehouseService
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Warehouse Products</RadzenText>
+                <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetProducts(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
+                <RadzenDataGrid TItem="WarehouseProduct" Data="@_warehouseProducts" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="ProductId.Name" Title="Product Name" Width="500px" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="WarehousePosition" Title="Warehouse Position" Width="150px" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Quantity" Title="Quantity" Width="100px" Sortable="false" TextAlign="TextAlign.Center" Filterable="false"/>
+                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="MinimumQuantity" Title="Minimum Quantity" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
+                    </Columns>
+                </RadzenDataGrid>
+                <RadzenButton Text="Alter stock" Disabled="@(_selectedProduct == null || _selectedWarehouse == null  ? true : false)" Click="OpenCreationDialog"/>
+            </RadzenCard>
+        </div>
+    </div> 
+    @if (!string.IsNullOrEmpty(errorMsg)) {
+            <br />
+                <label style="color: red">Error: @errorMsg</label>
+    }
+</div>
+
+@code {
+    private string errorMsg = "";
+
+    private IEnumerable<WarehouseProduct> _warehouseProducts = null;
+    private IEnumerable<Warehouse> _warehouses = null;
+
+    private IList<WarehouseProduct> _selectedProduct;
+    private Warehouse _selectedWarehouse;
+    private int _quantity = 0;
+    private int _minQuantity = 0;
+    private string _position = "";
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _warehouses = await warehouseService.GetWarehousesAsync();
+        }
+        catch (Exception e) {
+            errorMsg = e.Message;
+        }
+    }
+
+    private async Task GetProducts(long id) {
+        try {
+            _warehouseProducts = await warehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
+        }
+        catch (Exception e) {
+            errorMsg = e.Message;
+        }
+    }
+    
+    private async Task OpenCreationDialog() {
+        _quantity = _selectedProduct.First().Quantity;
+        _minQuantity = _selectedProduct.First().MinimumQuantity;
+        _position = _selectedProduct.First().WarehousePosition;
+        var result = await DialogService.OpenAsync("Alter Product", ds =>
+            @<div>
+                <p class="mb-4">Alter <b>@_selectedProduct.First().ProductId.Name</b> from <b>@_selectedWarehouse.Name</b></p>
+                <div class="row">
+                    <div class="col d-flex flex-column">
+                        <RadzenText TextStyle="TextStyle.Overline"Text="Quantity"/>
+                        <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_quantity></RadzenNumeric>
+                        <RadzenText TextStyle="TextStyle.Overline"Text="Minimum Quantity"/>
+                        <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
+                        <RadzenText TextStyle="TextStyle.Overline"Text="Position"/>
+                        <RadzenTextBox class="mb-2" @bind-Value=_position Placeholder="Warehouse Position"></RadzenTextBox>
+                        <RadzenButton Text="Confirm" Click="async () => {await CreateWarehouseProduct(_selectedProduct.First().ProductId.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    private async Task CreateWarehouseProduct(long productId, long warehouseId) {
+        try {
+            throw new NotImplementedException();
+            WarehouseProduct warehouseProduct = await warehouseProductService.CreateWarehouseProductAsync(new WarehouseProductCreationDto {
+                    ProductId = productId,
+                    WarehouseId = warehouseId,
+                    Quantity = _quantity,
+                    MinimumQuantity = _minQuantity,
+                    WarehousePosition = _position
+                });
+            _quantity = 0;
+            _minQuantity = 0;
+            _position = "";
+        }
+        catch (Exception e) {
+            errorMsg = e.Message;
+        }
+    }
+}
