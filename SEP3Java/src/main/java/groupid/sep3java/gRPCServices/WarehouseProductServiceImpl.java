@@ -68,6 +68,33 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 		}
 	}
 
+	@Override public void alterWarehouseProduct(
+			CreateWarehouseProductRequest request,
+			StreamObserver<WarehouseProductResponse> responseObserver) {
+		try {
+			Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new NotFoundException("product with id:" + request.getProductId() + "was not found"));
+			Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new NotFoundException("Warehouse with WarehouseId:" + request.getWarehouseId() + "was not found"));
+
+			if (warehouseProductRepository.findById(new WarehouseProductID(
+					product.getId(), warehouse.getId())).isEmpty()) throw new NotFoundException("Warehouse was not found");
+
+			WarehouseProduct warehouseProductToSave = GRPCWarehouseProductFactory.create(request,product,warehouse);
+			WarehouseProduct newProduct = warehouseProductRepository.save(warehouseProductToSave);
+
+			WarehouseProductResponse response = GRPCWarehouseProductFactory.createWarehouseProductResponse(newProduct);
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("WarehouseProduct could not be altered as, it didn't exist, or warehouse or product could not be found")
+					.asRuntimeException(metadata));
+		}
+	}
+
 	@Override public void getWarehouseProduct(
 			GetWarehouseProductRequest request,
 			StreamObserver<WarehouseProductResponse> responseObserver) {
