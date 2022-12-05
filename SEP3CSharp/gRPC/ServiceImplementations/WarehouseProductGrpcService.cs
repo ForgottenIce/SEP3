@@ -65,8 +65,50 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             throw e;
         }
     }
-    
-    
+
+    public async Task<WarehouseProduct> AlterWarehouseProductAsync(WarehouseProductCreationDto dto) {
+        try {
+            WarehouseProductResponse reply = await _warehouseProductGrpcServiceClient.AlterWarehouseProductAsync(
+                new CreateWarehouseProductRequest()
+                {
+                    WarehouseId = dto.WarehouseId,
+                    ProductId = dto.ProductId,
+                    WarehousePosition = dto.WarehousePosition,
+                    MinimumQuantity = dto.MinimumQuantity,
+                    Quantity = dto.Quantity
+                });
+
+            WarehouseProduct warehouseProduct = new WarehouseProduct()
+            {
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                    Id = reply.Product.Id,
+                    Name = reply.Product.Name,
+                    Description = reply.Product.Description,
+                    Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
+            };
+            return warehouseProduct;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw e;
+        }
+    }
+
     public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId)
     {
         try {
