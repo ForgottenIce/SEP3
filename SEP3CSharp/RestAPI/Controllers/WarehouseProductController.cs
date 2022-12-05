@@ -20,7 +20,7 @@ public class WarehouseProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<WarehouseProduct>> CreateWarehouseProduct(WarehouseProductCreationDto dto) {
+    public async Task<ActionResult<WarehouseProduct>> CreateWarehouseProductAsync(WarehouseProductCreationDto dto) {
         try {
             WarehouseProduct warehouseProduct = await _warehouseProductLogic.CreateWarehouseProduct(dto);
             return Ok(warehouseProduct);
@@ -28,6 +28,26 @@ public class WarehouseProductController : ControllerBase
         catch (AlreadyExistsException e) {
             Console.WriteLine(e.Message);
             return Conflict(e.Message);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return Conflict(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpPatch]
+    public async Task<ActionResult<WarehouseProduct>> AlterWarehouseProductAsync(WarehouseProductCreationDto dto) {
+        try {
+            WarehouseProduct warehouseProduct = await _warehouseProductLogic.AlterWarehouseProduct(dto);
+            return Ok(warehouseProduct);
         }
         catch (NotFoundException e) {
             Console.WriteLine(e.Message);
@@ -85,7 +105,7 @@ public class WarehouseProductController : ControllerBase
     }
 
     [HttpGet("byproductid/{id}")]
-    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByProduct(long id) {
+    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByProductAsync(long id) {
         try {
             IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
             return Ok(warehouseProducts);
@@ -102,7 +122,7 @@ public class WarehouseProductController : ControllerBase
     }
     
     [HttpGet("bywarehouseid/{id}")]
-    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByWarehouse(long id) {
+    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByWarehouseAsync(long id) {
         try {
             IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
             return Ok(warehouseProducts);
