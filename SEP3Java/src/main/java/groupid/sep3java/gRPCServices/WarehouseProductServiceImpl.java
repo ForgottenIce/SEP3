@@ -99,4 +99,26 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}
+
+	@Override public void getWarehouseProductByProductId(
+			QueryByPartialIdRequest request,
+			StreamObserver<GetWarehouseProductsResponse> responseObserver) {
+		List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByProductId(
+				request.getId());
+
+		GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
+	}
+
+	@Override public void getWarehouseProductByWarehouseId(
+			QueryByPartialIdRequest request,
+			StreamObserver<GetWarehouseProductsResponse> responseObserver) {
+		List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByWarehouseId(
+				request.getId());
+
+		GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
+		responseObserver.onNext(response);
+		responseObserver.onCompleted();
+	}
 }
