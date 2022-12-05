@@ -83,4 +83,38 @@ public class WarehouseProductController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpGet("byproductid/{id}")]
+    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByProduct(long id) {
+        try {
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
+            return Ok(warehouseProducts);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpGet("bywarehouseid/{id}")]
+    public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByWarehouse(long id) {
+        try {
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
+            return Ok(warehouseProducts);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }
