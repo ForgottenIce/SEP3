@@ -144,4 +144,88 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             throw e;
         }
     }
+
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductIdAsync(long id)
+    {
+        try
+        {
+            GetWarehouseProductsResponse reply =
+                await _warehouseProductGrpcServiceClient.GetWarehouseProductByProductIdAsync(
+                    new QueryByPartialIdRequest{Id = id});
+            List<WarehouseProduct> warehouseProducts = new();
+            foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
+            {
+                warehouseProducts.Add(new WarehouseProduct()
+                {
+
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
+                    
+                    WarehousePosition = pr.WarehousePosition,
+                    MinimumQuantity = pr.MinimumQuantity,
+                    Quantity = pr.Quantity,
+                });
+            }
+
+            return warehouseProducts.AsEnumerable();
+        }
+        catch (RpcException e)
+        {
+            if (e.StatusCode == StatusCode.Unavailable)
+            {
+                throw new ServiceUnavailableException();
+            }
+            throw e;
+        }
+    }
+
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseIdAsync(long id)
+    {
+        try
+        {
+            GetWarehouseProductsResponse reply = await _warehouseProductGrpcServiceClient.GetWarehouseProductByWarehouseIdAsync(new QueryByPartialIdRequest {Id = id});
+            List<WarehouseProduct> warehouseProducts = new();
+            foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
+            {
+                warehouseProducts.Add(new WarehouseProduct()
+                {
+
+                    WarehousePosition = pr.WarehousePosition,
+                    MinimumQuantity = pr.MinimumQuantity,
+                  
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
+                    Quantity = pr.Quantity,
+                });
+            }
+
+            return warehouseProducts.AsEnumerable();
+        }
+        catch (RpcException e)
+        {
+            if (e.StatusCode == StatusCode.Unavailable)
+            {
+                throw new ServiceUnavailableException();
+            }
+            throw e;
+        }
+    }
 }
