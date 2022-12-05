@@ -1,4 +1,5 @@
-﻿@page "/CreateCustomer"
+﻿using System.Text.REgularExpression;
+@page "/CreateCustomer"
 @using global::Shared.Dtos
 @using HttpClients.ClientIntefaces
 @using Microsoft.AspNetCore.Components
@@ -67,7 +68,7 @@
     string mail { get; set; }
     private string errorLabel;
     
-    Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+    /*Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");*/
 
     async Task CreateNewCustomer()
     {
@@ -81,7 +82,7 @@
         
     }
 
-    public bool validateMail()
+   /* public bool validateMail()
     {
         if (regex.IsMatch(mail))
         {
@@ -90,7 +91,7 @@
 
         return false;
     }
-    
+    */
     
     
     public bool validateFullName()
@@ -128,6 +129,11 @@
         }
         return true;
     }
-    
+
+    public static bool Isvalidate(string email)
+    {
+        Regex emailRegex= new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", RegexOptions.IgnoreCase);
+        return Isvalidate(email);
+    }
     
 }
