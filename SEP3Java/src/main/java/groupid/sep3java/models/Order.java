@@ -1,7 +1,9 @@
 package groupid.sep3java.models;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity(name = "orderPlaced")
@@ -10,21 +12,25 @@ public class Order {
 	private long id;
 	@ManyToOne
 	private Customer customer;
-	@Temporal(TemporalType.DATE)
-	private Date dateTimeOrdered;
+	private LocalDate dateOrdered;
+	private LocalTime timeOrdered;
 	private boolean isPacked;
-	@Temporal(TemporalType.DATE)
-	private Date dateTimeSent;
+	private LocalDate dateSent;
+	private LocalTime timeSent;
 
 	public Order() {
 	}
 
-	public Order(Customer customer, Date dateTimeOrdered,
-			boolean isPacked, Date dateTimeSent) {
+	public Order(Customer customer, LocalDateTime dateTimeOrdered,
+			boolean isPacked, LocalDateTime dateTimeSent) {
 		this.customer = customer;
-		this.dateTimeOrdered = dateTimeOrdered;
+		dateOrdered = dateTimeOrdered.toLocalDate();
+		timeOrdered = dateTimeOrdered.toLocalTime();
 		this.isPacked = isPacked;
-		this.dateTimeSent = dateTimeSent;
+		dateSent = dateTimeSent.toLocalDate();
+		timeSent = dateTimeSent.toLocalTime();
+
+
 	}
 
 	public long getId() {
@@ -43,12 +49,20 @@ public class Order {
 		this.customer = customer;
 	}
 
-	public Date getDateTimeOrdered() {
-		return dateTimeOrdered;
+	public LocalDate getDateOrdered() {
+		return dateOrdered;
 	}
 
-	public void setDateTimeOrdered(Date dateTimeOrdered) {
-		this.dateTimeOrdered = dateTimeOrdered;
+	public LocalTime getTimeOrdered() {
+		return timeOrdered;
+	}
+
+	public void setDateOrdered(LocalDate dateTimeOrdered) {
+		this.dateOrdered = dateTimeOrdered;
+	}
+
+	public void setTimeOrdered(LocalTime timeOrdered) {
+		this.timeOrdered = timeOrdered;
 	}
 
 	public boolean isPacked() {
@@ -59,12 +73,20 @@ public class Order {
 		isPacked = packed;
 	}
 
-	public Date getDateTimeSent() {
-		return dateTimeSent;
+	public LocalDate getDateSent() {
+		return dateSent;
 	}
 
-	public void setDateTimeSent(Date dateTimeSent) {
-		this.dateTimeSent = dateTimeSent;
+	public LocalTime getTimeSent() {
+		return timeSent;
+	}
+
+	public void setDateSent(LocalDate dateTimeSent) {
+		this.dateSent = dateTimeSent;
+	}
+
+	public void setTimeSent(LocalTime timeSent) {
+		this.timeSent = timeSent;
 	}
 
 	@Override public boolean equals(Object o) {
@@ -74,18 +96,18 @@ public class Order {
 			return false;
 		Order order = (Order) o;
 		return id == order.id && isPacked == order.isPacked && Objects.equals(
-				customer, order.customer) && Objects.equals(dateTimeOrdered,
-				order.dateTimeOrdered) && Objects.equals(dateTimeSent,
-				order.dateTimeSent);
+				customer, order.customer) && Objects.equals(dateOrdered,
+				order.dateOrdered) && Objects.equals(dateSent,
+				order.dateSent);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(id, customer, dateTimeOrdered, isPacked, dateTimeSent);
+		return Objects.hash(id, customer, dateOrdered, isPacked, dateSent);
 	}
 
 	@Override public String toString() {
 		return "Order{" + "id=" + id + ", customer=" + customer
-				+ ", dateTimeOrdered=" + dateTimeOrdered + ", isPacked=" + isPacked
-				+ ", dateTimeSent=" + dateTimeSent + '}';
+				+ ", dateTimeOrdered=" + dateOrdered + ", isPacked=" + isPacked
+				+ ", dateTimeSent=" + dateSent + '}';
 	}
 }
