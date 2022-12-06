@@ -6,5 +6,5 @@ public class Order {
     public DateTime? DateTimeOrdered { get; set; }
     public bool IsPacked { get; set; }
     public DateTime? DateTimeSent { get; set; }
-    
+    public IEnumerable<Product> OrderedProducts { get; set; }
 }

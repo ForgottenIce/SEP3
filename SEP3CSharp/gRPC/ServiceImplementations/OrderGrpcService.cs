@@ -1,8 +1,11 @@
 ﻿using gRPC.ServiceInterfaces;
 using Grpc.Core;
+using Google.Protobuf.Collections;
 using Shared.Dtos;
 using Shared.Exceptions;
 using Shared.Models;
+using System.Text;
+using System;
 
 namespace gRPC.ServiceImplementations;
 public class OrderGrpcService : IOrderGrpcService {
@@ -15,14 +18,19 @@ public class OrderGrpcService : IOrderGrpcService {
 
     public async Task<Order> CreateOrderAsync(OrderCreationDto dto) {
         try {
-            DateTimeOffset dtOffsetOrdered = new DateTimeOffset(dto.DateTimeOrdered);
-            DateTimeOffset dtOffsetSent = new DateTimeOffset(dto.DateTimeSent);
-            OrderResponse reply = await _serviceClient.CreateOrderAsync(new CreateOrderRequest {
+            DateTimeOffset dtOffsetOrdered = new DateTimeOffset(dto.DateTimeOrdered ?? new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            DateTimeOffset dtOffsetSent = new DateTimeOffset(dto.DateTimeSent ?? new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            CreateOrderRequest createOrderRequest = new CreateOrderRequest {
                 CustomerId = dto.CustomerId,
                 DateTimeOrdered = dtOffsetOrdered.ToUnixTimeSeconds(),
                 IsPacked = dto.IsPacked,
                 DateTimeSent = dtOffsetSent.ToUnixTimeSeconds(),
-            });
+            };
+            foreach (long productId in dto.ProductIds) {
+                createOrderRequest.ProductIds.Add(productId);
+            }
+
+            OrderResponse reply = await _serviceClient.CreateOrderAsync(createOrderRequest);
 
             Order order = new Order {
                 Id = reply.Id,
@@ -44,7 +52,8 @@ public class OrderGrpcService : IOrderGrpcService {
                 throw new ServiceUnavailableException();
             }
             if (e.StatusCode == StatusCode.NotFound) {
-                throw new NotFoundException(e.Status.Detail);
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
             throw e;
         }
