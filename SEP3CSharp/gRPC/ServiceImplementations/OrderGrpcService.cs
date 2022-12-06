@@ -1,11 +1,9 @@
 ﻿using gRPC.ServiceInterfaces;
 using Grpc.Core;
-using Google.Protobuf.Collections;
 using Shared.Dtos;
 using Shared.Exceptions;
 using Shared.Models;
 using System.Text;
-using System;
 
 namespace gRPC.ServiceImplementations;
 public class OrderGrpcService : IOrderGrpcService {
