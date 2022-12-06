@@ -25,6 +25,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
 
+
 //Radzen Services
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
