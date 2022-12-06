@@ -4,10 +4,13 @@
 @using HttpClients.ClientIntefaces
 @using global::Shared.Dtos
 @using global::Shared.Models
+@using BlazorClient.Util
+@inject NotificationService NotificationService
 @inject NavigationManager navMgr
 @inject DialogService DialogService
 @inject IWarehouseProductService warehouseProductService
 @inject IWarehouseService warehouseService
+@inject IWarehousePositionService warehousePositionService
 
 <div class="container">
     <div class="row">
@@ -27,17 +30,13 @@
             </RadzenCard>
         </div>
     </div> 
-    @if (!string.IsNullOrEmpty(errorMsg)) {
-            <br />
-                <label style="color: red">Error: @errorMsg</label>
-    }
 </div>
 
 @code {
-    private string errorMsg = "";
-
     private IEnumerable<WarehouseProduct> _warehouseProducts = null;
     private IEnumerable<Warehouse> _warehouses = null;
+    private IEnumerable<WarehousePosition> _warehousePositions = null;
+    private ICollection<WarehousePosition> _displayWarehousePosition;
 
     private IList<WarehouseProduct> _selectedProduct;
     private Warehouse _selectedWarehouse;
@@ -48,9 +47,11 @@
     protected override async Task OnInitializedAsync() {
         try {
             _warehouses = await warehouseService.GetWarehousesAsync();
+            _warehousePositions = await warehousePositionService.GetAsync();
+            _displayWarehousePosition = new List<WarehousePosition>();
         }
         catch (Exception e) {
-            errorMsg = e.Message;
+            Notifier.NotifyError(NotificationService,null,e.Message,-1);
         }
     }
 
@@ -59,14 +60,20 @@
             _warehouseProducts = await warehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
         }
         catch (Exception e) {
-            errorMsg = e.Message;
+            Notifier.NotifyError(NotificationService,null,e.Message,-1);
         }
     }
     
     private async Task OpenCreationDialog() {
+        _displayWarehousePosition.Clear();
         _quantity = _selectedProduct.First().Quantity;
         _minQuantity = _selectedProduct.First().MinimumQuantity;
         _position = _selectedProduct.First().WarehousePosition;
+        foreach (var warehousePosition in _warehousePositions) {
+            if (_position == warehousePosition.Position || _warehouseProducts.All(p => p.WarehousePosition != warehousePosition.Position)) {
+                _displayWarehousePosition.Add(warehousePosition);
+            }
+        }
         var result = await DialogService.OpenAsync("Alter Product", ds =>
             @<div>
                 <p class="mb-4">Alter <b>@_selectedProduct.First().ProductId.Name</b> from <b>@_selectedWarehouse.Name</b></p>
@@ -77,7 +84,8 @@
                         <RadzenText TextStyle="TextStyle.Overline"Text="Minimum Quantity"/>
                         <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
                         <RadzenText TextStyle="TextStyle.Overline"Text="Position"/>
-                        <RadzenTextBox class="mb-2" @bind-Value=_position Placeholder="Warehouse Position"></RadzenTextBox>
+                        <RadzenDropDown class="mb-2" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="string" @bind-Value=_position 
+                                        Data="_displayWarehousePosition" TextProperty="Position" ValueProperty="Position" Placeholder="Warehouse Position"/>
                         <RadzenButton Text="Confirm" Click="async () => {await AlterWarehouseProduct(_selectedProduct.First().ProductId.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
                     </div>
                 </div>
@@ -97,10 +105,12 @@
             _quantity = 0;
             _minQuantity = 0;
             _position = "";
+            _selectedProduct = null;
+            Notifier.NotifySuccess(NotificationService,null,"warehouse was altered",null);
             await GetProducts(warehouseId);
         }
         catch (Exception e) {
-            errorMsg = e.Message;
+            Notifier.NotifyError(NotificationService,null,e.Message,-1);
         }
     }
 }
