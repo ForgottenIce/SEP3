@@ -55,7 +55,7 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
-			responseObserver.onError(Status.ALREADY_EXISTS.withDescription("WarehouseProduct could not be created as is already exists")
+			responseObserver.onError(Status.ALREADY_EXISTS.withDescription("WarehouseProduct could not be created as it already exists")
 					.asRuntimeException(metadata));
 		}
 		catch (NotFoundException e) {
