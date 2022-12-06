@@ -2,6 +2,8 @@ package groupid.sep3java.gRPCFactory;
 
 import groupid.sep3java.models.*;
 import grpc.WarehouseProduct.*;
+import grpc.Product.*;
+import grpc.Warehouse.*;
 
 import java.util.List;
 
@@ -23,10 +25,14 @@ public class GRPCWarehouseProductFactory {
 		Product product = warehouseProduct.getProductId();
 		Warehouse warehouse = warehouseProduct.getWarehouseId();
 		WarehouseProductResponse warehouseProductResponse = WarehouseProductResponse.newBuilder()
-				.setProductId(product.getId()).setProductName(product.getName())
-				.setDescription(product.getDescription()).setPrice(product.getPrice())
-				.setWarehouseId(warehouse.getId()).setWarehouseName(warehouse.getName())
-				.setAddress(warehouse.getAddress()).setQuantity(warehouseProduct.getQuantity())
+				.setProduct(ProductResponse.newBuilder()
+						.setId(product.getId()).setName(product.getName())
+						.setDescription(product.getDescription())
+						.setPrice(product.getPrice()).build())
+				.setWarehouse(WarehouseResponse.newBuilder()
+						.setWarehouseId(warehouse.getId()).setName(warehouse.getName())
+						.setAddress(warehouse.getAddress()).build())
+				.setQuantity(warehouseProduct.getQuantity())
 				.setMinimumQuantity(warehouseProduct.getMinimumQuantity())
 				.setWarehousePosition(warehouseProduct.getWarehousePosition()).build();
 

@@ -21,7 +21,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
     public async Task<WarehouseProduct> CreateWarehouseProductAsync(WarehouseProductCreationDto dto)
     {
         try {
-            WarehouseProductResponse replay = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
+            WarehouseProductResponse reply = await _warehouseProductGrpcServiceClient.CreateWarehouseProductAsync(
                 new CreateWarehouseProductRequest()
                 {
                     WarehouseId = dto.WarehouseId,
@@ -33,12 +33,20 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 
             WarehouseProduct warehouseProduct = new WarehouseProduct()
             {
-                WarehouseId = replay.WarehouseId,
-                WarehousePosition = replay.WarehousePosition,
-                MinimumQuantity = replay.MinimumQuantity,
-                Quantity = replay.Quantity,
-                ProductId = replay.ProductId
-
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                  Id = reply.Product.Id,
+                  Name = reply.Product.Name,
+                  Description = reply.Product.Description,
+                  Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
             };
             return warehouseProduct;
         }
@@ -57,22 +65,73 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             throw e;
         }
     }
-    
-    
+
+    public async Task<WarehouseProduct> AlterWarehouseProductAsync(WarehouseProductCreationDto dto) {
+        try {
+            WarehouseProductResponse reply = await _warehouseProductGrpcServiceClient.AlterWarehouseProductAsync(
+                new CreateWarehouseProductRequest()
+                {
+                    WarehouseId = dto.WarehouseId,
+                    ProductId = dto.ProductId,
+                    WarehousePosition = dto.WarehousePosition,
+                    MinimumQuantity = dto.MinimumQuantity,
+                    Quantity = dto.Quantity
+                });
+
+            WarehouseProduct warehouseProduct = new WarehouseProduct()
+            {
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                    Id = reply.Product.Id,
+                    Name = reply.Product.Name,
+                    Description = reply.Product.Description,
+                    Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
+            };
+            return warehouseProduct;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw e;
+        }
+    }
+
     public async Task<WarehouseProduct> GetWarehouseProductByIdAsync(long productId, long warehouseId)
     {
         try {
-            WarehouseProductResponse replyTo =
+            WarehouseProductResponse reply =
                 await _warehouseProductGrpcServiceClient.GetWarehouseProductAsync(new GetWarehouseProductRequest
                     { ProductId = productId, WarehouseId = warehouseId });
 
             WarehouseProduct warehouseProduct = new WarehouseProduct
             {
-                WarehouseId = replyTo.WarehouseId,
-                WarehousePosition = replyTo.WarehousePosition,
-                MinimumQuantity = replyTo.MinimumQuantity,
-                Quantity = replyTo.Quantity,
-                ProductId = replyTo.ProductId
+                WarehouseId = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address
+                },
+                ProductId = new Product {
+                    Id = reply.Product.Id,
+                    Name = reply.Product.Name,
+                    Description = reply.Product.Description,
+                    Price = reply.Product.Price
+                },
+                WarehousePosition = reply.WarehousePosition,
+                MinimumQuantity = reply.MinimumQuantity,
+                Quantity = reply.Quantity
             
             };
             return warehouseProduct;
@@ -100,11 +159,20 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             {
                 warehouseProducts.Add(new WarehouseProduct()
                 {
-                    WarehouseId = pr.WarehouseId,
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
                     WarehousePosition = pr.WarehousePosition,
                     MinimumQuantity = pr.MinimumQuantity,
-                    Quantity = pr.Quantity,
-                    ProductId = pr.ProductId
+                    Quantity = pr.Quantity
                 });
             }
 
@@ -115,6 +183,90 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 throw new ServiceUnavailableException();
             }
             
+            throw e;
+        }
+    }
+
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByProductIdAsync(long id)
+    {
+        try
+        {
+            GetWarehouseProductsResponse reply =
+                await _warehouseProductGrpcServiceClient.GetWarehouseProductByProductIdAsync(
+                    new QueryByPartialIdRequest{Id = id});
+            List<WarehouseProduct> warehouseProducts = new();
+            foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
+            {
+                warehouseProducts.Add(new WarehouseProduct()
+                {
+
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
+                    
+                    WarehousePosition = pr.WarehousePosition,
+                    MinimumQuantity = pr.MinimumQuantity,
+                    Quantity = pr.Quantity,
+                });
+            }
+
+            return warehouseProducts.AsEnumerable();
+        }
+        catch (RpcException e)
+        {
+            if (e.StatusCode == StatusCode.Unavailable)
+            {
+                throw new ServiceUnavailableException();
+            }
+            throw e;
+        }
+    }
+
+    public async Task<IEnumerable<WarehouseProduct>> GetWarehouseProductsByWarehouseIdAsync(long id)
+    {
+        try
+        {
+            GetWarehouseProductsResponse reply = await _warehouseProductGrpcServiceClient.GetWarehouseProductByWarehouseIdAsync(new QueryByPartialIdRequest {Id = id});
+            List<WarehouseProduct> warehouseProducts = new();
+            foreach (WarehouseProductResponse pr in reply.WarehouseProducts)
+            {
+                warehouseProducts.Add(new WarehouseProduct()
+                {
+
+                    WarehousePosition = pr.WarehousePosition,
+                    MinimumQuantity = pr.MinimumQuantity,
+                  
+                    WarehouseId = new Warehouse {
+                        Id = pr.Warehouse.WarehouseId,
+                        Name = pr.Warehouse.Name,
+                        Address = pr.Warehouse.Address
+                    },
+                    ProductId = new Product {
+                        Id = pr.Product.Id,
+                        Name = pr.Product.Name,
+                        Description = pr.Product.Description,
+                        Price = pr.Product.Price
+                    },
+                    Quantity = pr.Quantity,
+                });
+            }
+
+            return warehouseProducts.AsEnumerable();
+        }
+        catch (RpcException e)
+        {
+            if (e.StatusCode == StatusCode.Unavailable)
+            {
+                throw new ServiceUnavailableException();
+            }
             throw e;
         }
     }

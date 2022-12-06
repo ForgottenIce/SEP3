@@ -1,7 +1,7 @@
 ﻿namespace Shared.Models;
 public class WarehouseProduct {
-    public long ProductId { get; set; } //TODO make these object references
-    public long WarehouseId { get; set; } //TODO make these object references
+    public Product ProductId { get; set; }
+    public Warehouse WarehouseId { get; set; }
     public int Quantity { get; set; }
     public int MinimumQuantity { get; set; }
     public string WarehousePosition { get; set; }
