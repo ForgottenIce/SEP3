@@ -20,12 +20,26 @@
     </div>
 
         <div>
-            <RadzenDataGrid TItem="Order" Data="@data">
+            <RadzenDataGrid TItem="Order" Data="@orders">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Order" Property="vareNr" Title="vare Nr" Width="100px" TextAlign="TextAlign.Center"/>
-                    <RadzenDataGridColumn TItem="Order" Property="TjekBoks" Title="" Sortable="false" Width="50px" TextAlign="TextAlign.Center">
+                    <RadzenDataGridColumn TItem="Order" Property="ItemNr" Title="Item Nr" Width="100px" TextAlign="TextAlign.Center"/>
+                    
+                    <RadzenDataGridColumn TItem="Order" Property="CheckBox" Title="Orders" Sortable="false" Width="50px" TextAlign="TextAlign.Center">
+                        
+                        <Template Context="orders">
+                        
+                            <RadzenCheckBox TriState="false" Value="@(selectedProducts != null && selectedProducts.Contains(orders))" 
+                                            TValue="bool" Change=@(args => { if(!allowRowSelectOnRowClick) { grid.SelectRow(orders); }}) />
+                            
+                            <RadzenDataGrid @ref="grid" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+                                            AllowSorting="true" Data="@this.orders" TItem="Order" ColumnWidth="200px"
+                                            SelectionMode="DataGridSelectionMode.Multiple" @bind-Value=@selectedProducts Class="m-4"/> 
+                        </Template>
+
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Order" Property="VareBeskrivelse" Title="Vare Beskrivelse" Width="800px" TextAlign="TextAlign.Center"/>
+                    
+                    
+                    <RadzenDataGridColumn TItem="Order" Property="ItemDescription" Title ="Item description" Width="800px" TextAlign="TextAlign.Center"/>
                     <RadzenDataGridColumn TItem="Order" Property="Position" Title="Position" Width="150px"/>
                 </Columns>
 
@@ -37,12 +51,29 @@
 
 @code 
 {
+    bool allowRowSelectOnRowClick = true;
+    IEnumerable<Order> products;
+    IList<Order> selectedProducts;
+    RadzenDataGrid<Order> grid;
     
     
-    List<Order> data = new List<Order>();
+    
+    public class Order {
+        public int ItemNr { get; set; }
+        public String ItemDescription { get; set; }
+        public string Position { get; set; }
+        public bool CheckBox { get; set; }
 
-    class Order
-    {
-        
+
     }
+
+    private List<Order> orders = new List<Order>() 
+    {
+        new Order {CheckBox = true, ItemDescription = "10:10:10", Position = "A32", ItemNr = 1},
+        new Order {ItemDescription = "10:10:10", Position = "B43", ItemNr= 2},
+        new Order {ItemDescription = "10:10:10", Position = "C67", ItemNr = 3},
+        new Order {ItemDescription = "10:10:10", Position = "D82", ItemNr= 4},
+        new Order {ItemDescription = "10:10:10", Position = "E70", ItemNr = 5}
+    };
+    
 }

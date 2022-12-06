@@ -24,14 +24,17 @@
 
 
         <div>
-            <RadzenDataGrid TItem="Order" Data="orders">
+            <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Order" Data="orders">
                 <Columns>
                    
                     <RadzenDataGridColumn TItem="Order" Property="OrderID" Title="OrderID" Width="50px" TextAlign="TextAlign.Center"  />
                     
-                    <RadzenDataGridColumn TItem="Order" Property="OrderTime" Title="Order time" Width="450px" TextAlign="TextAlign.Center"  />
+                    <RadzenDataGridColumn Filterable="false" Sortable="false" TItem="Order" Property="OrderTime" Title="Order time" Width="450px" TextAlign="TextAlign.Center"  />
+                    
                     
                     <RadzenDataGridColumn TItem="Order" Property="IsPacked" Title="Is packed" Width="200px" TextAlign="TextAlign.Center"  />
+                    
+                                        
                    
                 </Columns>
             </RadzenDataGrid>
@@ -44,16 +47,51 @@
 
 @code 
 {
+    OrderIsPacked? currentOrder;
+    IEnumerable<string> selectedCompanyNames;
 
+
+    public enum OrderIsPacked
+    { 
+        nottrue,
+        notfalse,
+        All = -1
+        
+        
+    }
+
+   
+    
     public class Order {
         public int OrderID { get; set; }
         public String OrderTime { get; set; }
         public bool IsPacked { get; set; }
+        public OrderIsPacked OrderIsPacked { get; set; }
     }
 
     private List<Order> orders = new List<Order>() 
     {
-        new Order {OrderTime = "10:10:10", IsPacked = true, OrderID = 1}
+        new Order {OrderTime = "10:10:10", IsPacked = true, OrderID = 1},
+        new Order {OrderTime = "10:10:10", IsPacked = false, OrderID = 2},
+        new Order {OrderTime = "10:10:10", IsPacked = true, OrderID = 3},
+        new Order {OrderTime = "10:10:10", IsPacked = true, OrderID = 4},
+        new Order {OrderTime = "10:10:10", IsPacked = false, OrderID = 5}
     };
+    
+    void OnSelectedIsPackedChange(object value)
+    {
+        if (selectedCompanyNames != null && !selectedCompanyNames.Any())
+        {
+            selectedCompanyNames = null;  
+        }
+    }
+
+    void OnSelectedTOCChange(object value)
+    {
+        if (currentOrder == OrderIsPacked.All)
+        {
+            currentOrder = null;
+        }
+    }
 
 }
