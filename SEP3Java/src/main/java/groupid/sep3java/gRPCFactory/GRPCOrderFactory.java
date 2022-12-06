@@ -2,30 +2,54 @@ package groupid.sep3java.gRPCFactory;
 
 import groupid.sep3java.models.Customer;
 import groupid.sep3java.models.Order;
+import groupid.sep3java.models.Product;
 import grpc.Order.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class GRPCOrderFactory {
 	private GRPCOrderFactory() {
 	}
 
-	public static Order create(Customer customer,CreateOrderRequest request){
-		Order order = new Order(customer,new Date(request.getDateTimeOrdered()),
-				request.getIsPacked(), new Date(request.getDateTimeSent()));
+	public static Order create(CreateOrderRequest request, Customer customer, List<Product> orderedProducts) {
+		LocalDateTime dateTimeOrdered = null;
+		LocalDateTime dateTimeSent = null;
+		if (request.getDateTimeOrdered() != 0) {
+			dateTimeOrdered = LocalDateTime.ofEpochSecond(request.getDateTimeOrdered(), 0, ZoneOffset.UTC);
+		}
+		if (request.getDateTimeSent() != 0) {
+			dateTimeSent = LocalDateTime.ofEpochSecond(request.getDateTimeSent(), 0, ZoneOffset.UTC);
+		}
+		Order order = new Order(customer, dateTimeOrdered, request.getIsPacked(), dateTimeSent, orderedProducts);
 		return order;
 	}
 
 	public static OrderResponse createOrderResponse(Order order) {
 		Customer customer = order.getCustomer();
+		long dateTimeOrdered = 0;
+		long dateTimeSent = 0;
+		if (order.getDateOrdered() != null && order.getTimeOrdered() != null) {
+			dateTimeOrdered = LocalDateTime.of(order.getDateOrdered(), order.getTimeOrdered()).toEpochSecond(ZoneOffset.UTC);
+		}
+		if (order.getDateSent() != null && order.getTimeSent() != null) {
+			dateTimeSent = LocalDateTime.of(order.getDateSent(), order.getTimeSent()).toEpochSecond(ZoneOffset.UTC);
+		}
+
 		OrderResponse orderResponse = OrderResponse.newBuilder()
-				.setId(order.getId()).setCustomerId(customer.getId())
-				.setFullname(customer.getFullName()).setPhoneNo(customer.getPhoneNo())
-				.setAddress(customer.getAddress()).setMail(customer.getMail())
-				.setDateTimeOrdered(order.getDateTimeOrdered().getTime())
+				.setId(order.getId())
+				.setCustomer(grpc.Customer.CustomerResponse.newBuilder()
+						.setId(customer.getId())
+						.setFullname(customer.getFullName())
+						.setPhoneNo(customer.getPhoneNo())
+						.setAddress(customer.getAddress())
+						.setMail(customer.getMail()).build())
+				.setDateTimeOrdered(dateTimeOrdered)
 				.setIsPacked(order.isPacked())
-				.setDateTimeSent(order.getDateTimeSent().getTime()).build();
+				.setDateTimeSent(dateTimeSent)
+				.setProducts(GRPCProductFactory.createGetProductsResponse(order.getOrderedProducts()))
+				.build();
 		return orderResponse;
 	}
 
