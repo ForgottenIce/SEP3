@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
+builder.Services.AddScoped<IWarehousePositionDao, WarehousePositionEfcDao>();
 
 // gRPC Service Clients
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
@@ -57,6 +58,7 @@ builder.Services.AddScoped<IWarehouseProductGrpcService, gRPC.ServiceImplementat
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+builder.Services.AddScoped<IWarehousePositionLogic, WarehousePositionLogic>();
 builder.Services.AddScoped<IPingLogic, PingLogic>();
 builder.Services.AddScoped<IOrderLogic, OrderLogic>();
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
