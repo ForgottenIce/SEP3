@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "orderPlaced")
@@ -17,20 +18,24 @@ public class Order {
 	private boolean isPacked;
 	private LocalDate dateSent;
 	private LocalTime timeSent;
-
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Product> orderedProducts;
 	public Order() {
 	}
 
 	public Order(Customer customer, LocalDateTime dateTimeOrdered,
-			boolean isPacked, LocalDateTime dateTimeSent) {
+			boolean isPacked, LocalDateTime dateTimeSent, List<Product> orderedProducts) {
 		this.customer = customer;
-		dateOrdered = dateTimeOrdered.toLocalDate();
-		timeOrdered = dateTimeOrdered.toLocalTime();
+		if (dateTimeOrdered != null) {
+			dateOrdered = dateTimeOrdered.toLocalDate();
+			timeOrdered = dateTimeOrdered.toLocalTime();
+		}
 		this.isPacked = isPacked;
-		dateSent = dateTimeSent.toLocalDate();
-		timeSent = dateTimeSent.toLocalTime();
-
-
+		if (dateTimeSent != null) {
+			dateSent = dateTimeSent.toLocalDate();
+			timeSent = dateTimeSent.toLocalTime();
+		}
+		this.orderedProducts = orderedProducts;
 	}
 
 	public long getId() {
@@ -87,6 +92,14 @@ public class Order {
 
 	public void setTimeSent(LocalTime timeSent) {
 		this.timeSent = timeSent;
+	}
+
+	public List<Product> getOrderedProducts() {
+		return orderedProducts;
+	}
+
+	public void setOrderedProducts(List<Product> orderedProducts) {
+		this.orderedProducts = orderedProducts;
 	}
 
 	@Override public boolean equals(Object o) {

@@ -4,8 +4,10 @@ import groupid.sep3java.exceptions.NotFoundException;
 import groupid.sep3java.gRPCFactory.GRPCOrderFactory;
 import groupid.sep3java.models.Customer;
 import groupid.sep3java.models.Order;
+import groupid.sep3java.models.Product;
 import groupid.sep3java.repositories.CustomerRepository;
 import groupid.sep3java.repositories.OrderRepository;
+import groupid.sep3java.repositories.ProductRepository;
 import grpc.Order.*;
 import grpc.OrderGrpcServiceGrpc.*;
 import io.grpc.Metadata;
@@ -15,24 +17,31 @@ import io.grpc.reflection.v1alpha.ErrorResponse;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @GrpcService
 public class OrderServiceImpl extends OrderGrpcServiceImplBase {
 	private final CustomerRepository customerRepository;
 	private final OrderRepository orderRepository;
+	private final ProductRepository productRepository;
 
 	public OrderServiceImpl(CustomerRepository customerRepository,
-			OrderRepository orderRepository) {
+			OrderRepository orderRepository, ProductRepository productRepository) {
 		this.customerRepository = customerRepository;
 		this.orderRepository = orderRepository;
+		this.productRepository = productRepository;
 	}
 
 	@Override public void createOrder(CreateOrderRequest request,
 			StreamObserver<OrderResponse> responseObserver) {
 		try {
-			Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer with id:" + request.getCustomerId() + "was not found"));
-			Order orderToCreate = GRPCOrderFactory.create(customer,request);
+			Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer with id: " + request.getCustomerId() + " was not found"));
+			ArrayList<Product> orderedProducts = new ArrayList<>();
+			for (long productId : request.getProductIdsList()) {
+				orderedProducts.add(productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product with id: " + productId + " was not found")));
+			}
+			Order orderToCreate = GRPCOrderFactory.create(request, customer, orderedProducts);
 			Order order = orderRepository.save(orderToCreate);
 
 			OrderResponse response = GRPCOrderFactory.createOrderResponse(order);
@@ -44,7 +53,7 @@ public class OrderServiceImpl extends OrderGrpcServiceImplBase {
 			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
-			responseObserver.onError(Status.NOT_FOUND.withDescription("Customer was not found")
+			responseObserver.onError(Status.NOT_FOUND.withDescription("An id reference was not found")
 					.asRuntimeException(metadata));
 		}
 	}

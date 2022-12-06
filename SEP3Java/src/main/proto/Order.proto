@@ -10,6 +10,7 @@ message CreateOrderRequest {
   int64 dateTimeOrdered = 2;
   bool isPacked = 3;
   int64 dateTimeSent = 4;
+  repeated int64 productIds = 5;
 }
 
 message OrderResponse {
@@ -18,7 +19,7 @@ message OrderResponse {
   int64 dateTimeOrdered = 3;
   bool isPacked = 4;
   int64 dateTimeSent = 5;
-  repeated ProductResponse products = 6;
+  GetProductsResponse products = 6;
 }
 
 message GetOrderRequest {
