@@ -5,9 +5,9 @@ using gRPC.ServiceInterfaces;
 namespace Application.Logic; 
 
 public class PingLogic : IPingLogic {
-	private IPingService _client;
+	private IPingGrpcService _client;
 
-	public PingLogic(IPingService client) {
+	public PingLogic(IPingGrpcService client) {
 		_client = client;
 	}
 

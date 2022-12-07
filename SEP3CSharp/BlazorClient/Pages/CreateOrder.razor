@@ -1,11 +1,15 @@
 ﻿@page "/CreateOrder"
 @using Radzen
+@using global::Shared.Models
+@using HttpClients.ClientIntefaces
+@using global::Shared.Dtos
+@inject NavigationManager navMgr;
+@inject IOrderService orderService;
+
+
 <h3>CreateOrder</h3>
 <div class="container p-4">
     <div class="row">
-        <div class="col-3">
-            <h6 class="text-uppercase">ID</h6>
-        </div>
         <div class="col-3">
             <h6 class="text-uppercase">CreateOrder</h6>
         </div>
@@ -17,12 +21,13 @@
         <div class="col-3">
 
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Default Numeric</RadzenText>
-            <RadzenNumeric TValue="int" Change=@(args => OnChange(args, "Numeric")) Class="w-100"/>
+            <RadzenNumeric TValue="int" ShowUpDown="false"  Placeholder="Amount" Class="w-100"@bind-Values="amount"/>
         </div>
         <div class="col-3">
 
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Placeholder</RadzenText>
-            <RadzenTextBox Placeholder="Search..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100"/>
+           <RadzenDropDown Style="width:300px" TValue="string" @bind-Value="Product.pId" Placeholder="Select Adres" AllowFiltering="true" Data="@(Product.pId)" TextProperty="CompanyName" ValueProperty="CustomerID"/>
+                                 
         </div>
 
     </div>
@@ -71,6 +76,18 @@
 
 @code {
 
+    public class Product
+    {
+        
+        public static string pId;
+    }
+    public static int amount;
+    //TODO 
+    /*
+     *  skal vi ikke have en amount på Order og hvad der er bestilt  
+     */
+
+   
     // btn logic 
 
     bool busy;
@@ -109,6 +126,35 @@
             this.itemNumber = itemNumber;
         }
     }
+
+    
+    public bool validateAmount()
+    {
+        if (amount<0)
+        {
+            //exceptional.set("You must enter a positive number.");
+            return false;
+        }
+        return true;
+    }
+
+    /*
+    public bool addOrderIsBusy = false;
+    async Task CreateNewCustomer()
+    {
+        if (validateAmount().Equals(true))
+        {
+            addOrderIsBusy = true;
+            await orderService.CreateOrderAsync(new OrderCreationDto());
+            navMgr.NavigateTo("/");
+        }
+        
+    }
+    */
+    
+}
+
+
 
 
 

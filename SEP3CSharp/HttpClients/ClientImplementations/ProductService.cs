@@ -28,7 +28,7 @@ public class ProductService : IProductService {
     }
 
     public async Task<IEnumerable<Product>> GetProductsAsync() {
-        HttpResponseMessage response = await _httpClient.GetAsync("/subPage");
+        HttpResponseMessage response = await _httpClient.GetAsync("/product");
         string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode) {
             throw new Exception(content);

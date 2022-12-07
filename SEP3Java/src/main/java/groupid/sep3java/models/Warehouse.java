@@ -10,13 +10,23 @@ import java.util.Objects;
 public class Warehouse {
 	@Id @GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
+	private String name;
 	private String address;
 
 	public Warehouse() {
 	}
 
-	public Warehouse(String address) {
+	public Warehouse(String name,String address) {
+		this.name = name;
 		this.address = address;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public long getId() {
@@ -41,14 +51,16 @@ public class Warehouse {
 		if (!(o instanceof Warehouse))
 			return false;
 		Warehouse warehouse = (Warehouse) o;
-		return id == warehouse.id && Objects.equals(address, warehouse.address);
+		return id == warehouse.id && Objects.equals(name, warehouse.name)
+				&& Objects.equals(address, warehouse.address);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(id, address);
+		return Objects.hash(id, name, address);
 	}
 
 	@Override public String toString() {
-		return "Warehouse{" + "Id=" + id + ", Address='" + address + '\'' + '}';
+		return "Warehouse{" + "id=" + id + ", name='" + name + '\'' + ", address='"
+				+ address + '\'' + '}';
 	}
 }

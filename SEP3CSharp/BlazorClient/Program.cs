@@ -1,5 +1,6 @@
 using BlazorClient;
 using BlazorClient.Auth;
+using BlazorClient.Util;
 using HttpClients.ClientImplementations;
 using HttpClients.ClientIntefaces;
 using HttpClients.ClientInterfaces;
@@ -20,7 +21,15 @@ builder.Services.AddScoped<IAuthService, JwtAuthService>();
 
 // Http Services
 builder.Services.AddScoped<IPingService, PingService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IWarehouseProductService, WarehouseProductService>();
+builder.Services.AddScoped<IWarehousePositionService, WarehousePositionService>();
+
+// Util
+builder.Services.AddScoped<INotifierService, NotifierService>();
 
 //Radzen Services
 builder.Services.AddScoped<DialogService>();

@@ -5,9 +5,9 @@ using Shared.Models;
 
 namespace Application.Logic;
 public class ProductLogic : IProductLogic {
-    private readonly IProductService productService;
+    private readonly IProductGrpcService productService;
 
-    public ProductLogic(IProductService productService) {
+    public ProductLogic(IProductGrpcService productService) {
         this.productService = productService;
     }
 
@@ -16,8 +16,9 @@ public class ProductLogic : IProductLogic {
         return product;
     }
 
-    public Task<Product> GetProductByIdAsync(long id) {
-        throw new NotImplementedException();
+    public async Task<Product> GetProductByIdAsync(long id) {
+        Product product = await productService.GetProductByIdAsync(id);
+        return product;
     }
 
     public async Task<IEnumerable<Product>> GetProductsAsync() {
