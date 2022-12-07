@@ -5,12 +5,12 @@
 @using global::Shared.Dtos
 @using global::Shared.Models
 @using BlazorClient.Util
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NotificationService NotificationService
-@inject NavigationManager navMgr
 @inject DialogService DialogService
-@inject IWarehouseProductService warehouseProductService
-@inject IWarehouseService warehouseService
-@inject IWarehousePositionService warehousePositionService
+@inject IWarehouseProductService WarehouseProductService
+@inject IWarehouseService WarehouseService
+@inject IWarehousePositionService WarehousePositionService
 
 <div class="container">
     <div class="row">
@@ -33,22 +33,33 @@
 </div>
 
 @code {
-    private IEnumerable<WarehouseProduct> _warehouseProducts = null;
-    private IEnumerable<Warehouse> _warehouses = null;
-    private IEnumerable<WarehousePosition> _warehousePositions = null;
-    private ICollection<WarehousePosition> _displayWarehousePosition;
+    private IEnumerable<WarehouseProduct> _warehouseProducts = null!;
+    private IEnumerable<Warehouse> _warehouses = null!;
+    private IEnumerable<WarehousePosition> _warehousePositions = null!;
+    private ICollection<WarehousePosition> _displayWarehousePosition = null!;
 
-    private IList<WarehouseProduct> _selectedProduct;
-    private Warehouse _selectedWarehouse;
-    private int _quantity = 0;
-    private int _minQuantity = 0;
+    private IList<WarehouseProduct> _selectedProduct = null!;
+    private Warehouse _selectedWarehouse = null!;
+    private int _quantity;
+    private int _minQuantity;
     private string _position = "";
+
+    AuthenticationState _state = null!;
 
     protected override async Task OnInitializedAsync() {
         try {
-            _warehouses = await warehouseService.GetWarehousesAsync();
-            _warehousePositions = await warehousePositionService.GetAsync();
+            _warehouses = await WarehouseService.GetWarehousesAsync();
+            _warehousePositions = await WarehousePositionService.GetAsync();
             _displayWarehousePosition = new List<WarehousePosition>();
+            _state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (_state.User.Identity != null && _state.User.Identity.IsAuthenticated) {
+                foreach (var warehouse in _warehouses) {
+                    if (warehouse.Id + "" == _state.User.Claims.First(c => c.Type == "Warehouse").Value) {
+                        _selectedWarehouse = warehouse;
+                        await GetProducts(warehouse.Id);
+                    }
+                }
+            }
         }
         catch (Exception e) {
             Notifier.NotifyError(NotificationService,null,e.Message,-1);
@@ -57,7 +68,7 @@
 
     private async Task GetProducts(long id) {
         try {
-            _warehouseProducts = await warehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
+            _warehouseProducts = await WarehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
         }
         catch (Exception e) {
             Notifier.NotifyError(NotificationService,null,e.Message,-1);
@@ -74,16 +85,16 @@
                 _displayWarehousePosition.Add(warehousePosition);
             }
         }
-        var result = await DialogService.OpenAsync("Alter Product", ds =>
+        await DialogService.OpenAsync("Alter Product", ds =>
             @<div>
                 <p class="mb-4">Alter <b>@_selectedProduct.First().Product.Name</b> from <b>@_selectedWarehouse.Name</b></p>
                 <div class="row">
                     <div class="col d-flex flex-column">
-                        <RadzenText TextStyle="TextStyle.Overline"Text="Quantity"/>
+                        <RadzenText TextStyle="TextStyle.Overline" Text="Quantity"/>
                         <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_quantity></RadzenNumeric>
-                        <RadzenText TextStyle="TextStyle.Overline"Text="Minimum Quantity"/>
+                        <RadzenText TextStyle="TextStyle.Overline" Text="Minimum Quantity"/>
                         <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
-                        <RadzenText TextStyle="TextStyle.Overline"Text="Position"/>
+                        <RadzenText TextStyle="TextStyle.Overline" Text="Position"/>
                         <RadzenDropDown class="mb-2" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="string" @bind-Value=_position 
                                         Data="_displayWarehousePosition" TextProperty="Position" ValueProperty="Position" Placeholder="Warehouse Position"/>
                         <RadzenButton Text="Confirm" Click="async () => {await AlterWarehouseProduct(_selectedProduct.First().Product.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
@@ -95,7 +106,7 @@
     
     private async Task AlterWarehouseProduct(long productId, long warehouseId) {
         try {
-            WarehouseProduct warehouseProduct = await warehouseProductService.AlterWarehouseProductAsync(new WarehouseProductCreationDto {
+            await WarehouseProductService.AlterWarehouseProductAsync(new WarehouseProductCreationDto {
                     ProductId = productId,
                     WarehouseId = warehouseId,
                     Quantity = _quantity,
@@ -105,7 +116,7 @@
             _quantity = 0;
             _minQuantity = 0;
             _position = "";
-            _selectedProduct = null;
+            _selectedProduct = null!;
             Notifier.NotifySuccess(NotificationService,null,"warehouse was altered",null);
             await GetProducts(warehouseId);
         }
