@@ -15,6 +15,7 @@ import io.grpc.protobuf.ProtoUtils;
 import io.grpc.reflection.v1alpha.ErrorResponse;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 
@@ -66,6 +67,14 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 			responseObserver.onError(Status.NOT_FOUND.withDescription("WarehouseProduct could not be created as warehouse or product could not be found")
 					.asRuntimeException(metadata));
 		}
+		catch (ConstraintViolationException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getCause().getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.ABORTED.withDescription("WarehouseProduct could not be created as it violates data constrains")
+					.asRuntimeException(metadata));
+		}
 	}
 
 	@Override public void alterWarehouseProduct(
@@ -91,6 +100,14 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 			Metadata metadata = new Metadata();
 			metadata.put(errorResponseKey, errorResponse);
 			responseObserver.onError(Status.NOT_FOUND.withDescription("WarehouseProduct could not be altered as, it didn't exist, or warehouse or product could not be found")
+					.asRuntimeException(metadata));
+		}
+		catch (ConstraintViolationException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getCause().getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.ABORTED.withDescription("WarehouseProduct could not be altered as it violates data constrains")
 					.asRuntimeException(metadata));
 		}
 	}
