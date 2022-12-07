@@ -2,11 +2,11 @@
 @using BlazorClient.Util;
 @using Radzen
 @using HttpClients.ClientIntefaces
-@using global::Shared.Models;
-@inject IOrderService _orderService;
-@inject IWarehouseService _warehouseService;
-@inject NotificationService _notificationService
-@inject NavigationManager _navMgr;
+@using global::Shared.Models
+@inject IOrderService _orderService
+@inject IWarehouseService _warehouseService
+@inject INotifierService _notifierService
+@inject NavigationManager _navMgr
 
 <PageTitle>Index</PageTitle>
 
@@ -41,7 +41,7 @@
 
         }
         catch (Exception e) {
-            Notifier.NotifyError(_notificationService, null, e.Message, -1);
+            _notifierService.NotifyError(e.Message);
         }
     }
 
@@ -50,7 +50,7 @@
             _orders = await _orderService.GetOrdersAsync();
         }
         catch (Exception e) {
-            Notifier.NotifyError(_notificationService, null, e.Message, -1);
+            _notifierService.NotifyError(e.Message);
         }
     }
 

@@ -7,7 +7,7 @@
 @using System.Text.RegularExpressions
 @using global::Shared.Dtos
 <h3>ViewCustomers</h3>
-@inject NotificationService NotificationService
+@inject INotifierService NotifierService
 @inject DialogService DialogService
 @inject ICustomerService CustomerService
 
@@ -52,7 +52,7 @@
         }
         catch (Exception e) {
             Console.WriteLine(e);
-            Notifier.NotifyError(NotificationService,null,e.Message,null);
+            NotifierService.NotifyError(e.Message);
         }
     }
 
@@ -99,7 +99,7 @@
         }
         catch (Exception e) {
             Console.WriteLine(e);
-            Notifier.NotifyError(NotificationService,null,e.Message,null);
+            NotifierService.NotifyError(e.Message);
         }
     }
     

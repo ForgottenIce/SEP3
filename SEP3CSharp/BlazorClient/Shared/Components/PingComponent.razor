@@ -3,7 +3,7 @@
 @using HttpClients.ClientInterfaces
 @using Radzen
 @inject IPingService PingService
-@inject NotificationService NotificationService
+@inject INotifierService NotifierService
 
 <p style="margin: 0 1em 0 0" class="text-white">@_ping ms 
     <RadzenButton
@@ -33,7 +33,7 @@
         }
         catch (Exception e) {
             Console.WriteLine(e);
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 }

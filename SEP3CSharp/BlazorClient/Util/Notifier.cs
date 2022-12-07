@@ -2,48 +2,55 @@
 
 namespace BlazorClient.Util; 
 
-public static class Notifier {
-	public static void NotifySuccess(NotificationService service, string? summery, string? description, double? duration) {
-		NotificationMessage message = new NotificationMessage {
-			Severity = NotificationSeverity.Success,
-			Summary = summery ?? "Success",
-			Detail = description ?? "",
-			Duration = duration
-		};
-		
-		service.Notify(message);
-	}
+public class NotifierService : INotifierService {
+	private readonly NotificationService _notificationService;
 
-	public static void NotifyInfo(NotificationService service, string? summery, string? description, double? duration) {
-		NotificationMessage message = new NotificationMessage {
-			Severity = NotificationSeverity.Info,
-			Summary = summery ?? "Info",
-			Detail = description ?? "",
-			Duration = duration
-		};
-		
-		service.Notify(message);
-	}
+    public NotifierService(NotificationService notificationService) {
+        _notificationService = notificationService;
+    }
 
-	public static void NotifyError(NotificationService service, string? summery, string? description, double? duration) {
-		NotificationMessage message = new NotificationMessage {
-			Severity = NotificationSeverity.Error,
-			Summary = summery ?? "Error",
-			Detail = description ?? "",
-			Duration = duration
-		};
-		
-		service.Notify(message);
-	}
+    public void NotifyError(string description, string summary = "Error", double duration = -1) {
+        NotificationMessage message = new NotificationMessage
+        {
+            Severity = NotificationSeverity.Error,
+            Detail = description,
+            Summary = summary,
+            Duration = duration
+        };
 
-	public static void NotifyWarning(NotificationService service, string? summery, string? description, double? duration) {
-		NotificationMessage message = new NotificationMessage {
-			Severity = NotificationSeverity.Warning,
-			Summary = summery ?? "Warning",
-			Detail = description ?? "",
-			Duration = duration
-		};
-		
-		service.Notify(message);
-	}
+        _notificationService.Notify(message);
+    }
+
+    public void NotifyInfo(string description, string summary = "Info", double duration = -1) {
+        NotificationMessage message = new NotificationMessage {
+            Severity = NotificationSeverity.Info,
+            Detail = description,
+            Summary = summary,
+            Duration = duration
+        };
+
+        _notificationService.Notify(message);
+    }
+
+    public void NotifySuccess(string description, string summary = "Success", double duration = -1) {
+        NotificationMessage message = new NotificationMessage {
+            Severity = NotificationSeverity.Success,
+            Detail = description,
+            Summary = summary,
+            Duration = duration
+        };
+
+        _notificationService.Notify(message);
+    }
+
+    public void NotifyWarning(string description, string summary = "Warning", double duration = -1) {
+        NotificationMessage message = new NotificationMessage {
+            Severity = NotificationSeverity.Warning,
+            Detail = description,
+            Summary = summary,
+            Duration = duration
+        };
+
+        _notificationService.Notify(message);
+    }
 }

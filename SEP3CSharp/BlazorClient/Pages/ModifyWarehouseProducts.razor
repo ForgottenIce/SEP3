@@ -6,7 +6,7 @@
 @using global::Shared.Models
 @using BlazorClient.Util
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NotificationService NotificationService
+@inject INotifierService NotifierService
 @inject DialogService DialogService
 @inject IWarehouseProductService WarehouseProductService
 @inject IWarehouseService WarehouseService
@@ -62,7 +62,7 @@
             }
         }
         catch (Exception e) {
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 
@@ -71,7 +71,7 @@
             _warehouseProducts = await WarehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
         }
         catch (Exception e) {
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
     
@@ -117,11 +117,11 @@
             _minQuantity = 0;
             _position = "";
             _selectedProduct = null!;
-            Notifier.NotifySuccess(NotificationService,null,"warehouse was altered",null);
+            NotifierService.NotifySuccess("Warehouse was altered", duration:4000);
             await GetProducts(warehouseId);
         }
         catch (Exception e) {
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 }

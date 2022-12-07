@@ -4,7 +4,7 @@
 @namespace Login
 @inject NavigationManager NavMgr
 @inject IAuthService AuthService
-@inject NotificationService NotificationService
+@inject INotifierService NotifierService
 @inject DialogService DialogService
 
 <AuthorizeView>
@@ -39,22 +39,22 @@
     private async Task LoginAsync() {
         try {
             await AuthService.LoginAsync(_userName, _password);
-            Notifier.NotifySuccess(NotificationService,null,"logged in as " + _userName, null);
+            NotifierService.NotifySuccess("Logged in as " + _userName, duration:4000);
         }
         catch (Exception e) {
             Console.WriteLine(e);
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 
     private async Task LogoutAsync() {
         try {
             await AuthService.LogoutAsync();
-            Notifier.NotifySuccess(NotificationService,null,"logged out", null);
+            NotifierService.NotifySuccess("Logged out", duration:4000);
         }
         catch (Exception e) {
             Console.WriteLine(e);
-            Notifier.NotifyError(NotificationService,null,e.Message,-1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 }

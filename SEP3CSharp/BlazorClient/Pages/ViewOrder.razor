@@ -6,7 +6,7 @@
 @using HttpClients.ClientImplementations
 @using HttpClients.ClientInterfaces
 @inject IOrderService _orderService
-@inject NotificationService _notificationService
+@inject INotifierService NotifierService
 
 
 <div class="container">
@@ -48,7 +48,7 @@
             _order = await _orderService.GetOrderByIdAsync(OrderId);
         }
         catch (Exception e) {
-            Notifier.NotifyError(_notificationService, null, e.Message, -1);
+            NotifierService.NotifyError(e.Message);
         }
     }
 
