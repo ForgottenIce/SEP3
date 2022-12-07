@@ -3,6 +3,7 @@ package groupid.sep3java.gRPCFactory;
 import groupid.sep3java.models.Customer;
 import groupid.sep3java.models.Order;
 import groupid.sep3java.models.Product;
+import groupid.sep3java.models.Warehouse;
 import grpc.Order.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ public class GRPCOrderFactory {
 	private GRPCOrderFactory() {
 	}
 
-	public static Order create(CreateOrderRequest request, Customer customer, List<Product> orderedProducts) {
+	public static Order create(CreateOrderRequest request, Customer customer, Warehouse warehouse, List<Product> orderedProducts) {
 		LocalDateTime dateTimeOrdered = null;
 		LocalDateTime dateTimeSent = null;
 		if (request.getDateTimeOrdered() != 0) {
@@ -22,12 +23,13 @@ public class GRPCOrderFactory {
 		if (request.getDateTimeSent() != 0) {
 			dateTimeSent = LocalDateTime.ofEpochSecond(request.getDateTimeSent(), 0, ZoneOffset.UTC);
 		}
-		Order order = new Order(customer, dateTimeOrdered, request.getIsPacked(), dateTimeSent, orderedProducts);
+		Order order = new Order(customer, warehouse, dateTimeOrdered, request.getIsPacked(), dateTimeSent, orderedProducts);
 		return order;
 	}
 
 	public static OrderResponse createOrderResponse(Order order) {
 		Customer customer = order.getCustomer();
+		Warehouse warehouse = order.getWarehouse();
 		long dateTimeOrdered = 0;
 		long dateTimeSent = 0;
 		if (order.getDateOrdered() != null && order.getTimeOrdered() != null) {
@@ -45,6 +47,10 @@ public class GRPCOrderFactory {
 						.setPhoneNo(customer.getPhoneNo())
 						.setAddress(customer.getAddress())
 						.setMail(customer.getMail()).build())
+				.setWarehouse(grpc.Warehouse.WarehouseResponse.newBuilder()
+						.setWarehouseId(warehouse.getId())
+						.setName(warehouse.getName())
+						.setAddress(warehouse.getAddress()).build())
 				.setDateTimeOrdered(dateTimeOrdered)
 				.setIsPacked(order.isPacked())
 				.setDateTimeSent(dateTimeSent)

@@ -5,9 +5,11 @@ import groupid.sep3java.gRPCFactory.GRPCOrderFactory;
 import groupid.sep3java.models.Customer;
 import groupid.sep3java.models.Order;
 import groupid.sep3java.models.Product;
+import groupid.sep3java.models.Warehouse;
 import groupid.sep3java.repositories.CustomerRepository;
 import groupid.sep3java.repositories.OrderRepository;
 import groupid.sep3java.repositories.ProductRepository;
+import groupid.sep3java.repositories.WarehouseRepository;
 import grpc.Order.*;
 import grpc.OrderGrpcServiceGrpc.*;
 import io.grpc.Metadata;
@@ -22,14 +24,16 @@ import java.util.List;
 
 @GrpcService
 public class OrderServiceImpl extends OrderGrpcServiceImplBase {
-	private final CustomerRepository customerRepository;
 	private final OrderRepository orderRepository;
+	private final CustomerRepository customerRepository;
+	private final WarehouseRepository warehouseRepository;
 	private final ProductRepository productRepository;
 
-	public OrderServiceImpl(CustomerRepository customerRepository,
-			OrderRepository orderRepository, ProductRepository productRepository) {
-		this.customerRepository = customerRepository;
+	public OrderServiceImpl(OrderRepository orderRepository, CustomerRepository customerRepository,
+			 WarehouseRepository warehouseRepository, ProductRepository productRepository) {
 		this.orderRepository = orderRepository;
+		this.customerRepository = customerRepository;
+		this.warehouseRepository = warehouseRepository;
 		this.productRepository = productRepository;
 	}
 
@@ -37,11 +41,12 @@ public class OrderServiceImpl extends OrderGrpcServiceImplBase {
 			StreamObserver<OrderResponse> responseObserver) {
 		try {
 			Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer with id: " + request.getCustomerId() + " was not found"));
+			Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new NotFoundException("Warehouse with id: " + request.getWarehouseId() + " was not found"));
 			ArrayList<Product> orderedProducts = new ArrayList<>();
 			for (long productId : request.getProductIdsList()) {
 				orderedProducts.add(productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product with id: " + productId + " was not found")));
 			}
-			Order orderToCreate = GRPCOrderFactory.create(request, customer, orderedProducts);
+			Order orderToCreate = GRPCOrderFactory.create(request, customer, warehouse, orderedProducts);
 			Order order = orderRepository.save(orderToCreate);
 
 			OrderResponse response = GRPCOrderFactory.createOrderResponse(order);

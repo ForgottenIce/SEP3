@@ -4,22 +4,25 @@ package grpc;
 
 import "Product.proto";
 import "Customer.proto";
+import "Warehouse.proto";
 
 message CreateOrderRequest {
   int64 customerId = 1;
-  int64 dateTimeOrdered = 2;
-  bool isPacked = 3;
-  int64 dateTimeSent = 4;
-  repeated int64 productIds = 5;
+  int64 warehouseId = 2;
+  int64 dateTimeOrdered = 3;
+  bool isPacked = 4;
+  int64 dateTimeSent = 5;
+  repeated int64 productIds = 6;
 }
 
 message OrderResponse {
   int64 id = 1;
   CustomerResponse customer = 2;
-  int64 dateTimeOrdered = 3;
-  bool isPacked = 4;
-  int64 dateTimeSent = 5;
-  GetProductsResponse products = 6;
+  WarehouseResponse warehouse = 3;
+  int64 dateTimeOrdered = 4;
+  bool isPacked = 5;
+  int64 dateTimeSent = 6;
+  GetProductsResponse products = 7;
 }
 
 message GetOrderRequest {
