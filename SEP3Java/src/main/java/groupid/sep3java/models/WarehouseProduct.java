@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 @Entity
 @IdClass(WarehouseProductID.class)
+@Table(uniqueConstraints = {@UniqueConstraint(name = "UniqueWarehouseIDxPosition",columnNames = {"warehouse_id_id","warehousePosition"})})
 public class WarehouseProduct {
 	@Id @ManyToOne
 	public Product productId;
