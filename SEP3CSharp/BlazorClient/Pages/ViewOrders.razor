@@ -1,0 +1,61 @@
+﻿@page "/Orders"
+@using BlazorClient.Util;
+@using Radzen
+@using HttpClients.ClientIntefaces
+@using global::Shared.Models;
+@inject IOrderService _orderService;
+@inject IWarehouseService _warehouseService;
+@inject NotificationService _notificationService
+@inject NavigationManager _navMgr;
+
+<PageTitle>Index</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Orders</RadzenText>
+            <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetOrders(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
+            <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Order" Data="_orders" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedOrder class="mb-2">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Order" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center" />
+                    <RadzenDataGridColumn TItem="Order" Property="Order.Customer.FullName" Title="Customer" Width="450px" TextAlign="TextAlign.Center"  />
+                    <RadzenDataGridColumn TItem="Order" Property="Order.DateTimeOrdered" Title="Ordered Date" TextAlign="TextAlign.Center"  />
+                    <RadzenDataGridColumn TItem="Order" Property="Order.DateTimeSent" Title="Sent Date" TextAlign="TextAlign.Center"  />
+                    <RadzenDataGridColumn TItem="Order" Property="IsPacked" Title="Is packed" Width="200px" TextAlign="TextAlign.Center"  />
+                </Columns>
+            </RadzenDataGrid>
+            <RadzenButton Text="Go to order" Disabled="@(_selectedOrder == null || _selectedWarehouse == null  ? true : false)" Click="GoToSelectedOrder"/>
+        </div>
+    </div>
+</div>
+
+@code 
+{
+    private IEnumerable<Order> _orders = null!;
+    private IEnumerable<Warehouse> _warehouses = null!;
+    private Warehouse _selectedWarehouse = null!;
+    private IList<Order> _selectedOrder = null!;
+    protected override async Task OnInitializedAsync() {
+        try {
+            _warehouses = await _warehouseService.GetWarehousesAsync();
+
+        }
+        catch (Exception e) {
+            Notifier.NotifyError(_notificationService, null, e.Message, -1);
+        }
+    }
+
+    private async Task GetOrders(long id) {
+        try {
+            _orders = await _orderService.GetOrdersAsync();
+        }
+        catch (Exception e) {
+            Notifier.NotifyError(_notificationService, null, e.Message, -1);
+        }
+    }
+
+    private async Task GoToSelectedOrder() {
+        _navMgr.NavigateTo($"/order/{_selectedOrder.First().Id}");
+    }
+
+}

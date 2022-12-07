@@ -30,7 +30,7 @@ public class OrderService : IOrderService {
     }
 
     public async Task<Order> GetOrderByIdAsync(long id) {
-        HttpResponseMessage response = await _httpClient.GetAsync("/order");
+        HttpResponseMessage response = await _httpClient.GetAsync($"/order/{id}");
         string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode) {
             throw new Exception(content);

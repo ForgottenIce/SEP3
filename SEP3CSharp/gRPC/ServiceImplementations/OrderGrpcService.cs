@@ -20,6 +20,7 @@ public class OrderGrpcService : IOrderGrpcService {
             DateTimeOffset dtOffsetSent = new DateTimeOffset(dto.DateTimeSent ?? new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             CreateOrderRequest createOrderRequest = new CreateOrderRequest {
                 CustomerId = dto.CustomerId,
+                WarehouseId = dto.WarehouseId,
                 DateTimeOrdered = dtOffsetOrdered.ToUnixTimeSeconds(),
                 IsPacked = dto.IsPacked,
                 DateTimeSent = dtOffsetSent.ToUnixTimeSeconds(),
@@ -30,6 +31,16 @@ public class OrderGrpcService : IOrderGrpcService {
 
             OrderResponse reply = await _serviceClient.CreateOrderAsync(createOrderRequest);
 
+            List<Product> products = new();
+            foreach (ProductResponse pr in reply.Products.Products) {
+                products.Add(new Product {
+                    Id = pr.Id,
+                    Name = pr.Name,
+                    Description = pr.Description,
+                    Price = pr.Price
+                });
+            }
+
             Order order = new Order {
                 Id = reply.Id,
                 Customer = new Customer {
@@ -39,9 +50,15 @@ public class OrderGrpcService : IOrderGrpcService {
                     Address = reply.Customer.Address,
                     Mail = reply.Customer.Mail,
                 },
+                Warehouse = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address,
+                },
                 DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                 IsPacked = reply.IsPacked,
-                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
+                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime,
+                OrderedProducts = products.AsEnumerable()
             };
             return order;
         }
@@ -61,6 +78,16 @@ public class OrderGrpcService : IOrderGrpcService {
         try {
             OrderResponse reply = await _serviceClient.GetOrderAsync(new GetOrderRequest { Id = id });
 
+            List<Product> products = new();
+            foreach (ProductResponse pr in reply.Products.Products) {
+                products.Add(new Product {
+                    Id = pr.Id,
+                    Name = pr.Name,
+                    Description = pr.Description,
+                    Price = pr.Price
+                });
+            }
+
             Order order = new Order {
                 Id = reply.Id,
                 Customer = new Customer {
@@ -70,9 +97,15 @@ public class OrderGrpcService : IOrderGrpcService {
                     Address = reply.Customer.Address,
                     Mail = reply.Customer.Mail,
                 },
+                Warehouse = new Warehouse {
+                    Id = reply.Warehouse.WarehouseId,
+                    Name = reply.Warehouse.Name,
+                    Address = reply.Warehouse.Address,
+                },
                 DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                 IsPacked = reply.IsPacked,
-                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime
+                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime,
+                OrderedProducts = products
             };
             return order;
         }
@@ -101,6 +134,11 @@ public class OrderGrpcService : IOrderGrpcService {
                         PhoneNo = or.Customer.PhoneNo,
                         Address = or.Customer.Address,
                         Mail = or.Customer.Mail,
+                    },
+                    Warehouse = new Warehouse {
+                        Id = or.Warehouse.WarehouseId,
+                        Name = or.Warehouse.Name,
+                        Address = or.Warehouse.Address,
                     },
                     DateTimeOrdered = or.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
                     IsPacked = or.IsPacked,

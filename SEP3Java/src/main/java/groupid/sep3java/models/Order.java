@@ -13,6 +13,8 @@ public class Order {
 	private long id;
 	@ManyToOne
 	private Customer customer;
+	@ManyToOne
+	private Warehouse warehouse;
 	private LocalDate dateOrdered;
 	private LocalTime timeOrdered;
 	private boolean isPacked;
@@ -23,9 +25,10 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(Customer customer, LocalDateTime dateTimeOrdered,
+	public Order(Customer customer, Warehouse warehouse, LocalDateTime dateTimeOrdered,
 			boolean isPacked, LocalDateTime dateTimeSent, List<Product> orderedProducts) {
 		this.customer = customer;
+		this.warehouse = warehouse;
 		if (dateTimeOrdered != null) {
 			dateOrdered = dateTimeOrdered.toLocalDate();
 			timeOrdered = dateTimeOrdered.toLocalTime();
@@ -52,6 +55,14 @@ public class Order {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 
 	public LocalDate getDateOrdered() {
