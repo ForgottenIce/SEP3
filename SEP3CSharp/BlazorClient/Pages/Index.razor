@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using HttpClients.ClientInterfaces
-@inject IAuthService authService
-@inject NavigationManager navMgr
+@inject IAuthService AuthService
+@inject NavigationManager NavMgr
 <h3>Alting/Aps</h3>
 
 <div>
@@ -17,17 +17,17 @@
 
                         <div class="container-fluid" style="justify-content: center">
                             <label>User name:</label>
-                            <input type="text" @bind="userName"/>
+                            <input type="text" @bind="_userName"/>
                         </div>
-                        <div class="container-fluid"style="justify-content: center; margin-top: 20px; margin-left: 8px">
+                        <div class="container-fluid" style="justify-content: center; margin-top: 20px; margin-left: 8px">
                             <label style="text-align: center">Password:</label>
-                            <input type="password" @bind="password"/>
+                            <input type="password" @bind="_password"/>
                         </div>
-                        @if (!string.IsNullOrEmpty(errorLabel))
+                        @if (!string.IsNullOrEmpty(_errorLabel))
                         {
-                            <div class="container-fluid"style="align-content: center; margin-top: 20px">
+                            <div class="container-fluid" style="align-content: center; margin-top: 20px">
                                 <label style="color: red">
-                                    @errorLabel
+                                    @_errorLabel
                                 </label>
                             </div>
                         }
@@ -39,6 +39,7 @@
                     <Authorized>
                         <div class="card">
                             <h3>Hello, @context.User.Identity?.Name</h3>
+                            warehouse: @context.User.Claims.First(c => c.Type == "Warehouse").Value
                         </div>
                     </Authorized>
                 </AuthorizeView>
@@ -59,40 +60,40 @@
 
 
 @code {
-    private string userName = string.Empty;
-    private string password = string.Empty;
-    private string errorLabel = "";
+    private string _userName = string.Empty;
+    private string _password = string.Empty;
+    private string _errorLabel = "";
 
     private async Task LoginAsync()
     {
-        errorLabel = "";
+        _errorLabel = "";
         try
         {
-            await authService.LoginAsync(userName, password);
-            navMgr.NavigateTo("/");
+            await AuthService.LoginAsync(_userName, _password);
+            NavMgr.NavigateTo("/");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            errorLabel = $"Error: {e.Message}";
+            _errorLabel = $"Error: {e.Message}";
         }
     }
     
 public class Order
 {
 
-    String totalOrder;
+    String _totalOrder;
 
 
     public Order(string totalOrder)
     {
-        this.totalOrder = totalOrder;
+        this._totalOrder = totalOrder;
     }
 
-    public string total
+    public string Total
     {
-        get => totalOrder;
-        set => totalOrder = value ?? throw new ArgumentNullException(nameof(value));
+        get => _totalOrder;
+        set => _totalOrder = value ?? throw new ArgumentNullException(nameof(value));
     }
 }
 }
