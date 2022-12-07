@@ -1,0 +1,157 @@
+﻿@page "/ViewCustomers"
+@using global::Shared.Models
+@using Microsoft.AspNetCore.Components
+@using Radzen
+@using BlazorClient.Util
+@using HttpClients.ClientIntefaces
+@using System.Text.RegularExpressions
+@using global::Shared.Dtos
+<h3>ViewCustomers</h3>
+@inject NotificationService NotificationService
+@inject DialogService DialogService
+@inject ICustomerService CustomerService
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Customers</RadzenText>
+                <RadzenButton class="mb-2" Text="Create Customer" Click="OpenCreationDialog"></RadzenButton>
+                <RadzenDataGrid TItem="Customer" Data="@_customers" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedCustomer class="mb-2">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Customer" Property="Id" Title="Customer Id" Width="100px" />
+                        <RadzenDataGridColumn TItem="Customer" Property="FullName" Title="Full Name" Width="150px" />
+                        <RadzenDataGridColumn TItem="Customer" Property="PhoneNo" Title="Phone Number" Width="150px" />
+                        <RadzenDataGridColumn TItem="Customer" Property="Address" Title="Address" Width="150px" Sortable="false"/>
+                        <RadzenDataGridColumn TItem="Customer" Property="Mail" Title="Mail" Width="150px"/>
+                    </Columns>
+                </RadzenDataGrid>
+                <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null || true)" Click="(() => { })"/>
+            </RadzenCard>
+        </div>
+    </div> 
+</div>
+
+@code {
+    private IEnumerable<Customer> _customers = null!;
+
+    private IList<Customer> _selectedCustomer = null!;
+
+    private string _fullName = "";
+    private string _phoneNo = "";
+    private string _address = "";
+    private string _mail = "";
+    
+    private bool _addCustomerIsBusy = false;
+    
+    private readonly Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _customers = await CustomerService.GetCustomersAsync();
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            Notifier.NotifyError(NotificationService,null,e.Message,null);
+        }
+    }
+
+    private async Task OpenCreationDialog() {
+        await DialogService.OpenAsync("Create Customer", ds => 
+            @<div>
+                <div class="d-flex flex-column p-3">
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-1 mb-0">FullName </RadzenText>
+                        <RadzenTextBox Placeholder="Fullname" Class="w-100" @bind-value="_fullName" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Phone </RadzenText>
+                        <RadzenTextBox Placeholder="Phone" Class="w-100" @bind-value="_phoneNo" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Addresse </RadzenText>
+                        <RadzenTextBox Placeholder="Address" Class="w-100" @bind-value="_address" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Mail </RadzenText>
+                        <RadzenTextBox Placeholder="Mail" Class="w-100" @bind-Value="_mail" />
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <RadzenButton class="mt-3" style="width: 160px" Icon="save" BusyText="Creating ..." IsBusy=@_addCustomerIsBusy Click=@CreateNewCustomerAsync Text="Create"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            );
+    }
+    
+    private async Task CreateNewCustomerAsync()
+    {
+        try {
+            if (ValidatePhone().Equals(true) && ValidateFullName().Equals(true)&& ValidateMail().Equals(true))
+            {
+                _addCustomerIsBusy = true;
+                await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
+                    _fullName, _phoneNo, _address, _mail));
+                _customers = await CustomerService.GetCustomersAsync();
+            }
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            Notifier.NotifyError(NotificationService,null,e.Message,null);
+        }
+    }
+    
+    private bool ValidateMail()
+    {
+        if (regex.IsMatch(_mail))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
+    private bool ValidateFullName()
+    {
+        if (string.IsNullOrEmpty(_fullName) && string.IsNullOrEmpty(_address) && String.IsNullOrEmpty(_mail))
+        {
+            return false;
+        }
+        char[] chars = _fullName.ToCharArray();
+        foreach (char c in chars)
+        {
+            if (!Char.IsLetter(c))
+            {
+                // exceptionLabel.set("only letters allowed");
+                return false; 
+            }
+        }
+        return true;
+    }
+    
+    private bool ValidatePhone()
+    {
+        if (String.IsNullOrEmpty(_phoneNo))
+        {
+            return false;
+        }
+        char[] chars = _phoneNo.ToCharArray();
+        foreach (char c in chars)
+        {
+            if (Char.IsLetter(c)&& chars.Length != 8)
+            {
+                // exceptionLabel.set("only letters allowed");
+                return false; 
+            }
+        }
+        return true;
+    }
+
+    private static bool IsValidate(string email)
+    {
+        Regex emailRegex= new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", RegexOptions.IgnoreCase);
+        return IsValidate(email);
+    }
+}
