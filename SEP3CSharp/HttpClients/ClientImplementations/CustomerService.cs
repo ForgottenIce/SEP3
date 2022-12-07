@@ -17,7 +17,7 @@ public class CustomerService : ICustomerService
 
     public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/CreateCustomer", dto);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Customer", dto);
         string content = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -33,9 +33,9 @@ public class CustomerService : ICustomerService
         return customer;
     }
 
-    public async Task<IEnumerable<Customer>> GetCreateCustomerAsync()
+    public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
-        HttpResponseMessage responseMessage = await _httpClient.GetAsync("/CreateCustomer"); // Url er ikke right sat
+        HttpResponseMessage responseMessage = await _httpClient.GetAsync("/Customer");
         string content = await responseMessage.Content.ReadAsStringAsync();
         if (!responseMessage.IsSuccessStatusCode)
         {
@@ -48,6 +48,5 @@ public class CustomerService : ICustomerService
                 PropertyNameCaseInsensitive = true
             })!;
         return customers;
-
     }
 }

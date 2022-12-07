@@ -6,6 +6,6 @@ namespace HttpClients.ClientIntefaces;
 public interface ICustomerService
 {
     Task<Customer> CreateCustomerAsync(CustomerCreationDto dto);
-    Task<IEnumerable<Customer>> GetCreateCustomerAsync();
+    Task<IEnumerable<Customer>> GetCustomersAsync();
     
 }
