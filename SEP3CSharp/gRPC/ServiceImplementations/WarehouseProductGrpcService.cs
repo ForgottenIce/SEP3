@@ -33,12 +33,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 
             WarehouseProduct warehouseProduct = new WarehouseProduct()
             {
-                WarehouseId = new Warehouse {
+                Warehouse = new Warehouse {
                     Id = reply.Warehouse.WarehouseId,
                     Name = reply.Warehouse.Name,
                     Address = reply.Warehouse.Address
                 },
-                ProductId = new Product {
+                Product = new Product {
                   Id = reply.Product.Id,
                   Name = reply.Product.Name,
                   Description = reply.Product.Description,
@@ -80,12 +80,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 
             WarehouseProduct warehouseProduct = new WarehouseProduct()
             {
-                WarehouseId = new Warehouse {
+                Warehouse = new Warehouse {
                     Id = reply.Warehouse.WarehouseId,
                     Name = reply.Warehouse.Name,
                     Address = reply.Warehouse.Address
                 },
-                ProductId = new Product {
+                Product = new Product {
                     Id = reply.Product.Id,
                     Name = reply.Product.Name,
                     Description = reply.Product.Description,
@@ -118,12 +118,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
 
             WarehouseProduct warehouseProduct = new WarehouseProduct
             {
-                WarehouseId = new Warehouse {
+                Warehouse = new Warehouse {
                     Id = reply.Warehouse.WarehouseId,
                     Name = reply.Warehouse.Name,
                     Address = reply.Warehouse.Address
                 },
-                ProductId = new Product {
+                Product = new Product {
                     Id = reply.Product.Id,
                     Name = reply.Product.Name,
                     Description = reply.Product.Description,
@@ -159,12 +159,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             {
                 warehouseProducts.Add(new WarehouseProduct()
                 {
-                    WarehouseId = new Warehouse {
+                    Warehouse = new Warehouse {
                         Id = pr.Warehouse.WarehouseId,
                         Name = pr.Warehouse.Name,
                         Address = pr.Warehouse.Address
                     },
-                    ProductId = new Product {
+                    Product = new Product {
                         Id = pr.Product.Id,
                         Name = pr.Product.Name,
                         Description = pr.Product.Description,
@@ -200,12 +200,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 warehouseProducts.Add(new WarehouseProduct()
                 {
 
-                    WarehouseId = new Warehouse {
+                    Warehouse = new Warehouse {
                         Id = pr.Warehouse.WarehouseId,
                         Name = pr.Warehouse.Name,
                         Address = pr.Warehouse.Address
                     },
-                    ProductId = new Product {
+                    Product = new Product {
                         Id = pr.Product.Id,
                         Name = pr.Product.Name,
                         Description = pr.Product.Description,
@@ -244,12 +244,12 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                     WarehousePosition = pr.WarehousePosition,
                     MinimumQuantity = pr.MinimumQuantity,
                   
-                    WarehouseId = new Warehouse {
+                    Warehouse = new Warehouse {
                         Id = pr.Warehouse.WarehouseId,
                         Name = pr.Warehouse.Name,
                         Address = pr.Warehouse.Address
                     },
-                    ProductId = new Product {
+                    Product = new Product {
                         Id = pr.Product.Id,
                         Name = pr.Product.Name,
                         Description = pr.Product.Description,

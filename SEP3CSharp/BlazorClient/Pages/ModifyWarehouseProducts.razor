@@ -20,7 +20,7 @@
                 <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetProducts(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
                 <RadzenDataGrid TItem="WarehouseProduct" Data="@_warehouseProducts" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
                     <Columns>
-                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="ProductId.Name" Title="Product Name" Width="500px" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Name" Title="Product Name" Width="500px" TextAlign="TextAlign.Center"/>
                         <RadzenDataGridColumn TItem="WarehouseProduct" Property="WarehousePosition" Title="Warehouse Position" Width="150px" TextAlign="TextAlign.Center"/>
                         <RadzenDataGridColumn TItem="WarehouseProduct" Property="Quantity" Title="Quantity" Width="100px" Sortable="false" TextAlign="TextAlign.Center" Filterable="false"/>
                         <RadzenDataGridColumn TItem="WarehouseProduct" Property="MinimumQuantity" Title="Minimum Quantity" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
@@ -76,7 +76,7 @@
         }
         var result = await DialogService.OpenAsync("Alter Product", ds =>
             @<div>
-                <p class="mb-4">Alter <b>@_selectedProduct.First().ProductId.Name</b> from <b>@_selectedWarehouse.Name</b></p>
+                <p class="mb-4">Alter <b>@_selectedProduct.First().Product.Name</b> from <b>@_selectedWarehouse.Name</b></p>
                 <div class="row">
                     <div class="col d-flex flex-column">
                         <RadzenText TextStyle="TextStyle.Overline"Text="Quantity"/>
@@ -86,7 +86,7 @@
                         <RadzenText TextStyle="TextStyle.Overline"Text="Position"/>
                         <RadzenDropDown class="mb-2" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="string" @bind-Value=_position 
                                         Data="_displayWarehousePosition" TextProperty="Position" ValueProperty="Position" Placeholder="Warehouse Position"/>
-                        <RadzenButton Text="Confirm" Click="async () => {await AlterWarehouseProduct(_selectedProduct.First().ProductId.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
+                        <RadzenButton Text="Confirm" Click="async () => {await AlterWarehouseProduct(_selectedProduct.First().Product.Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
                     </div>
                 </div>
             </div>
