@@ -1,7 +1,5 @@
 package groupid.sep3java.repositories;
 
-import groupid.sep3java.models.Product;
-import groupid.sep3java.models.Warehouse;
 import groupid.sep3java.models.WarehouseProduct;
 import groupid.sep3java.models.WarehouseProductID;
 import org.springframework.data.jpa.repository.JpaRepository;
