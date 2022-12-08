@@ -30,4 +30,9 @@ public class OrderLogic : IOrderLogic {
         IEnumerable<Order> orders = await _orderService.GetOrdersByWarehouseIdAsync(id);
         return orders;
     }
+
+    public async Task<string> UpdateOrderAsync(Order updatedOrder) {
+        string responseMessage = await _orderService.UpdateOrderAsync(updatedOrder);
+        return responseMessage;
+    }
 }
