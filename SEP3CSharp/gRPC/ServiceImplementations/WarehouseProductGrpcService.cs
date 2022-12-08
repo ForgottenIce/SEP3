@@ -226,6 +226,10 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             {
                 throw new ServiceUnavailableException();
             }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
             throw e;
         }
     }
@@ -266,6 +270,10 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             if (e.StatusCode == StatusCode.Unavailable)
             {
                 throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
             throw e;
         }
