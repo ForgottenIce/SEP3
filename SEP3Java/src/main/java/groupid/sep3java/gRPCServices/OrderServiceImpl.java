@@ -89,4 +89,25 @@ public class OrderServiceImpl extends OrderGrpcServiceImplBase {
 		responseObserver.onNext(response);
 		responseObserver.onCompleted();
 	}
+
+	@Override
+	public void getOrdersByWarehouseId(GetOrdersByWarehouseIdRequest request,
+			   StreamObserver<GetOrdersResponse> responseObserver) {
+		try {
+			warehouseRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Warehouse with id: " + request.getId() + " was not found"));
+			List<Order> orders = orderRepository.findByWarehouse_Id(request.getId());
+
+			GetOrdersResponse response = GRPCOrderFactory.createGetOrdersResponse(orders);
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Warehouse was not found")
+					.asRuntimeException(metadata));
+		}
+	}
 }
