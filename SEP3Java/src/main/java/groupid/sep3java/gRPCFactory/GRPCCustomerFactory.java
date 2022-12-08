@@ -15,6 +15,13 @@ public class GRPCCustomerFactory {
 		return customer;
 	}
 
+	public static Customer createAlteration(AlterCustomerRequest request) {
+		Customer customer = new Customer(request.getFullname(),request.getPhoneNo(),
+				request.getAddress(), request.getMail());
+		customer.setId(request.getId());
+		return customer;
+	}
+
 	public static CustomerResponse createCustomerResponse(Customer customer) {
 		CustomerResponse customerResponse = CustomerResponse.newBuilder()
 				.setId(customer.getId()).setFullname(customer.getFullName())
