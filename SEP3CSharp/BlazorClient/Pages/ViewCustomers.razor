@@ -26,7 +26,7 @@
                         <RadzenDataGridColumn TItem="Customer" Property="Mail" Title="Mail" Width="150px"/>
                     </Columns>
                 </RadzenDataGrid>
-                <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null || true)" Click="(() => { })"/>
+                <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null)" Click="OpenAlterDialog"/>
             </RadzenCard>
         </div>
     </div> 
@@ -78,7 +78,7 @@
                     </div>
                     <div class="row mb-4">
                         <div class="col">
-                            <RadzenButton class="mt-3" style="width: 160px" Icon="save" BusyText="Creating ..." IsBusy=@_addCustomerIsBusy Click=@CreateNewCustomerAsync Text="Create"/>
+                            <RadzenButton class="mt-3" style="width: 160px" Icon="save" BusyText="Creating ..." IsBusy=@_addCustomerIsBusy Click="async () => await CreateNewCustomerAsync(ds)" Text="Create"/>
                         </div>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
             );
     }
     
-    private async Task CreateNewCustomerAsync()
+    private async Task CreateNewCustomerAsync(DialogService dialogService)
     {
         try {
             if (ValidatePhone().Equals(true) && ValidateFullName().Equals(true)&& ValidateMail().Equals(true))
@@ -94,7 +94,82 @@
                 _addCustomerIsBusy = true;
                 await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
                     _fullName, _phoneNo, _address, _mail));
+                _fullName = string.Empty;
+                _phoneNo = string.Empty;
+                _address = string.Empty;
+                _mail = string.Empty;
                 _customers = await CustomerService.GetCustomersAsync();
+                NotifierService.NotifySuccess("Customer was created", duration: 4000);
+                dialogService.Close();
+            }
+            else {
+                NotifierService.NotifyError("customer was not valid");
+            }
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            NotifierService.NotifyError(e.Message);
+        }
+    }
+    
+    private async Task OpenAlterDialog() {
+        Customer _selected = _selectedCustomer.First();
+        _fullName = _selected.FullName;
+        _phoneNo = _selected.PhoneNo;
+        _address = _selected.Address;
+        _mail = _selected.Mail;
+        await DialogService.OpenAsync("Create Customer", ds => 
+            @<div>
+                <div class="d-flex flex-column p-3">
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-1 mb-0">FullName </RadzenText>
+                        <RadzenTextBox Placeholder="Fullname" Class="w-100" @bind-value="_fullName" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Phone </RadzenText>
+                        <RadzenTextBox Placeholder="Phone" Class="w-100" @bind-value="_phoneNo" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Addresse </RadzenText>
+                        <RadzenTextBox Placeholder="Address" Class="w-100" @bind-value="_address" />
+                    </div>
+                    <div class="row px-3">
+                        <RadzenText TextStyle="TextStyle.Overline" Class="mt-3 mb-0">Mail </RadzenText>
+                        <RadzenTextBox Placeholder="Mail" Class="w-100" @bind-Value="_mail" />
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <RadzenButton class="mt-3" style="width: 160px" Icon="save" Click="async () => await AlterCustomerAsync(ds)" Text="Alter"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            );
+    }
+    
+    private async Task AlterCustomerAsync(DialogService dialogService)
+    {
+        try {
+            if (ValidatePhone() && ValidateFullName() && ValidateMail())
+            {
+                _addCustomerIsBusy = true;
+                await CustomerService.AlterCustomerAsync(new Customer {
+                    Id = _selectedCustomer.First().Id,
+                    FullName = _fullName,
+                    PhoneNo = _phoneNo,
+                    Address = _address,
+                    Mail = _mail
+                });
+                _fullName = string.Empty;
+                _phoneNo = string.Empty;
+                _address = string.Empty;
+                _mail = string.Empty;
+                _customers = await CustomerService.GetCustomersAsync();
+                NotifierService.NotifySuccess("Customer was altered", duration:4000);
+                dialogService.Close();
+            }
+            else {
+                NotifierService.NotifyError("Customer was not valid");
             }
         }
         catch (Exception e) {
