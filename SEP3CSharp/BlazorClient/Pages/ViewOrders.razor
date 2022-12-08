@@ -3,6 +3,7 @@
 @using Radzen
 @using HttpClients.ClientIntefaces
 @using global::Shared.Models
+@inject AuthenticationStateProvider _authenticationStateProvider
 @inject IOrderService _orderService
 @inject IWarehouseService _warehouseService
 @inject INotifierService _notifierService
@@ -33,12 +34,19 @@
 {
     private IEnumerable<Order> _orders = null!;
     private IEnumerable<Warehouse> _warehouses = null!;
+
     private Warehouse _selectedWarehouse = null!;
     private IList<Order> _selectedOrder = null!;
+
+    private AuthenticationState _state = null!;
     protected override async Task OnInitializedAsync() {
         try {
             _warehouses = await _warehouseService.GetWarehousesAsync();
-
+            _state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            if (_state.User.Identity != null && _state.User.Identity.IsAuthenticated) {
+                _selectedWarehouse = _warehouses.First(w => w.Id.ToString().Equals(_state.User.Claims.First(c => c.Type.Equals("Warehouse")).Value));
+                await GetOrders(_selectedWarehouse.Id);
+            }
         }
         catch (Exception e) {
             _notifierService.NotifyError(e.Message);
@@ -47,7 +55,7 @@
 
     private async Task GetOrders(long id) {
         try {
-            _orders = await _orderService.GetOrdersAsync();
+            _orders = await _orderService.GetOrdersByWarehouseIdAsync(id);
         }
         catch (Exception e) {
             _notifierService.NotifyError(e.Message);
