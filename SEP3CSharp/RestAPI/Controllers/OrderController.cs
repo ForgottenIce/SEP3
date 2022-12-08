@@ -1,6 +1,7 @@
 ﻿using Application.LogicInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
+using Shared.Exceptions;
 using Shared.Models;
 
 namespace RestAPI.Controllers;
@@ -21,6 +22,14 @@ public class OrderController : ControllerBase {
             Order order = await _orderLogic.CreateOrderAsync(dto);
             return Created($"/order/{order.Id}", order);
         }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
         catch (Exception e) {
             Console.WriteLine(e);
             return StatusCode(500, e.Message);
@@ -28,10 +37,34 @@ public class OrderController : ControllerBase {
     }
 
     [HttpGet]
+    public async Task<ActionResult<IEnumerable<Order>>> GetOrdersAsync() {
+        try {
+            IEnumerable<Order> order = await _orderLogic.GetOrdersAsync();
+            return Ok(order);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpGet("{id}")]
     public async Task<ActionResult<Order>> GetOrderByIdAsync([FromRoute] long id) {
         try {
             Order order = await _orderLogic.GetOrderByIdAsync(id);
             return Ok(order);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
         }
         catch (Exception e) {
             Console.WriteLine(e);

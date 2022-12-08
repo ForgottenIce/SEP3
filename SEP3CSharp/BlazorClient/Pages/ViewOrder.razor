@@ -1,0 +1,59 @@
+﻿@page "/Order/{OrderId:long}"
+@using BlazorClient.Util;
+@using HttpClients.ClientIntefaces;
+@using Radzen
+@using global::Shared.Models
+@using HttpClients.ClientImplementations
+@using HttpClients.ClientInterfaces
+@inject IOrderService _orderService
+@inject INotifierService NotifierService
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H4">Order: @OrderId</RadzenText>
+            @if (_order != null) {
+                <RadzenText TextStyle="TextStyle.H6">Customer: @_order.Customer.FullName</RadzenText>
+                <RadzenText TextStyle="TextStyle.H6" Text="Products" />
+                <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Product" Data="_order.OrderedProducts" class="mb-2">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" Width="450px" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Description" Title="Description" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Title="Packaged" Width="200px" TextAlign="TextAlign.Center">
+                            <Template>
+                                <RadzenCheckBox TValue="bool" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>   
+            }
+            <RadzenButton Text="Mark as Packaged" Click="@MarkAsPackaged"/>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public long OrderId { get; set; }
+
+    public Order _order = null!;
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _order = await _orderService.GetOrderByIdAsync(OrderId);
+        }
+        catch (Exception e) {
+            NotifierService.NotifyError(e.Message);
+        }
+    }
+
+    private void MarkAsPackaged() {
+        
+    }
+
+}

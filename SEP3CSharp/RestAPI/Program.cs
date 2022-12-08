@@ -10,6 +10,7 @@ using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth;
+using Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,30 +23,48 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IEmployeeDao,EmployeeEfcDao>();
+builder.Services.AddScoped<IWarehousePositionDao, WarehousePositionEfcDao>();
 
-// gRPC dependencies
+// gRPC Service Clients
 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
 Uri grpcUri = new Uri("http://localhost:9090");
-builder.Services.AddGrpcClient<ProductGrpcService.ProductGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.ProductGrpcService.ProductGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
-builder.Services.AddGrpcClient<OrderGrpcService.OrderGrpcServiceClient>(o => {
+builder.Services.AddGrpcClient<gRPC.OrderGrpcService.OrderGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
+builder.Services.AddGrpcClient<gRPC.WarehouseGrpcService.WarehouseGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
+builder.Services.AddGrpcClient<gRPC.WarehouseProductGrpcService.WarehouseProductGrpcServiceClient>(o => {
     o.Address = grpcUri;
 });
 builder.Services.AddGrpcClient<Ping.PingClient>(o => {
     o.Address = grpcUri;
 });
+builder.Services.AddGrpcClient<CustomersGrpcService.CustomersGrpcServiceClient>(o => {
+    o.Address = grpcUri;
+});
 
-builder.Services.AddScoped<IPingService, PingService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IProductService, ProductService>();
+// gRPC Services
+builder.Services.AddScoped<IPingGrpcService, PingGrpcService>();
+builder.Services.AddScoped<IOrderGrpcService, gRPC.ServiceImplementations.OrderGrpcService>();
+builder.Services.AddScoped<IProductGrpcService, gRPC.ServiceImplementations.ProductGrpcService>();
+builder.Services.AddScoped<IWarehouseGrpcService, gRPC.ServiceImplementations.WarehouseGrpcService>();
+builder.Services.AddScoped<ICustomerGrpcService, CustomerGrpcService>();
+builder.Services.AddScoped<IWarehouseProductGrpcService, gRPC.ServiceImplementations.WarehouseProductGrpcService>();
 
 // Logic dependencies
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+builder.Services.AddScoped<IWarehousePositionLogic, WarehousePositionLogic>();
 builder.Services.AddScoped<IPingLogic, PingLogic>();
 builder.Services.AddScoped<IOrderLogic, OrderLogic>();
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
+builder.Services.AddScoped<IWarehouseLogic, WarehouseLogic>();
+builder.Services.AddScoped<ICustomerLogic, CustomerLogic>();
+builder.Services.AddScoped<IWarehouseProductLogic, WarehouseProductLogic>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
