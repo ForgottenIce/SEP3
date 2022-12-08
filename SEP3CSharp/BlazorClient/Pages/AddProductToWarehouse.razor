@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col">
             <RadzenCard>
-                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Warehouse Products</RadzenText>
+                <RadzenText TextStyle="TextStyle.H6">Products</RadzenText>
                 <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetProducts(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
                 <RadzenDataGrid TItem="Product" Data="@_products" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
                     <Columns>
