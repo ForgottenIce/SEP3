@@ -5,32 +5,34 @@
 @using global::Shared.Models
 @using HttpClients.ClientImplementations
 @using HttpClients.ClientInterfaces
-@inject IOrderService _orderService
+@inject IOrderService OrderService
 @inject INotifierService NotifierService
 
 
 <div class="container">
     <div class="row">
         <div class="col">
-            <RadzenText TextStyle="TextStyle.H4">Order: @OrderId</RadzenText>
-            @if (_order != null) {
-                <RadzenText TextStyle="TextStyle.H6">Customer: @_order.Customer.FullName</RadzenText>
-                <RadzenText TextStyle="TextStyle.H6" Text="Products" />
-                <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Product" Data="_order.OrderedProducts" class="mb-2">
-                    <Columns>
-                        <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center"  />
-                        <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" Width="450px" TextAlign="TextAlign.Center"  />
-                        <RadzenDataGridColumn TItem="Product" Property="Description" Title="Description" TextAlign="TextAlign.Center"  />
-                        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
-                        <RadzenDataGridColumn TItem="Product" Title="Packaged" Width="200px" TextAlign="TextAlign.Center">
-                            <Template>
-                                <RadzenCheckBox TValue="bool" />
-                            </Template>
-                        </RadzenDataGridColumn>
-                    </Columns>
-                </RadzenDataGrid>   
-            }
-            <RadzenButton Text="Mark as Packaged" Click="@MarkAsPackaged"/>
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H4">Order: @OrderId</RadzenText>
+                @if (_order != null) {
+                    <RadzenText TextStyle="TextStyle.H6">Customer: @_order.Customer.FullName</RadzenText>
+                    <RadzenText TextStyle="TextStyle.H6" Text="Products" />
+                    <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="ProductExtension" Data="_products" class="mb-2">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="ProductExtension" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center"  />
+                            <RadzenDataGridColumn TItem="ProductExtension" Property="Name" Title="Name" Width="450px" TextAlign="TextAlign.Center"  />
+                            <RadzenDataGridColumn TItem="ProductExtension" Property="Description" Title="Description" TextAlign="TextAlign.Center"  />
+                            <RadzenDataGridColumn TItem="ProductExtension" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
+                            <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Title="Mark as Packaged" Width="200px" TextAlign="TextAlign.Center">
+                                <Template Context="product">
+                                    <RadzenCheckBox TValue="bool" @bind-Value="product.IsPackaged" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>   
+                }
+                <RadzenButton Text="Mark Order as Packaged" Disabled="@(_products.Any(p => !p.IsPackaged) ? true : false)" Click="@MarkAsPackaged"/>
+            </RadzenCard>
         </div>
     </div>
 </div>
@@ -41,11 +43,25 @@
     [Parameter]
     public long OrderId { get; set; }
 
-    public Order _order = null!;
+    private class ProductExtension : Product {
+        public bool IsPackaged { get; set; }
+    }
+
+    private Order _order = null!;
+    private List<ProductExtension> _products = new();
 
     protected override async Task OnInitializedAsync() {
         try {
-            _order = await _orderService.GetOrderByIdAsync(OrderId);
+            _order = await OrderService.GetOrderByIdAsync(OrderId);
+            foreach (Product product in _order.OrderedProducts) {
+                _products.Add(new ProductExtension() {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price,
+                    IsPackaged = false
+                });
+            }
         }
         catch (Exception e) {
             NotifierService.NotifyError(e.Message);
@@ -53,7 +69,7 @@
     }
 
     private void MarkAsPackaged() {
-        
+        NotifierService.NotifyInfo("Not implemented yet", duration:4000);
     }
 
 }

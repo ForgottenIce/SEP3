@@ -71,4 +71,24 @@ public class OrderController : ControllerBase {
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpGet("bywarehouseid/{id}")]
+    public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByWarehouseIdAsync([FromRoute] long id) {
+        try {
+            IEnumerable<Order> orders = await _orderLogic.GetOrdersByWarehouseIdAsync(id);
+            return Ok(orders);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
 }

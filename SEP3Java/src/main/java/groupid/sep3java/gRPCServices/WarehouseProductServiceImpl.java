@@ -147,22 +147,44 @@ public class WarehouseProductServiceImpl extends WarehouseProductGrpcServiceImpl
 	@Override public void getWarehouseProductByProductId(
 			QueryByPartialIdRequest request,
 			StreamObserver<GetWarehouseProductsResponse> responseObserver) {
-		List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByProductId(
-				request.getId());
+		try {
+			productRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Product with id: " + request.getId() + " was not found"));
+			List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByProductId(
+					request.getId());
 
-		GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
-		responseObserver.onNext(response);
-		responseObserver.onCompleted();
+			GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Product was not found")
+					.asRuntimeException(metadata));
+		}
 	}
 
 	@Override public void getWarehouseProductByWarehouseId(
 			QueryByPartialIdRequest request,
 			StreamObserver<GetWarehouseProductsResponse> responseObserver) {
-		List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByWarehouseId(
-				request.getId());
+		try {
+			warehouseRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Warehouse with id: " + request.getId() + " was not found"));
+			List<WarehouseProduct> products = warehouseProductRepository.findWarehouseProductsByWarehouseId(
+					request.getId());
 
-		GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
-		responseObserver.onNext(response);
-		responseObserver.onCompleted();
+			GetWarehouseProductsResponse response = GRPCWarehouseProductFactory.createGetWarehouseProductsResponse(products);
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Warehouse was not found")
+					.asRuntimeException(metadata));
+		}
 	}
 }

@@ -31,6 +31,10 @@ message GetOrderRequest {
 
 message GetOrdersRequest {}
 
+message GetOrdersByWarehouseIdRequest {
+  int64 id = 1;
+}
+
 message GetOrdersResponse {
   repeated OrderResponse orders = 1;
 }
@@ -39,4 +43,5 @@ service OrderGrpcService {
   rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
   rpc GetOrder(GetOrderRequest) returns (OrderResponse);
   rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse);
+  rpc GetOrdersByWarehouseId(GetOrdersByWarehouseIdRequest) returns (GetOrdersResponse);
 }
