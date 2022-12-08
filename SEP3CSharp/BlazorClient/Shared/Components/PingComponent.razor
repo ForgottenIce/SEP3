@@ -29,6 +29,7 @@
                 _fromTime = dateTimes[0];
                 _serverTime = dateTimes[1];
                 _ping = DateTimeOffset.Now.ToUnixTimeMilliseconds() - _fromTime;
+                StateHasChanged();
             }
         }
         catch (Exception e) {
