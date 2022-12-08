@@ -7,31 +7,31 @@ namespace Application.Logic;
 
 public class CustomerLogic : ICustomerLogic
 {
-    private readonly ICustomerGrpcService customerService;
+    private readonly ICustomerGrpcService _customerService;
     public CustomerLogic(ICustomerGrpcService customerService) {
-        this.customerService = customerService;
+        this._customerService = customerService;
     }
 
     public async Task<Customer> CreateCustomerAsync(CustomerCreationDto dto)
     {
-        Customer customer = await customerService.CreateCustomerAsync(dto);
+        Customer customer = await _customerService.CreateCustomerAsync(dto);
         return customer;
     }
 
     public async Task<Customer> AlterCustomerAsync(Customer customer) {
-        Customer returnCustomer = await customerService.AlterCustomerAsync(customer);
+        Customer returnCustomer = await _customerService.AlterCustomerAsync(customer);
         return returnCustomer;
     }
 
     public async Task<Customer> GetCustomerByIdAsync(long id)
     {
-        Customer customer = await customerService.GetCustomerByIdAsync(id);
+        Customer customer = await _customerService.GetCustomerByIdAsync(id);
         return customer;
     }
 
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
-        IEnumerable<Customer> customers = await customerService.GetCustomersAsync();
+        IEnumerable<Customer> customers = await _customerService.GetCustomersAsync();
         return customers;
     }
 }

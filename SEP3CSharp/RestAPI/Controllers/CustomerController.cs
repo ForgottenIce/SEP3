@@ -1,5 +1,4 @@
 ﻿using Application.LogicInterfaces;
-using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
 using Shared.Exceptions;
