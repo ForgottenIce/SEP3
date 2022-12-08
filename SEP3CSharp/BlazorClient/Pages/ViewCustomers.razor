@@ -7,6 +7,7 @@
 @using System.Text.RegularExpressions
 @using global::Shared.Dtos
 <h3>ViewCustomers</h3>
+@inject NavigationManager NavMgr
 @inject INotifierService NotifierService
 @inject DialogService DialogService
 @inject ICustomerService CustomerService
@@ -27,6 +28,7 @@
                     </Columns>
                 </RadzenDataGrid>
                 <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null)" Click="OpenAlterDialog"/>
+                 <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"order/new/{_selectedCustomer.First().Id}"))></RadzenButton>
             </RadzenCard>
         </div>
     </div> 

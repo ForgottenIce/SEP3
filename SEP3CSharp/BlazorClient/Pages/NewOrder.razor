@@ -1,0 +1,66 @@
+﻿@page "/order/new/{CustomerId:long}"
+@using global::Shared.Models
+@using Radzen
+@using global::Shared.Dtos
+@using HttpClients.ClientIntefaces
+@using BlazorClient.Util
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject INotifierService NotifierService
+@inject DialogService DialogService
+@inject ICustomerService CustomerService
+@inject IWarehouseProductService WarehouseProductService
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <RadzenText TextStyle="TextStyle.H4">Create Order</RadzenText>
+            @if (_products != null) {
+                <RadzenText TextStyle="TextStyle.H6">Customer: @_customer.FullName</RadzenText>
+                <RadzenText TextStyle="TextStyle.H6" Text="Products" />
+                <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Product" Data="_products" class="mb-2">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" Width="450px" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Description" Title="Description" TextAlign="TextAlign.Center"  />
+                        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
+                    </Columns>
+                </RadzenDataGrid>   
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public long CustomerId { get; set; }
+    
+    private OrderCreationDto _order;
+    private Customer _customer;
+    
+    private AuthenticationState _state = null!;
+
+    private IList<Product> _products;
+
+    private IEnumerable<WarehouseProduct> _warehouseProducts = null!;
+
+    protected override async Task OnInitializedAsync() {
+        try {
+            _state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            _order = new OrderCreationDto();
+            if (_state.User.Identity != null && _state.User.Identity.IsAuthenticated) {
+                _order.WarehouseId = long.Parse(_state.User.Claims.First(c => c.Type.Equals("Warehouse")).Value);
+            }
+            _customer = await CustomerService.GetCustomerByIdAsync(CustomerId);
+            _order.CustomerId = _customer.Id;
+            _warehouseProducts = await WarehouseProductService.GetWarehouseProductsByWarehouseAsync(_order.WarehouseId);
+            _products = new List<Product>();
+            for (long i = 1; i < 5; i++) {
+                _products.Add(_warehouseProducts.FirstOrDefault(w => w.Product.Id == i).Product);
+            }
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            NotifierService.NotifyError(e.Message);
+        }
+    }   
+}
