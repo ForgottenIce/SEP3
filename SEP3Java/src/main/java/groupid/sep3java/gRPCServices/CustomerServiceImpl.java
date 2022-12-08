@@ -33,6 +33,27 @@ public class CustomerServiceImpl extends CustomersGrpcServiceImplBase {
 		responseObserver.onCompleted();
 	}
 
+	@Override public void alterCustomer(AlterCustomerRequest request,
+			StreamObserver<CustomerResponse> responseObserver) {
+		try {
+			repository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Customer with id:" + request.getId() + "was not found"));
+			Customer customerToAlter = GRPCCustomerFactory.createAlteration(request);
+			Customer customer = repository.save(customerToAlter);
+
+			CustomerResponse response = GRPCCustomerFactory.createCustomerResponse(customer);
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("Customer was not found")
+					.asRuntimeException(metadata));
+		}
+	}
+
 	@Override public void getCustomer(GetCustomerRequest request,
 			StreamObserver<CustomerResponse> responseObserver) {
 		try {
