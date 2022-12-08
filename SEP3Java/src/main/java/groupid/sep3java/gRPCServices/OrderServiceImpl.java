@@ -63,8 +63,35 @@ public class OrderServiceImpl extends OrderGrpcServiceImplBase {
 		}
 	}
 
+	@Override
+	public void updateOrder(UpdateOrderRequest request, StreamObserver<UpdateOrderResponse> responseObserver) {
+		try {
+			orderRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Order with id: " + request.getId() + " was not found"));
+			Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer with id: " + request.getCustomerId() + " was not found"));
+			Warehouse warehouse = warehouseRepository.findById(request.getWarehouseId()).orElseThrow(() -> new NotFoundException("Warehouse with id: " + request.getWarehouseId() + " was not found"));
+			ArrayList<Product> orderedProducts = new ArrayList<>();
+			for (long productId : request.getProductIdsList()) {
+				orderedProducts.add(productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product with id: " + productId + " was not found")));
+			}
+			Order orderToUpdate = GRPCOrderFactory.create(request, customer, warehouse, orderedProducts);
+			orderRepository.save(orderToUpdate);
+
+			UpdateOrderResponse response = GRPCOrderFactory.createUpdateOrderResponse("Order " + request.getId() + " was successfully updated");
+			responseObserver.onNext(response);
+			responseObserver.onCompleted();
+		}
+		catch (NotFoundException e) {
+			Metadata.Key<ErrorResponse> errorResponseKey = ProtoUtils.keyForProto(ErrorResponse.getDefaultInstance());
+			ErrorResponse errorResponse = ErrorResponse.newBuilder().setErrorMessage(e.getMessage()).build();
+			Metadata metadata = new Metadata();
+			metadata.put(errorResponseKey, errorResponse);
+			responseObserver.onError(Status.NOT_FOUND.withDescription("An id reference was not found")
+					.asRuntimeException(metadata));
+		}
+	}
+
 	@Override public void getOrder(GetOrderRequest request,
-			StreamObserver<OrderResponse> responseObserver) {
+								   StreamObserver<OrderResponse> responseObserver) {
 		try {
 			Order order = orderRepository.findById(request.getId()).orElseThrow(() -> new NotFoundException("Customer with id:" + request.getId() + "was not found"));
 			OrderResponse response = GRPCOrderFactory.createOrderResponse(order);
