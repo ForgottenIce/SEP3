@@ -18,6 +18,11 @@ public class CustomerLogic : ICustomerLogic
         return customer;
     }
 
+    public async Task<Customer> AlterCustomerAsync(Customer customer) {
+        Customer returnCustomer = await customerService.AlterCustomerAsync(customer);
+        return returnCustomer;
+    }
+
     public async Task<Customer> GetCustomerByIdAsync(long id)
     {
         Customer customer = await customerService.GetCustomerByIdAsync(id);
