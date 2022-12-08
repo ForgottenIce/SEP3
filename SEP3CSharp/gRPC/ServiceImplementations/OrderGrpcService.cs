@@ -155,4 +155,44 @@ public class OrderGrpcService : IOrderGrpcService {
             throw e;
         }
     }
+
+    public async Task<IEnumerable<Order>> GetOrdersByWarehouseIdAsync(long id) {
+        try {
+            GetOrdersResponse reply = await _serviceClient.GetOrdersByWarehouseIdAsync(new GetOrdersByWarehouseIdRequest { Id = id});
+
+            List<Order> orders = new();
+            foreach (OrderResponse or in reply.Orders) {
+                orders.Add(new Order {
+                    Id = or.Id,
+                    Customer = new Customer {
+                        Id = or.Customer.Id,
+                        FullName = or.Customer.Fullname,
+                        PhoneNo = or.Customer.PhoneNo,
+                        Address = or.Customer.Address,
+                        Mail = or.Customer.Mail,
+                    },
+                    Warehouse = new Warehouse {
+                        Id = or.Warehouse.WarehouseId,
+                        Name = or.Warehouse.Name,
+                        Address = or.Warehouse.Address,
+                    },
+                    DateTimeOrdered = or.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
+                    IsPacked = or.IsPacked,
+                    DateTimeSent = or.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeSent).DateTime
+                });
+            }
+
+            return orders.AsEnumerable();
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw e;
+        }
+    }
 }
