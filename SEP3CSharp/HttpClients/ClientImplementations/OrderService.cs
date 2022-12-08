@@ -52,4 +52,16 @@ public class OrderService : IOrderService {
         })!;
         return orders;
     }
+
+    public async Task<IEnumerable<Order>> GetOrdersByWarehouseIdAsync(long id) {
+        HttpResponseMessage response = await _httpClient.GetAsync($"/order/bywarehouseid/{id}");
+        string content = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode) {
+            throw new Exception(content);
+        }
+        IEnumerable<Order> orders = JsonSerializer.Deserialize<IEnumerable<Order>>(content, new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true
+        })!;
+        return orders;
+    }
 }
