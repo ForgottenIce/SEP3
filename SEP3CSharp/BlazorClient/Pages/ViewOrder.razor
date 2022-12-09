@@ -25,7 +25,8 @@
                             <RadzenDataGridColumn TItem="ProductExtension" Property="Id" Title="Id" Width="75px" TextAlign="TextAlign.Center"  />
                             <RadzenDataGridColumn TItem="ProductExtension" Property="Name" Title="Name" Width="450px" TextAlign="TextAlign.Center"  />
                             <RadzenDataGridColumn TItem="ProductExtension" Property="Description" Title="Description" TextAlign="TextAlign.Center"  />
-                            <RadzenDataGridColumn TItem="ProductExtension" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
+                                <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
+                                <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Property="Amount" Title="Amount" TextAlign="TextAlign.Center"  />
                             @if (!_order.IsPacked) {
                                 <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Title="Mark as Packaged" Width="200px" TextAlign="TextAlign.Center">
                                     <Template Context="product">
@@ -55,7 +56,7 @@
 
     private class ProductExtension : Product {
         public bool IsPackaged { get; set; }
-        public int Amount { get; set; }
+        public int Amount { get; set; } = 1;
     }
 
     private Order _order = null!;
@@ -65,13 +66,19 @@
         try {
             _order = await OrderService.GetOrderByIdAsync(OrderId);
             foreach (Product product in _order.OrderedProducts) {
-                _products.Add(new ProductExtension() {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Price = product.Price,
-                    IsPackaged = false
-                });
+                ProductExtension? pe = _products.FirstOrDefault(p => p.Id == product.Id);
+                if (pe != null) {
+                    pe.Amount++;
+                }
+                else {
+                    _products.Add(new ProductExtension() {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Description = product.Description,
+                        Price = product.Price,
+                        IsPackaged = false
+                    });                    
+                }
             }
         }
         catch (Exception e) {
@@ -81,14 +88,26 @@
 
     private async Task MarkOrderAsPackaged() {
         _order.IsPacked = true;
-        await OrderService.UpdateOrderAsync(_order);
-        NotifierService.NotifySuccess($"Order {_order.Id} was marked as packaged", duration:6000);
+        try {
+            await OrderService.UpdateOrderAsync(_order);
+            NotifierService.NotifySuccess($"Order {_order.Id} was marked as packaged", duration:6000);     
+        }
+        catch (Exception e) {
+            _order.IsPacked = false;
+            NotifierService.NotifyError(e.Message);
+        }
     }
 
     private async Task MarkOrderAsSent() {
         _order.DateTimeSent = DateTime.Now;
-        await OrderService.UpdateOrderAsync(_order);
-        NotifierService.NotifySuccess($"Order {_order.Id} was marked as sent at {_order.DateTimeSent?.ToString("dd/MM/yyyy HH:mm")}", duration: 10000);
+        try {
+            await OrderService.UpdateOrderAsync(_order);
+            NotifierService.NotifySuccess($"Order {_order.Id} was marked as sent at {_order.DateTimeSent?.ToString("dd/MM/yyyy HH:mm")}", duration: 10000);
+        }
+        catch (Exception e) {
+            _order.DateTimeSent = null;
+            NotifierService.NotifyError(e.Message);
+        }
     }
 
 }
