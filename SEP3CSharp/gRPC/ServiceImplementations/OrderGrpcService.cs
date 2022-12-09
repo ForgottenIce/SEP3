@@ -69,6 +69,10 @@ public class OrderGrpcService : IOrderGrpcService {
                 var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
                 throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
+            if (e.StatusCode == StatusCode.FailedPrecondition) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new InsufficientStockException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
             throw e;
         }
     }

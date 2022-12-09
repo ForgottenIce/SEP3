@@ -26,6 +26,10 @@ public class OrderController : ControllerBase {
             Console.WriteLine(e.Message);
             return NotFound(e.Message);
         }
+        catch (InsufficientStockException e) {
+            Console.WriteLine(e.Message);
+            return StatusCode(412, e.Message);
+        }
         catch (ServiceUnavailableException e) {
             Console.WriteLine(e);
             return StatusCode(503, e.Message);
