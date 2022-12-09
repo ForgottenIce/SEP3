@@ -28,7 +28,7 @@
                     </Columns>
                 </RadzenDataGrid>
                 <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null)" Click="OpenAlterDialog"/>
-                 <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"order/new/{_selectedCustomer.First().Id}"))></RadzenButton>
+                 <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"orders/new/{_selectedCustomer.First().Id}"))></RadzenButton>
             </RadzenCard>
         </div>
     </div> 
