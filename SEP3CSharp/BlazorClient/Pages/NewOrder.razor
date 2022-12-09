@@ -7,7 +7,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavMgr
 @inject INotifierService NotifierService
-@inject DialogService DialogService
 @inject ICustomerService CustomerService
 @inject IWarehouseProductService WarehouseProductService
 @inject IOrderService OrderService
@@ -19,7 +18,6 @@
                 <RadzenText TextStyle="TextStyle.H4">Create Order</RadzenText>
                 @if (_products != null) {
                     <RadzenText TextStyle="TextStyle.H6">Customer: @_customer.FullName</RadzenText>
-                    <RadzenButton class="ms-auto" Text="Add products" Click="OpenProductListDialog"/>
                     <div class="d-grid mt-1 mb-1" style="grid-template-columns: repeat(3,150px)">
                         <RadzenText class="mb-0" Text="Product id" TextStyle="TextStyle.Overline"/>
                         <RadzenText class="mb-0" Text="Amount" TextStyle="TextStyle.Overline"/>
@@ -56,15 +54,14 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <RadzenPanel Collapsed="true" AllowCollapse="true" Style="width: 1200px; margin: 40px auto;">
+            <RadzenPanel Collapsed="true" AllowCollapse="true" Style="margin: 40px auto;">
                 <HeaderTemplate>
-                    <h2 class="m-0 d-flex align-items-center">
-                        <RadzenIcon Icon="inventory" class="me-1">Warehouse Products</RadzenIcon>
-                    </h2>
+                    <h4 class="m-0 d-flex align-items-center">
+                        <RadzenIcon Icon="view_list" Style="transform: scale(1.5)" class="me-1 user-select-none"/><b>Warehouse Products</b>
+                    </h4>
                 </HeaderTemplate>
                 <ChildContent>
-                    <RadzenCard>
-                        <RadzenText TextStyle="TextStyle.H6">Warehouse Products</RadzenText>
+                    <div class="m-2">
                         <RadzenDataGrid TItem="WarehouseProduct" Data="@_warehouseProducts" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
                             <Columns>
                                 <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Id" Title="Product Id" Width="150px" TextAlign="TextAlign.Center"/>
@@ -75,8 +72,8 @@
                             </Columns>
                         </RadzenDataGrid>
                         <RadzenNumeric TValue="int" Min="1" @bind-Value="_amount"></RadzenNumeric>
-                        <RadzenButton Text="Add to Order" Disabled="@(_selectedProduct == null||_selectedProduct.Count != 1)"  Click="AddToOrder"/>
-                    </RadzenCard>
+                        <RadzenButton Text="Add to Order" Disabled="@(_selectedProduct == null || _selectedProduct.Count != 1)" Click="AddToOrder"/>
+                    </div>
                 </ChildContent>
             </RadzenPanel>
         </div>
@@ -136,37 +133,6 @@
         }
     }
 
-    private async Task OpenProductListDialog() {
-        try {
-        await DialogService.OpenAsync("Alter Product", _ => 
-            @<div class="container">
-                <div class="row">
-                    <div class="col">
-                            <RadzenCard>
-                                <RadzenText TextStyle="TextStyle.H6">Warehouse Products</RadzenText>
-                                <RadzenDataGrid TItem="WarehouseProduct" Data="@_warehouseProducts" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
-                                    <Columns>
-                                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Id" Title="Product Id" Width="150px" TextAlign="TextAlign.Center"/>
-                                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Name" Title="Name" Width="150px" Sortable="false"/>
-                                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Description" Title="Description" Width="500px" TextAlign="TextAlign.Center" Sortable="false"/>
-                                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Price" Title="Price" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
-                                        <RadzenDataGridColumn TItem="WarehouseProduct" Property="Quantity" Title="On stock" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
-                                    </Columns>
-                                </RadzenDataGrid>
-                                <RadzenNumeric TValue="int" Min="1" @bind-Value="_amount"></RadzenNumeric>
-                                <RadzenButton Text="Add to Order"  Click="AddToOrder"/>
-                            </RadzenCard>
-                    </div>
-                </div>
-            </div>,new DialogOptions {Width = $"{1100}px"});
-
-        }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            NotifierService.NotifyError(e.Message);
-        }
-    }
-    
     private async Task AddDirectlyToOrder() {
         try {
             WarehouseProduct warehouseProduct = _warehouseProducts.First(p => p.Product.Id == _directProductId);
@@ -213,7 +179,7 @@
             NotifierService.NotifyInfo("Product Added", duration:4000);
         }
         catch (Exception e) {
-            NotifierService.NotifyWarning(e.Message);
+            NotifierService.NotifyWarning(e.Message, duration:4000);
         }
         _selectedProduct = null!;
         _amount = 1;
