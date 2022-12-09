@@ -3,7 +3,7 @@
 @using Radzen
 @using HttpClients.ClientIntefaces
 @using global::Shared.Models
-@inject AuthenticationStateProvider _authenticationStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IOrderService OrderService
 @inject IWarehouseService WarehouseService
 @inject INotifierService NotifierService
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col">
             <RadzenCard>
-                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">Orders</RadzenText>
+                <RadzenText TextStyle="TextStyle.H6">Orders</RadzenText>
                 <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetOrders(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
                 <RadzenDataGrid FilterMode="FilterMode.Simple" AllowFiltering="true" AllowPaging="true" AllowSorting="true" TItem="Order" Data="_orders">
                     <Columns>
@@ -51,7 +51,7 @@
     protected override async Task OnInitializedAsync() {
         try {
             _warehouses = await WarehouseService.GetWarehousesAsync();
-            _state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            _state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             if (_state.User.Identity != null && _state.User.Identity.IsAuthenticated) {
                 _selectedWarehouse = _warehouses.First(w => w.Id.ToString().Equals(_state.User.Claims.First(c => c.Type.Equals("Warehouse")).Value));
                 await GetOrders(_selectedWarehouse.Id);

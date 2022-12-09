@@ -84,9 +84,9 @@
 @code {
     [Parameter]
     public long CustomerId { get; set; }
-    
-    private OrderCreationDto _order;
-    private Customer _customer;
+
+    private OrderCreationDto _order = null!;
+    private Customer _customer = null!;
     
     private AuthenticationState _state = null!;
 

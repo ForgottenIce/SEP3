@@ -1,7 +1,6 @@
 ﻿using HttpClients.ClientIntefaces;
 using Shared.Dtos;
 using Shared.Models;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -34,7 +33,7 @@ public class OrderService : IOrderService {
         string updatedOrderAsJson = JsonSerializer.Serialize(updatedOrder);
         HttpContent httpContent = new StringContent(updatedOrderAsJson, Encoding.UTF8, "application/json");
         HttpResponseMessage response = await _httpClient.PutAsync("/order", httpContent);
-        string content = await response.Content.ReadAsStringAsync();
+        await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode) {
             string result = await response.Content.ReadAsStringAsync();

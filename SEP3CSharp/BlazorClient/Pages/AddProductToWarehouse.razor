@@ -28,7 +28,7 @@
                         <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
                     </Columns>
                 </RadzenDataGrid>
-                <RadzenButton Text="Add to Warehouse" Disabled="@(_selectedProduct == null || _selectedWarehouse == null  ? true : false)" Click="OpenCreationDialog"/>
+                <RadzenButton Text="Add to Warehouse" Disabled="@(_selectedProduct == null || _selectedWarehouse == null)" Click="OpenCreationDialog"/>
             </RadzenCard>
         </div>
     </div>

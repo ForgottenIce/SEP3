@@ -26,7 +26,7 @@
                         <RadzenDataGridColumn TItem="WarehouseProduct" Property="MinimumQuantity" Title="Minimum Quantity" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
                     </Columns>
                 </RadzenDataGrid>
-                <RadzenButton Text="Alter stock" Disabled="@(_selectedProduct == null || _selectedWarehouse == null  ? true : false)" Click="OpenCreationDialog"/>
+                <RadzenButton Text="Alter stock" Disabled="@(_selectedProduct == null || _selectedWarehouse == null)" Click="OpenCreationDialog"/>
             </RadzenCard>
         </div>
     </div> 

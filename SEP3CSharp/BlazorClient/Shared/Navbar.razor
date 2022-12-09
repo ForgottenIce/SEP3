@@ -1,11 +1,11 @@
 ﻿<nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container-fluid">
         @*<a class="navbar-brand" href=""><img src="img/reddit-logo.png" width="40"/><span style="vertical-align: middle"> Freddit</span></a>*@
-        <button class="navbar-toggler" @onclick="@(() => showNavbar = !showNavbar)">
+        <button class="navbar-toggler" @onclick="@(() => _showNavbar = !_showNavbar)">
             <RadzenIcon Icon="menu" />
         </button>
        
-        <div class="collapse navbar-collapse @((showNavbar)? "show" : "")" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse @((_showNavbar)? "show" : "")" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
                     <NavLink href="" Match="NavLinkMatch.All" class="nav-link">
@@ -50,5 +50,5 @@
     //label
     String currentUser = "420";
     
-    bool showNavbar = false;
+    bool _showNavbar = false;
 }

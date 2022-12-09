@@ -7,5 +7,5 @@ public class OrderCreationDto {
     public DateTime? DateTimeOrdered { get; set; }
     public bool IsPacked { get; set; }
     public DateTime? DateTimeSent { get; set; }
-    public IEnumerable<long> ProductIds { get; set; }
+    public IEnumerable<long> ProductIds { get; set; } = null!;
 }
