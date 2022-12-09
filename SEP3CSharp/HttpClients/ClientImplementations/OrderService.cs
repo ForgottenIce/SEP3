@@ -3,6 +3,7 @@ using Shared.Dtos;
 using Shared.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace HttpClients.ClientImplementations;
@@ -27,6 +28,18 @@ public class OrderService : IOrderService {
             PropertyNameCaseInsensitive = true
         })!;
         return order;
+    }
+
+    public async Task UpdateOrderAsync(Order updatedOrder) {
+        string updatedOrderAsJson = JsonSerializer.Serialize(updatedOrder);
+        HttpContent httpContent = new StringContent(updatedOrderAsJson, Encoding.UTF8, "application/json");
+        HttpResponseMessage response = await _httpClient.PutAsync("/order", httpContent);
+        string content = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode) {
+            string result = await response.Content.ReadAsStringAsync();
+            throw new Exception(result);
+        }
     }
 
     public async Task<Order> GetOrderByIdAsync(long id) {
