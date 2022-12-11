@@ -1,7 +1,5 @@
 ﻿@page "/"
-@using HttpClients.ClientInterfaces
 @using Radzen
-@inject IAuthService AuthService
 @inject NavigationManager NavMgr
 <PageTitle>Index</PageTitle>
 
@@ -40,40 +38,4 @@
 
 
 @code {
-    private string _userName = string.Empty;
-    private string _password = string.Empty;
-    private string _errorLabel = "";
-
-    private async Task LoginAsync()
-    {
-        _errorLabel = "";
-        try
-        {
-            await AuthService.LoginAsync(_userName, _password);
-            NavMgr.NavigateTo("/");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            _errorLabel = $"Error: {e.Message}";
-        }
-    }
-    
-public class Order
-{
-
-    String _totalOrder;
-
-
-    public Order(string totalOrder)
-    {
-        this._totalOrder = totalOrder;
-    }
-
-    public string Total
-    {
-        get => _totalOrder;
-        set => _totalOrder = value ?? throw new ArgumentNullException(nameof(value));
-    }
-}
 }
