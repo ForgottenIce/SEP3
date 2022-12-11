@@ -13,6 +13,9 @@ public static class AuthorizationPolicies {
 			
 			options.AddPolicy("MustBeCashier",a => 
 				a.RequireAuthenticatedUser().RequireRole("Cashier"));
+			
+			options.AddPolicy("MustBeSysAdmin",a => 
+				a.RequireAuthenticatedUser().RequireRole("SysAdmin"));
 		});
 	}
 }
