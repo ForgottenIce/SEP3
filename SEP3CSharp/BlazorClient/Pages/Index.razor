@@ -1,60 +1,40 @@
 ﻿@page "/"
 @using HttpClients.ClientInterfaces
+@using Radzen
 @inject IAuthService AuthService
 @inject NavigationManager NavMgr
-<h3>Alting/Aps</h3>
+<PageTitle>Index</PageTitle>
 
 <div>
-    <div class="container-center">
-        <div class="col-xl-6 d-flex p-3">
-            <RadzenCard class="p-5 w-40">
-                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
-                    Please login
-                </RadzenText>
+    <div class="container">
+        <div class="row">
+            <RadzenCard class="d-flex justify-content-around">
                 <AuthorizeView>
                     <NotAuthorized>
-
-
-                        <div class="container-fluid" style="justify-content: center">
-                            <label>User name:</label>
-                            <input type="text" @bind="_userName"/>
-                        </div>
-                        <div class="container-fluid" style="justify-content: center; margin-top: 20px; margin-left: 8px">
-                            <label style="text-align: center">Password:</label>
-                            <input type="password" @bind="_password"/>
-                        </div>
-                        @if (!string.IsNullOrEmpty(_errorLabel))
-                        {
-                            <div class="container-fluid" style="align-content: center; margin-top: 20px">
-                                <label style="color: red">
-                                    @_errorLabel
-                                </label>
-                            </div>
-                        }
-                        <div class="container-fluid" style="justify-content: center; margin-top: 20px">
-                            <button class="loginbtn" @onclick="LoginAsync">Log in</button>
-                        </div>
-
+                        <RadzenText class="w-100 text-center" TextStyle="TextStyle.H5" Text="Please login"/>
                     </NotAuthorized>
-                    <Authorized>
-                        <div class="card">
-                            <h3>Hello, @context.User.Identity?.Name</h3>
-                            warehouse: @context.User.Claims.First(c => c.Type == "Warehouse").Value
-                        </div>
-                    </Authorized>
                 </AuthorizeView>
-
+                <AuthorizeView Roles="Manager,SysAdmin">
+                    <RadzenButton Size="ButtonSize.Large" class="h4" Text="Product" Click="@(() => NavMgr.NavigateTo("Products"))"/>
+                </AuthorizeView>
+                <AuthorizeView Roles="Manager,Warehouse,SysAdmin">
+                    <RadzenButton Size="ButtonSize.Large" class="h4" Text="Inventory" Click="@(() => NavMgr.NavigateTo("Inventory"))"/>
+                </AuthorizeView>
+                <AuthorizeView Roles="Cashier,Manager,SysAdmin">
+                    <RadzenButton Size="ButtonSize.Large" class="h4" Text="Customers" Click="@(() => NavMgr.NavigateTo("Customers"))"/>
+                </AuthorizeView>
+                <AuthorizeView>
+                    <RadzenButton Size="ButtonSize.Large" class="h4" Text="Orders" Click="@(() => NavMgr.NavigateTo("Orders"))"/>
+                </AuthorizeView>
             </RadzenCard>
-            <RadzenCard class="p-5 w-40" Style="margin-left: 20px">
-                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
-                    Total ordres ordered since launch
-                </RadzenText>
-                
-                <RadzenTextBox Disabled="true" Placeholder=AmountOrdered Class="w-100"></RadzenTextBox>
-                
-            </RadzenCard>
-
         </div>
+        <RadzenCard class="row mt-4 p-5 w-50">
+            <RadzenText TextStyle="TextStyle.H3" Text="Users"/>
+            <RadzenText Text="username: bob, password: bobson4, role: Manager"/>
+            <RadzenText Text="username: steve, password: stevesteve3, role: Cashier"/>
+            <RadzenText Text="username: ware, password: warehouse2, role: Warehouse"/>
+            <RadzenText Text="username: anders, password: adminpower5, role: SysAdmin"/>
+        </RadzenCard>
     </div>
 </div>
 

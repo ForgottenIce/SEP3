@@ -10,6 +10,8 @@
 @inject ICustomerService CustomerService
 @inject IWarehouseProductService WarehouseProductService
 @inject IOrderService OrderService
+@attribute [Authorize(Roles = "Cashier,Manager,SysAdmin")]
+<PageTitle>New Order</PageTitle>
 
 <div class="container">
     <div class="row">

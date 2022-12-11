@@ -1,4 +1,4 @@
-﻿@page "/ViewCustomers"
+﻿@page "/Customers"
 @using global::Shared.Models
 @using Microsoft.AspNetCore.Components
 @using Radzen
@@ -6,11 +6,12 @@
 @using HttpClients.ClientIntefaces
 @using System.Text.RegularExpressions
 @using global::Shared.Dtos
-<h3>ViewCustomers</h3>
 @inject NavigationManager NavMgr
 @inject INotifierService NotifierService
 @inject DialogService DialogService
 @inject ICustomerService CustomerService
+@attribute [Authorize(Roles = "Cashier,Manager,SysAdmin")]
+<PageTitle>Customers</PageTitle>
 
 <div class="container">
     <div class="row">
@@ -28,7 +29,7 @@
                     </Columns>
                 </RadzenDataGrid>
                 <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null)" Click="OpenAlterDialog"/>
-                 <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"orders/new/{_selectedCustomer.First().Id}"))></RadzenButton>
+                <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"orders/new/{_selectedCustomer.First().Id}"))></RadzenButton>
             </RadzenCard>
         </div>
     </div> 
