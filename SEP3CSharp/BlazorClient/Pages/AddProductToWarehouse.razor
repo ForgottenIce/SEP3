@@ -43,9 +43,9 @@
 
     private IList<Product> _selectedProduct = null!;
     private Warehouse _selectedWarehouse = null!;
-    private int _quantity;
-    private int _minQuantity;
-    private string _position = "";
+    private int? _quantity = 0;
+    private int? _minQuantity = 0;
+    private string? _position = null;
     
     AuthenticationState _state = null!;
 
@@ -83,19 +83,19 @@
                 <div class="row">
                     <div class="col d-flex flex-column">
                         <RadzenText TextStyle="TextStyle.Overline" Text="Quantity"/>
-                        <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_quantity></RadzenNumeric>
+                        <RadzenNumeric class="mb-2" Min="0" TValue="int?" @bind-Value=_quantity></RadzenNumeric>
                         <RadzenText TextStyle="TextStyle.Overline" Text="Minimum Quantity"/>
-                        <RadzenNumeric class="mb-2" Min="0" TValue="int" @bind-Value=_minQuantity></RadzenNumeric>
+                        <RadzenNumeric class="mb-2" Min="0" TValue="int?" @bind-Value=_minQuantity></RadzenNumeric>
                         <RadzenText TextStyle="TextStyle.Overline" Text="Position"/>
                         <RadzenDropDown class="mb-2" AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" TValue="string" @bind-Value=_position 
                                         Data="_displayWarehousePosition" TextProperty="Position" ValueProperty="Position" Placeholder="Warehouse Position"/>
                         <RadzenButton Text="Confirm" Click="async () => {await CreateWarehouseProduct(_selectedProduct.First().Id, _selectedWarehouse.Id); ds.Close();}" ButtonStyle="ButtonStyle.Light" Class="me-1"/>
                     </div>
                 </div>
-            </div>
-        );
+        </div>
+    );
     }
-    
+
     private async Task GetProducts(long id) {
         try {
             _warehouseProducts = await WarehouseProductService.GetWarehouseProductsByWarehouseAsync(id);
@@ -104,20 +104,28 @@
             NotifierService.NotifyError(e.Message);
         }
     }
-    
+
     private async Task CreateWarehouseProduct(long productId, long warehouseId) {
+        if (_quantity == null || _minQuantity == null || _position == null ) {
+            string missingValues = "";
+            missingValues += _quantity == null ? "Quantity " : "";
+            missingValues += _minQuantity == null ? "Minimum Quantity " : "";
+            missingValues += _position == null ? "Position" : "";
+            NotifierService.NotifyWarning("Please fill in all fields. Missing values: " + missingValues, duration: 4000);
+            return;
+        }
         try {
             await WarehouseProductService.CreateWarehouseProductAsync(new WarehouseProductCreationDto {
                     ProductId = productId,
                     WarehouseId = warehouseId,
-                    Quantity = _quantity,
-                    MinimumQuantity = _minQuantity,
+                    Quantity = _quantity ?? 0,
+                    MinimumQuantity = _minQuantity ?? 0,
                     WarehousePosition = _position
                 });
             _quantity = 0;
             _minQuantity = 0;
             _position = "";
-            NotifierService.NotifySuccess("Warehouse Created", duration: 4000);
+            NotifierService.NotifySuccess("Product added to Warehouse", duration: 4000);
             await GetProducts(warehouseId);
         }
         catch (Exception e) {
