@@ -69,23 +69,24 @@ public class WarehouseProduct {
 	@Override public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof WarehouseProduct))
+		if (o == null || getClass() != o.getClass())
 			return false;
 		WarehouseProduct that = (WarehouseProduct) o;
-		return quantity == that.quantity
-				&& minimumQuantity == that.minimumQuantity
-				&& Objects.equals(warehouseId, that.warehouseId)
-				&& Objects.equals(warehousePosition, that.warehousePosition);
+		return quantity == that.quantity && minimumQuantity == that.minimumQuantity
+				&& Objects.equals(productId, that.productId) && Objects.equals(
+				warehouseId, that.warehouseId) && Objects.equals(warehousePosition,
+				that.warehousePosition);
 	}
 
 	@Override public int hashCode() {
-		return Objects.hash(warehouseId, quantity, minimumQuantity,
+		return Objects.hash(productId, warehouseId, quantity, minimumQuantity,
 				warehousePosition);
 	}
 
 	@Override public String toString() {
-		return "WarehouseProduct{" + "warehouseID="
+		return "WarehouseProduct{" + "productId=" + productId + ", warehouseId="
 				+ warehouseId + ", quantity=" + quantity + ", minimumQuantity="
-				+ minimumQuantity + ", shelf='" + warehousePosition + '}';
+				+ minimumQuantity + ", warehousePosition='" + warehousePosition + '\''
+				+ '}';
 	}
 }
