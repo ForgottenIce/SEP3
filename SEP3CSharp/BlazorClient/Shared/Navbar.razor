@@ -12,33 +12,44 @@
                         Home
                     </NavLink>
                 </li>
-                <li class="nav-item">
-                    <NavLink href="AddProductToWarehouse" class="nav-link">
-                        Add product to Warehouse
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink href="ModifyWarehouseProducts" class="nav-link">
-                        Modify Warehouse Products
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink href="ViewCustomers" class="nav-link">
-                        Customers
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink href="orders" class="nav-link">
-                        Orders
-                    </NavLink>
-                </li>
+                <AuthorizeView Roles = "Manager,SysAdmin">
+                    <li class="nav-item">
+                        <NavLink href="Products" class="nav-link">
+                            Products
+                        </NavLink>
+                    </li>
+                </AuthorizeView>
+                <AuthorizeView Roles = "Manager,Warehouse,SysAdmin">
+                    <li class="nav-item">
+                        <NavLink href="Inventory" class="nav-link">
+                            Inventory
+                        </NavLink>
+                    </li>
+                </AuthorizeView>
+                <AuthorizeView Roles = "Cashier,Manager,SysAdmin">
+                    <li class="nav-item">
+                        <NavLink href="Customers" class="nav-link">
+                            Customers
+                        </NavLink>
+                    </li>
+                </AuthorizeView>
+                <AuthorizeView>
+                    <li>
+                        <NavLink href="orders" class="nav-link">
+                            Orders
+                        </NavLink>
+                    </li>
+                </AuthorizeView>
             </ul>
-            <div>
-                <label style="color: Gold; margin-top: auto; align-items: center; margin-right: 20px">
-                    Current user @currentUser
-                </label>
-                                                                
-            </div>
+            <AuthorizeView>
+                <Authorized>
+                    <div>
+                        <label style="color: Gold; margin-top: auto; align-items: center; margin-right: 20px">
+                            Current user @context.User.Identity?.Name
+                        </label>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
             
             <PingComponent />
             <Login.LoginButtons />

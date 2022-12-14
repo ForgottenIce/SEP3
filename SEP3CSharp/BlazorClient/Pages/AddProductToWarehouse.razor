@@ -1,5 +1,4 @@
-﻿@page "/AddProductToWarehouse"
-<h3>AddProductToWarehouse</h3>
+﻿@page "/Products"
 @using Radzen
 @using HttpClients.ClientIntefaces
 @using global::Shared.Dtos
@@ -12,6 +11,8 @@
 @inject IProductService ProductService
 @inject IWarehouseService WarehouseService
 @inject IWarehousePositionService WarehousePositionService
+@attribute [Authorize(Roles = "Manager,SysAdmin")]
+<PageTitle>Products</PageTitle>
 
 
 <div class="container">
@@ -19,7 +20,9 @@
         <div class="col">
             <RadzenCard>
                 <RadzenText TextStyle="TextStyle.H6">Products</RadzenText>
-                <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetProducts(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
+                <AuthorizeView Policy="MustBeSysAdmin">
+                    <RadzenDropDown Style="width:300px" TValue="Warehouse" Placeholder="Select Warehouse" Data="@_warehouses" Change=@(() => GetProducts(_selectedWarehouse.Id)) TextProperty="Name" class="mb-2" @bind-Value=@_selectedWarehouse />
+                </AuthorizeView>
                 <RadzenDataGrid TItem="Product" Data="@_products" PageSize="10" AllowPaging="true" AllowFiltering="true" FilterMode="FilterMode.SimpleWithMenu" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct class="mb-2">
                     <Columns>
                         <RadzenDataGridColumn TItem="Product" Property="Id" Title="Product Id" Width="150px" TextAlign="TextAlign.Center"/>
