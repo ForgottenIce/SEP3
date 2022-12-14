@@ -8,7 +8,7 @@ using Shared.Models;
 namespace HttpClients.ClientImplementations; 
 
 public class JwtAuthService : IAuthService{
-	private readonly HttpClient client;
+	private readonly HttpClient _client;
 
     // this private variable for simple caching
     public static string? Jwt { get; private set; } = "";
@@ -17,7 +17,7 @@ public class JwtAuthService : IAuthService{
 
     public JwtAuthService(HttpClient client)
     {
-        this.client = client;
+        this._client = client;
     }
 
     public async Task LoginAsync(string username, string password)
@@ -31,7 +31,7 @@ public class JwtAuthService : IAuthService{
         string userAsJson = JsonSerializer.Serialize(employeeLoginDto);
         StringContent content = new(userAsJson, Encoding.UTF8, "application/json");
 
-        HttpResponseMessage response = await client.PostAsync("http://localhost:5103/auth/login", content);
+        HttpResponseMessage response = await _client.PostAsync("http://localhost:5103/auth/login", content);
         string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -74,7 +74,7 @@ public class JwtAuthService : IAuthService{
     {
         string userAsJson = JsonSerializer.Serialize(employee);
         StringContent content = new(userAsJson, Encoding.UTF8, "application/json");
-        HttpResponseMessage response = await client.PostAsync("http://localhost:5103/auth/register", content);
+        HttpResponseMessage response = await _client.PostAsync("http://localhost:5103/auth/register", content);
         string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)

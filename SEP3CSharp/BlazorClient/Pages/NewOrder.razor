@@ -10,6 +10,8 @@
 @inject ICustomerService CustomerService
 @inject IWarehouseProductService WarehouseProductService
 @inject IOrderService OrderService
+@attribute [Authorize(Roles = "Cashier,Manager,SysAdmin")]
+<PageTitle>New Order</PageTitle>
 
 <div class="container">
     <div class="row">
@@ -18,6 +20,7 @@
                 <RadzenText TextStyle="TextStyle.H4">Create Order</RadzenText>
                 @if (_products != null) {
                     <RadzenText TextStyle="TextStyle.H6">Customer: @_customer.FullName</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle1" Text="Add Product from Id:"/>
                     <div class="d-grid mt-1 mb-1" style="grid-template-columns: repeat(3,150px)">
                         <RadzenText class="mb-0" Text="Product id" TextStyle="TextStyle.Overline"/>
                         <RadzenText class="mb-0" Text="Amount" TextStyle="TextStyle.Overline"/>
@@ -84,9 +87,9 @@
 @code {
     [Parameter]
     public long CustomerId { get; set; }
-    
-    private OrderCreationDto _order;
-    private Customer _customer;
+
+    private OrderCreationDto _order = null!;
+    private Customer _customer = null!;
     
     private AuthenticationState _state = null!;
 

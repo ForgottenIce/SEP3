@@ -1,4 +1,4 @@
-﻿@page "/ViewCustomers"
+﻿@page "/Customers"
 @using global::Shared.Models
 @using Microsoft.AspNetCore.Components
 @using Radzen
@@ -6,11 +6,12 @@
 @using HttpClients.ClientIntefaces
 @using System.Text.RegularExpressions
 @using global::Shared.Dtos
-<h3>ViewCustomers</h3>
 @inject NavigationManager NavMgr
 @inject INotifierService NotifierService
 @inject DialogService DialogService
 @inject ICustomerService CustomerService
+@attribute [Authorize(Roles = "Cashier,Manager,SysAdmin")]
+<PageTitle>Customers</PageTitle>
 
 <div class="container">
     <div class="row">
@@ -28,7 +29,7 @@
                     </Columns>
                 </RadzenDataGrid>
                 <RadzenButton Text="Edit Customer" Disabled="@(_selectedCustomer == null)" Click="OpenAlterDialog"/>
-                 <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"orders/new/{_selectedCustomer.First().Id}"))></RadzenButton>
+                <RadzenButton Text="Create Order" Disabled="@(_selectedCustomer == null)" Click=@(() => NavMgr.NavigateTo($"orders/new/{_selectedCustomer.First().Id}"))></RadzenButton>
             </RadzenCard>
         </div>
     </div> 
@@ -43,10 +44,11 @@
     private string _phoneNo = "";
     private string _address = "";
     private string _mail = "";
-    
+
     private bool _addCustomerIsBusy = false;
-    
+
     private readonly Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+    private readonly Regex regexName = new Regex(@"^[a-åA-Å ]+$");
 
     protected override async Task OnInitializedAsync() {
         try {
@@ -59,6 +61,10 @@
     }
 
     private async Task OpenCreationDialog() {
+        _fullName = "";
+        _phoneNo = "";
+        _address = "";
+        _mail = "";
         await DialogService.OpenAsync("Create Customer", ds => 
             @<div>
                 <div class="d-flex flex-column p-3">
@@ -84,29 +90,33 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            );
+        </div>
+    );
     }
-    
+
     private async Task CreateNewCustomerAsync(DialogService dialogService)
     {
         try {
-            if (ValidatePhone().Equals(true) && ValidateFullName().Equals(true)&& ValidateMail().Equals(true))
-            {
-                _addCustomerIsBusy = true;
-                await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
-                    _fullName, _phoneNo, _address, _mail));
-                _fullName = string.Empty;
-                _phoneNo = string.Empty;
-                _address = string.Empty;
-                _mail = string.Empty;
-                _customers = await CustomerService.GetCustomersAsync();
-                NotifierService.NotifySuccess("Customer was created", duration: 4000);
-                dialogService.Close();
+            if (!ValidatePhone(_phoneNo) || !ValidateFullName(_fullName) || !ValidateMail(_mail) || !ValidateAddress(_address)) {
+                string missingValues = "";
+                missingValues += !ValidateFullName(_fullName) ? "FullName " : "";
+                missingValues += !ValidatePhone(_phoneNo) ? "PhoneNo " : "";
+                missingValues += !ValidateAddress(_address) ? "Address " : "";
+                missingValues += !ValidateMail(_mail) ? "Mail" : "";
+                NotifierService.NotifyWarning("One or more fields were not validated."
+                + "The following fields contain invalid information: " + missingValues, duration: 8000);
+                return;
             }
-            else {
-                NotifierService.NotifyError("customer was not valid");
-            }
+            _addCustomerIsBusy = true;
+            await CustomerService.CreateCustomerAsync(new CustomerCreationDto(
+                _fullName, _phoneNo, _address, _mail));
+            _fullName = string.Empty;
+            _phoneNo = string.Empty;
+            _address = string.Empty;
+            _mail = string.Empty;
+            _customers = await CustomerService.GetCustomersAsync();
+            NotifierService.NotifySuccess("Customer was created", duration: 4000);
+            dialogService.Close();
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -120,7 +130,7 @@
         _phoneNo = _selected.PhoneNo;
         _address = _selected.Address;
         _mail = _selected.Mail;
-        await DialogService.OpenAsync("Create Customer", ds => 
+        await DialogService.OpenAsync("Edit Customer", ds => 
             @<div>
                 <div class="d-flex flex-column p-3">
                     <div class="row px-3">
@@ -152,83 +162,74 @@
     private async Task AlterCustomerAsync(DialogService dialogService)
     {
         try {
-            if (ValidatePhone() && ValidateFullName() && ValidateMail())
-            {
-                _addCustomerIsBusy = true;
-                await CustomerService.AlterCustomerAsync(new Customer {
-                    Id = _selectedCustomer.First().Id,
-                    FullName = _fullName,
-                    PhoneNo = _phoneNo,
-                    Address = _address,
-                    Mail = _mail
-                });
-                _fullName = string.Empty;
-                _phoneNo = string.Empty;
-                _address = string.Empty;
-                _mail = string.Empty;
-                _customers = await CustomerService.GetCustomersAsync();
-                NotifierService.NotifySuccess("Customer was altered", duration:4000);
-                dialogService.Close();
+            if (!ValidatePhone(_phoneNo) || !ValidateFullName(_fullName) || !ValidateMail(_mail) || !ValidateAddress(_address)) {
+                string missingValues = "";
+                missingValues += !ValidateFullName(_fullName) ? "FullName " : "";
+                missingValues += !ValidatePhone(_phoneNo) ? "PhoneNo " : "";
+                missingValues += !ValidateAddress(_address) ? "Address " : "";
+                missingValues += !ValidateMail(_mail) ? "Mail" : "";
+                NotifierService.NotifyWarning("One or more fields were not validated."
+                + "The following fields contain invalid information: " + missingValues, duration: 8000);
+                return;
             }
-            else {
-                NotifierService.NotifyError("Customer was not valid");
-            }
+            _addCustomerIsBusy = true;
+            await CustomerService.AlterCustomerAsync(new Customer {
+                Id = _selectedCustomer.First().Id,
+                FullName = _fullName,
+                PhoneNo = _phoneNo,
+                Address = _address,
+                Mail = _mail
+            });
+            _fullName = string.Empty;
+            _phoneNo = string.Empty;
+            _address = string.Empty;
+            _mail = string.Empty;
+            _customers = await CustomerService.GetCustomersAsync();
+            NotifierService.NotifySuccess("Customer was altered", duration:4000);
+            dialogService.Close();
         }
         catch (Exception e) {
             Console.WriteLine(e);
             NotifierService.NotifyError(e.Message);
         }
     }
-    
-    private bool ValidateMail()
-    {
-        if (regex.IsMatch(_mail))
-        {
+
+    public bool ValidateMail(string _mail) {
+        if (regex.IsMatch(_mail)) {
             return true;
         }
-
         return false;
     }
-    
-    private bool ValidateFullName()
-    {
-        if (string.IsNullOrEmpty(_fullName) && string.IsNullOrEmpty(_address) && String.IsNullOrEmpty(_mail))
-        {
-            return false;
-        }
-        char[] chars = _fullName.ToCharArray();
-        foreach (char c in chars)
-        {
-            if (!Char.IsLetter(c))
-            {
-                // exceptionLabel.set("only letters allowed");
-                return false; 
+
+    public bool ValidateFullName(string _fullName) {
+        if (!string.IsNullOrWhiteSpace(_fullName)) {
+            if (regexName.IsMatch(_fullName)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
-    
-    private bool ValidatePhone()
-    {
-        if (String.IsNullOrEmpty(_phoneNo))
-        {
+
+    public bool ValidatePhone(string _phoneNo) {
+        if (String.IsNullOrEmpty(_phoneNo)) {
             return false;
         }
         char[] chars = _phoneNo.ToCharArray();
-        foreach (char c in chars)
-        {
-            if (Char.IsLetter(c)&& chars.Length != 8)
-            {
-                // exceptionLabel.set("only letters allowed");
-                return false; 
+        foreach (char c in chars) {
+            if (Char.IsLetter(c)) {
+                return false;
+            }
+            if (chars.Length != 8) {
+                return false;
             }
         }
         return true;
     }
 
-    private static bool IsValidate(string email)
-    {
-        Regex emailRegex= new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", RegexOptions.IgnoreCase);
-        return IsValidate(email);
+    public bool ValidateAddress(string _address) {
+        if (string.IsNullOrWhiteSpace(_address)) {
+            return false;
+        }
+        return true;
     }
 }

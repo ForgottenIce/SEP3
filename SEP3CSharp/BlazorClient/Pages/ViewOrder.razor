@@ -3,12 +3,10 @@
 @using HttpClients.ClientIntefaces;
 @using Radzen
 @using global::Shared.Models
-@using HttpClients.ClientImplementations
-@using HttpClients.ClientInterfaces
 @inject IOrderService OrderService
 @inject INotifierService NotifierService
-@inject NavigationManager NavMgr
-
+@attribute [Authorize]
+<PageTitle>Order</PageTitle>
 
 <div class="container">
     <div class="row">
@@ -28,16 +26,20 @@
                                 <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Property="Price" Title="Price" TextAlign="TextAlign.Center"  />
                                 <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Property="Amount" Title="Amount" TextAlign="TextAlign.Center"  />
                             @if (!_order.IsPacked) {
-                                <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Title="Mark as Packaged" Width="200px" TextAlign="TextAlign.Center">
-                                    <Template Context="product">
-                                        <RadzenCheckBox TValue="bool" @bind-Value="product.IsPackaged" />
-                                    </Template>
-                                </RadzenDataGridColumn>                                
+                                <AuthorizeView Roles="Warehouse,Manager,SysAdmin" >
+                                    <RadzenDataGridColumn TItem="ProductExtension" Filterable="false" Sortable="false" Title="Mark as Packaged" Width="200px" TextAlign="TextAlign.Center">
+                                        <Template Context="product">
+                                            <RadzenCheckBox TValue="bool" @bind-Value="product.IsPackaged" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </AuthorizeView>
                             }
                         </Columns>
                     </RadzenDataGrid>   
                     @if (!_order.IsPacked) {
-                        <RadzenButton Text="Mark Order as Packaged" Disabled="@(_products.Any(p => !p.IsPackaged))" Click="@MarkOrderAsPackaged"/>
+                        <AuthorizeView Roles="Warehouse,Manager,SysAdmin">
+                            <RadzenButton Text="Mark Order as Packaged" Disabled="@(_products.Any(p => !p.IsPackaged))" Click="@MarkOrderAsPackaged"/>
+                        </AuthorizeView>
                     }
                     else if (_order.DateTimeSent == null) {
                         <RadzenButton Text="Mark Order as Sent" Click="@MarkOrderAsSent"/>

@@ -10,7 +10,6 @@ using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth;
-using Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,7 +86,7 @@ var app = builder.Build();
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true) // allow any origin
+    .SetIsOriginAllowed(_ => true) // allow any origin
     .AllowCredentials());
 
 

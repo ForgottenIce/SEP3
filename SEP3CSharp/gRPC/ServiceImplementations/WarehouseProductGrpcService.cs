@@ -62,7 +62,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             if (e.StatusCode == StatusCode.AlreadyExists) {
                 throw new AlreadyExistsException(e.Status.Detail);
             }
-            throw e;
+            throw;
         }
     }
 
@@ -105,7 +105,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
                 throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
-            throw e;
+            throw;
         }
     }
 
@@ -143,7 +143,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
             if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
-            throw e;
+            throw;
         }
     }
     
@@ -183,7 +183,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 throw new ServiceUnavailableException();
             }
             
-            throw e;
+            throw;
         }
     }
 
@@ -230,7 +230,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
                 throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
-            throw e;
+            throw;
         }
     }
 
@@ -275,7 +275,7 @@ public class WarehouseProductGrpcService : IWarehouseProductGrpcService
                 var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
                 throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
-            throw e;
+            throw;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using HttpClients.ClientIntefaces;
 using Shared.Models;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace HttpClients.ClientImplementations;
