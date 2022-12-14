@@ -1,5 +1,4 @@
 ﻿using Application.LogicInterfaces;
-using gRPC.ServiceInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
 using Shared.Exceptions;
@@ -34,6 +33,29 @@ public class CustomerController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+    
+    [HttpPatch]
+    public async Task<ActionResult<Customer>> AlterCustomerAsync(Customer customer)
+    {
+        try
+        {
+            Customer returnCustomer = await _customerLogic.AlterCustomerAsync(customer);
+            return Ok(returnCustomer);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
     [HttpGet("{id}")]
     public async Task<ActionResult<Customer>> GetCustomerByIdAsync([FromRoute] long id) {
         try {

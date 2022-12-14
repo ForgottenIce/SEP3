@@ -11,7 +11,7 @@ public class AuthLogic : IAuthLogic {
         _employeeDao = employeeDao;
     }
 
-    public async Task<Employee> ValidateEmployee(string username, string password) { //TODO implement proper exceptions
+    public async Task<Employee> ValidateEmployee(string username, string password) {
         Employee? employee = await _employeeDao.GetByUsernameAsync(username);
         if (employee == null) {
             throw new Exception("User not found");

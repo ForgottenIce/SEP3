@@ -26,6 +26,30 @@ public class OrderController : ControllerBase {
             Console.WriteLine(e.Message);
             return NotFound(e.Message);
         }
+        catch (InsufficientStockException e) {
+            Console.WriteLine(e.Message);
+            return StatusCode(412, e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<Order>> UpdateOrderAsync(Order updatedOrder) {
+        try {
+            string responseMessage = await _orderLogic.UpdateOrderAsync(updatedOrder);
+            return Ok(responseMessage);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
         catch (ServiceUnavailableException e) {
             Console.WriteLine(e);
             return StatusCode(503, e.Message);
@@ -57,6 +81,26 @@ public class OrderController : ControllerBase {
         try {
             Order order = await _orderLogic.GetOrderByIdAsync(id);
             return Ok(order);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
+        }
+        catch (ServiceUnavailableException e) {
+            Console.WriteLine(e);
+            return StatusCode(503, e.Message);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpGet("bywarehouseid/{id}")]
+    public async Task<ActionResult<IEnumerable<Order>>> GetOrdersByWarehouseIdAsync([FromRoute] long id) {
+        try {
+            IEnumerable<Order> orders = await _orderLogic.GetOrdersByWarehouseIdAsync(id);
+            return Ok(orders);
         }
         catch (NotFoundException e) {
             Console.WriteLine(e.Message);

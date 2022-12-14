@@ -26,6 +26,19 @@ public class GRPCOrderFactory {
 		Order order = new Order(customer, warehouse, dateTimeOrdered, request.getIsPacked(), dateTimeSent, orderedProducts);
 		return order;
 	}
+	public static Order create(UpdateOrderRequest request, Customer customer, Warehouse warehouse, List<Product> orderedProducts) {
+		LocalDateTime dateTimeOrdered = null;
+		LocalDateTime dateTimeSent = null;
+		if (request.getDateTimeOrdered() != 0) {
+			dateTimeOrdered = LocalDateTime.ofEpochSecond(request.getDateTimeOrdered(), 0, ZoneOffset.UTC);
+		}
+		if (request.getDateTimeSent() != 0) {
+			dateTimeSent = LocalDateTime.ofEpochSecond(request.getDateTimeSent(), 0, ZoneOffset.UTC);
+		}
+		Order order = new Order(customer, warehouse, dateTimeOrdered, request.getIsPacked(), dateTimeSent, orderedProducts);
+		order.setId(request.getId());
+		return order;
+	}
 
 	public static OrderResponse createOrderResponse(Order order) {
 		Customer customer = order.getCustomer();
@@ -67,5 +80,12 @@ public class GRPCOrderFactory {
 		}
 		GetOrdersResponse response = builder.build();
 		return response;
+	}
+
+	public static UpdateOrderResponse createUpdateOrderResponse(String responseMessage) {
+		UpdateOrderResponse updateOrderResponse = UpdateOrderResponse.newBuilder()
+				.setResponseMessage(responseMessage)
+				.build();
+		return updateOrderResponse;
 	}
 }

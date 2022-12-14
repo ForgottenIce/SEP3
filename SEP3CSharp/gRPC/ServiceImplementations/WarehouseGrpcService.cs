@@ -29,7 +29,7 @@ public class WarehouseGrpcService : IWarehouseGrpcService {
             if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
-            throw e;
+            throw;
         }
     }
 
@@ -52,7 +52,7 @@ public class WarehouseGrpcService : IWarehouseGrpcService {
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            throw e;
+            throw;
         }
     }
 }

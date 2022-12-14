@@ -3,6 +3,7 @@ using Grpc.Core;
 using Shared.Dtos;
 using Shared.Exceptions;
 using Shared.Models;
+using Shared.Util;
 using System.Text;
 
 namespace gRPC.ServiceImplementations;
@@ -16,14 +17,12 @@ public class OrderGrpcService : IOrderGrpcService {
 
     public async Task<Order> CreateOrderAsync(OrderCreationDto dto) {
         try {
-            DateTimeOffset dtOffsetOrdered = new DateTimeOffset(dto.DateTimeOrdered ?? new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            DateTimeOffset dtOffsetSent = new DateTimeOffset(dto.DateTimeSent ?? new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             CreateOrderRequest createOrderRequest = new CreateOrderRequest {
                 CustomerId = dto.CustomerId,
                 WarehouseId = dto.WarehouseId,
-                DateTimeOrdered = dtOffsetOrdered.ToUnixTimeSeconds(),
+                DateTimeOrdered = DateTimeConverter.DateTimeToUnixTimeStamp(dto.DateTimeOrdered),
                 IsPacked = dto.IsPacked,
-                DateTimeSent = dtOffsetSent.ToUnixTimeSeconds(),
+                DateTimeSent = DateTimeConverter.DateTimeToUnixTimeStamp(dto.DateTimeSent),
             };
             foreach (long productId in dto.ProductIds) {
                 createOrderRequest.ProductIds.Add(productId);
@@ -55,9 +54,9 @@ public class OrderGrpcService : IOrderGrpcService {
                     Name = reply.Warehouse.Name,
                     Address = reply.Warehouse.Address,
                 },
-                DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
+                DateTimeOrdered = DateTimeConverter.UnixTimeStampToDateTime(reply.DateTimeOrdered),
                 IsPacked = reply.IsPacked,
-                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime,
+                DateTimeSent = DateTimeConverter.UnixTimeStampToDateTime(reply.DateTimeSent),
                 OrderedProducts = products.AsEnumerable()
             };
             return order;
@@ -70,7 +69,41 @@ public class OrderGrpcService : IOrderGrpcService {
                 var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
                 throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
             }
-            throw e;
+            if (e.StatusCode == StatusCode.FailedPrecondition) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new InsufficientStockException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw;
+        }
+    }
+
+    public async Task<string> UpdateOrderAsync(Order updatedOrder) {
+        try {
+            UpdateOrderRequest updateOrderRequest = new UpdateOrderRequest {
+                Id = updatedOrder.Id,
+                CustomerId = updatedOrder.Customer.Id,
+                WarehouseId = updatedOrder.Warehouse.Id,
+                DateTimeOrdered = DateTimeConverter.DateTimeToUnixTimeStamp(updatedOrder.DateTimeOrdered),
+                IsPacked = updatedOrder.IsPacked,
+                DateTimeSent = DateTimeConverter.DateTimeToUnixTimeStamp(updatedOrder.DateTimeSent),
+            };
+
+            foreach (Product product in updatedOrder.OrderedProducts) {
+                updateOrderRequest.ProductIds.Add(product.Id);
+            }
+
+            UpdateOrderResponse reply = await _serviceClient.UpdateOrderAsync(updateOrderRequest);
+            return reply.ResponseMessage;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw;
         }
     }
 
@@ -102,9 +135,9 @@ public class OrderGrpcService : IOrderGrpcService {
                     Name = reply.Warehouse.Name,
                     Address = reply.Warehouse.Address,
                 },
-                DateTimeOrdered = reply.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
+                DateTimeOrdered = DateTimeConverter.UnixTimeStampToDateTime(reply.DateTimeOrdered),
                 IsPacked = reply.IsPacked,
-                DateTimeSent = reply.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(reply.DateTimeSent).DateTime,
+                DateTimeSent = DateTimeConverter.UnixTimeStampToDateTime(reply.DateTimeSent),
                 OrderedProducts = products
             };
             return order;
@@ -116,7 +149,7 @@ public class OrderGrpcService : IOrderGrpcService {
             if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
-            throw e;
+            throw;
         }
     }
 
@@ -140,9 +173,9 @@ public class OrderGrpcService : IOrderGrpcService {
                         Name = or.Warehouse.Name,
                         Address = or.Warehouse.Address,
                     },
-                    DateTimeOrdered = or.DateTimeOrdered == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeOrdered).DateTime, // Set datetime to null if unix time = 0
+                    DateTimeOrdered = DateTimeConverter.UnixTimeStampToDateTime(or.DateTimeOrdered),
                     IsPacked = or.IsPacked,
-                    DateTimeSent = or.DateTimeSent == 0 ? null : DateTimeOffset.FromUnixTimeSeconds(or.DateTimeSent).DateTime
+                    DateTimeSent = DateTimeConverter.UnixTimeStampToDateTime(or.DateTimeSent),
                 });
             }
             
@@ -152,7 +185,47 @@ public class OrderGrpcService : IOrderGrpcService {
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            throw e;
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Order>> GetOrdersByWarehouseIdAsync(long id) {
+        try {
+            GetOrdersResponse reply = await _serviceClient.GetOrdersByWarehouseIdAsync(new GetOrdersByWarehouseIdRequest { Id = id});
+
+            List<Order> orders = new();
+            foreach (OrderResponse or in reply.Orders) {
+                orders.Add(new Order {
+                    Id = or.Id,
+                    Customer = new Customer {
+                        Id = or.Customer.Id,
+                        FullName = or.Customer.Fullname,
+                        PhoneNo = or.Customer.PhoneNo,
+                        Address = or.Customer.Address,
+                        Mail = or.Customer.Mail,
+                    },
+                    Warehouse = new Warehouse {
+                        Id = or.Warehouse.WarehouseId,
+                        Name = or.Warehouse.Name,
+                        Address = or.Warehouse.Address,
+                    },
+                    DateTimeOrdered = DateTimeConverter.UnixTimeStampToDateTime(or.DateTimeOrdered),
+                    IsPacked = or.IsPacked,
+                    DateTimeSent = DateTimeConverter.UnixTimeStampToDateTime(or.DateTimeSent),
+                });
+            }
+
+            return orders.AsEnumerable();
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                var trailer = e.Trailers.Get("grpc.reflection.v1alpha.errorresponse-bin")!;
+                throw new NotFoundException(e.Status.Detail + "\nDetails: " + Encoding.UTF8.GetString(trailer.ValueBytes).Substring(2));
+            }
+            throw;
         }
     }
 }

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using Shared.Auth;
-using Shared.Models;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -39,6 +38,6 @@ builder.Services.AddScoped<ContextMenuService>();
 
 AuthorizationPolicies.AddPolicies(builder.Services);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5103") });
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("http://localhost:5103") });
 
 await builder.Build().RunAsync();

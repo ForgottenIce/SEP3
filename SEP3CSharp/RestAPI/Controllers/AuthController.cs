@@ -7,19 +7,19 @@ using Application.LogicInterfaces;
 using Shared.Dtos;
 using Shared.Models;
 
-namespace WebAPI.Controllers;
+namespace RestAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration config;
-    private readonly IAuthLogic authLogic;
+    private readonly IConfiguration _config;
+    private readonly IAuthLogic _authLogic;
 
-    public AuthController(IConfiguration config, IAuthLogic authService)
+    public AuthController(IConfiguration config, IAuthLogic authLogic)
     {
-        this.config = config;
-        this.authLogic = authService;
+        _config = config;
+        _authLogic = authLogic;
     }
     
     [HttpPost, Route("login")]
@@ -27,12 +27,12 @@ public class AuthController : ControllerBase
     {
         try
         {
-            Employee employee = await authLogic.ValidateEmployee(employeeLoginDto.UserId, employeeLoginDto.Password);
+            Employee employee = await _authLogic.ValidateEmployee(employeeLoginDto.UserId, employeeLoginDto.Password);
             string token = GenerateJwt(employee);
     
             return Ok(token);
         }
-        catch (Exception e) //TODO handle proper exception
+        catch (Exception e)
         {
             return BadRequest(e.Message);
         }
@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]),
+            new Claim(JwtRegisteredClaimNames.Sub, _config["Jwt:Subject"]!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
             new Claim(ClaimTypes.Name, employee.Username),
@@ -58,14 +58,14 @@ public class AuthController : ControllerBase
     {
         List<Claim> claims = GenerateClaims(employee);
     
-        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         SigningCredentials signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
     
         JwtHeader header = new JwtHeader(signIn);
     
         JwtPayload payload = new JwtPayload(
-            config["Jwt:Issuer"],
-            config["Jwt:Audience"],
+            _config["Jwt:Issuer"],
+            _config["Jwt:Audience"],
             claims, 
             null,
             DateTime.UtcNow.AddMinutes(60));

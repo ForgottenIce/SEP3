@@ -107,8 +107,12 @@ public class WarehouseProductController : ControllerBase
     [HttpGet("byproductid/{id}")]
     public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByProductAsync(long id) {
         try {
-            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsByProductIdAsync(id);
             return Ok(warehouseProducts);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
         }
         catch (ServiceUnavailableException e) {
             Console.WriteLine(e);
@@ -124,8 +128,12 @@ public class WarehouseProductController : ControllerBase
     [HttpGet("bywarehouseid/{id}")]
     public async Task<ActionResult<IEnumerable<WarehouseProduct>>> GetWarehouseProductsByWarehouseAsync(long id) {
         try {
-            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsAsync();
+            IEnumerable<WarehouseProduct> warehouseProducts = await _warehouseProductLogic.GetWarehouseProductsByWarehouseIdAsync(id);
             return Ok(warehouseProducts);
+        }
+        catch (NotFoundException e) {
+            Console.WriteLine(e.Message);
+            return NotFound(e.Message);
         }
         catch (ServiceUnavailableException e) {
             Console.WriteLine(e);

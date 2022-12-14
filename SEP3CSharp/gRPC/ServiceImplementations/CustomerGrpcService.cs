@@ -39,7 +39,37 @@ public class CustomerGrpcService : ICustomerGrpcService
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            throw e;
+            throw;
+        }
+    }
+
+    public async Task<Customer> AlterCustomerAsync(Customer customer) {
+        try {
+            CustomerResponse reply = await _serviceClient.AlterCustomerAsync(new AlterCustomerRequest {
+                Id = customer.Id,
+                Fullname = customer.FullName,
+                Address = customer.Address,
+                Mail = customer.Mail,
+                PhoneNo = customer.PhoneNo
+            });
+            Customer returnCustomer = new Customer()
+            {
+                Id = reply.Id,
+                FullName = reply.Fullname,
+                PhoneNo = reply.PhoneNo,
+                Address = reply.Address,
+                Mail = reply.Mail
+            };
+            return returnCustomer;
+        }
+        catch (RpcException e) {
+            if (e.StatusCode == StatusCode.Unavailable) {
+                throw new ServiceUnavailableException();
+            }
+            if (e.StatusCode == StatusCode.NotFound) {
+                throw new NotFoundException(e.Status.Detail);
+            }
+            throw;
         }
     }
 
@@ -67,7 +97,7 @@ public class CustomerGrpcService : ICustomerGrpcService
             if (e.StatusCode == StatusCode.Unavailable) {
                 throw new ServiceUnavailableException();
             }
-            throw e;
+            throw;
         }
     }
 
@@ -96,7 +126,7 @@ public class CustomerGrpcService : ICustomerGrpcService
             if (e.StatusCode == StatusCode.NotFound) {
                 throw new NotFoundException(e.Status.Detail);
             }
-            throw e;
+            throw;
         }
     }
 }

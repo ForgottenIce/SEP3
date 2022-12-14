@@ -31,7 +31,7 @@ public class WarehouseProductService : IWarehouseProductService {
 	}
 
 	public async Task<WarehouseProduct> AlterWarehouseProductAsync(WarehouseProductCreationDto dto) {
-		string serialized = JsonSerializer.Serialize<WarehouseProductCreationDto>(dto);
+		string serialized = JsonSerializer.Serialize(dto);
 		HttpContent httpContent = new StringContent(serialized,Encoding.UTF8,"application/json");
 		HttpResponseMessage response = await _httpClient.PatchAsync("/warehouseProduct", httpContent);
 		string content = await response.Content.ReadAsStringAsync();

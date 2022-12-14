@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using HttpClients.ClientIntefaces;
 using Shared.Dtos;
@@ -30,6 +31,41 @@ public class CustomerService : ICustomerService
         {
             PropertyNameCaseInsensitive = true
         })!;
+        return customer;
+    }
+
+    public async Task<Customer> AlterCustomerAsync(Customer customer) {
+        string serialized = JsonSerializer.Serialize(customer);
+        HttpContent httpContent = new StringContent(serialized,Encoding.UTF8,"application/json");
+        HttpResponseMessage response = await _httpClient.PatchAsync("/Customer", httpContent);
+        string content = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string result = await response.Content.ReadAsStringAsync();
+            throw new Exception(result);
+        }
+
+        Customer returnCustomer = JsonSerializer.Deserialize<Customer>(content, new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true
+        })!;
+        return returnCustomer;
+    }
+
+    public async Task<Customer> GetCustomerByIdAsync(long id) {
+        HttpResponseMessage responseMessage = await _httpClient.GetAsync($"/Customer/{id}");
+        string content = await responseMessage.Content.ReadAsStringAsync();
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            throw new Exception(content);
+        }
+
+        Customer customer = JsonSerializer.Deserialize<Customer>(content,
+            new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
         return customer;
     }
 
