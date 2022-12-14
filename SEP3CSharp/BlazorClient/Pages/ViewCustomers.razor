@@ -61,6 +61,7 @@
     }
 
     private async Task OpenCreationDialog() {
+        _addCustomerIsBusy = false;
         _fullName = "";
         _phoneNo = "";
         _address = "";
@@ -125,6 +126,7 @@
     }
     
     private async Task OpenAlterDialog() {
+        _addCustomerIsBusy = false;
         Customer _selected = _selectedCustomer.First();
         _fullName = _selected.FullName;
         _phoneNo = _selected.PhoneNo;
