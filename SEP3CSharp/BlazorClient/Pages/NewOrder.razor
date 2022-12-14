@@ -71,7 +71,7 @@
                                 <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Name" Title="Name" Width="150px" Sortable="false"/>
                                 <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Description" Title="Description" Width="500px" TextAlign="TextAlign.Center" Sortable="false"/>
                                 <RadzenDataGridColumn TItem="WarehouseProduct" Property="Product.Price" Title="Price" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
-                                <RadzenDataGridColumn TItem="WarehouseProduct" Property="Quantity" Title="On stock" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
+                                <RadzenDataGridColumn TItem="WarehouseProduct" Property="Quantity" Title="Stock" Width="100px" TextAlign="TextAlign.Center" Filterable="false"/>
                             </Columns>
                         </RadzenDataGrid>
                         <RadzenNumeric TValue="int" Min="1" @bind-Value="_amount"></RadzenNumeric>
@@ -199,7 +199,7 @@
         _order.DateTimeOrdered = DateTime.Now;
         try {
             await OrderService.CreateOrderAsync(_order);
-            NavMgr.NavigateTo("/ViewCustomers");
+            NavMgr.NavigateTo("/Customers");
             NotifierService.NotifySuccess("Order placed", duration:4000);
         }
         catch (Exception e) {
